@@ -1,0 +1,31 @@
+{
+  "name": "outorga-moderacao",
+  "version": "1.0.0",
+  "description": "Moderação do cadatro de interessados para compra de Outorga das Operações Urbanas Consorciadas de São Paulo",
+  "author": "dev-spurbanismo",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
+    "api:mock": "json-server --watch ./api-mock/db.json --port 5000"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/pwa": "^3.0.0-0",
+    "nuxt": "^2.0.0",
+    "vue-good-table": "^2.18.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^1.0.1",
+    "@nuxtjs/eslint-module": "^1.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-nuxt": ">=0.4.2",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0"
+  }
+}

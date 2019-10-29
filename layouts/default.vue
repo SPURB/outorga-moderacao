@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <nuxt />
+    <nuxt id="main" />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -33,6 +33,10 @@ html {
 *:after {
   box-sizing: border-box;
   margin: 0;
+}
+
+#nuxt-loading {
+  background-color: #008375
 }
 
 .container {

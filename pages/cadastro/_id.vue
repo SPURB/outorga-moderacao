@@ -1,13 +1,21 @@
 <template>
   <div class="cadastro">
-    <p>olar cadastro de id {{idCadastro}}</p>
+    <code>{{ fila }}</code>
   </div>
 </template>
 <script>
+import axios from '~/plugins/axios'
+
 export default {
   name: 'Cadastro',
-  computed: {
-    idCadastro () { return parseInt(this.$route.params.id) }
-  }
+  data () {
+    return {
+      isFetching: false,
+      fila: {}
+    }
+  },
+  asyncData: ({ params }) => axios.get(`/filacepac/api/fila/${params.id}`)
+    .then((res) => { return { fila: res.data } })
+    .catch((e) => { return { error: e } })
 }
 </script>

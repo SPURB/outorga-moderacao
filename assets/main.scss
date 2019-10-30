@@ -1,0 +1,55 @@
+/*
+  SMACSS -> http://smacss.com/book/categorizing
+  0. Variables
+  1. Base
+  2. Layout
+  3. Module
+  4. State
+  5. Theme
+*/
+
+/*
+  0. Variables and mixins
+*/
+$font-stack: 'Roboto', 'Helvetica', Arial, sans-serif;
+$brand-1: "#008375";
+
+@mixin table-collapsed {
+  @media (max-width: 1900px) { @content; }
+}
+
+/*
+  1. Base
+*/
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  font-family: $font-stack;
+  font-size: 16px;
+}
+
+/*
+  2. Layout
+*/
+.container {
+  margin: 0 1rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include table-collapsed {
+    justify-content: unset;
+  }
+}
+
+/*
+  4. State
+*/
+#nuxt-loading {
+  background-color: $brand-1
+}

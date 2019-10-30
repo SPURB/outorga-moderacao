@@ -1,6 +1,6 @@
 <template>
   <div class="cadastro">
-    <code>{{ fila }}</code>
+    <p>{{ fila }}</p>
   </div>
 </template>
 <script>

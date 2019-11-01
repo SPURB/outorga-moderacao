@@ -12,7 +12,7 @@
   0. Variables and mixins
 */
 $font-stack: 'Roboto', 'Helvetica', Arial, sans-serif;
-$brand-1: "#008375";
+$brand-1: #008375;
 
 @mixin table-collapsed {
   @media (max-width: 1900px) { @content; }
@@ -31,21 +31,27 @@ $brand-1: "#008375";
 html {
   font-family: $font-stack;
   font-size: 16px;
+  line-height: 1.6;
+}
+
+.container {
+  header {
+    img {
+      height: 48px;
+      width: 148px;
+    }
+    h1 {
+      color: #FFF;
+      background-color: $brand-1;
+      font-size: 1.5rem;
+      padding: 1.75rem 3.25rem;
+    }
+  }
 }
 
 /*
   2. Layout
 */
-.container {
-  margin: 0 1rem;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @include table-collapsed {
-    justify-content: unset;
-  }
-}
 
 /*
   4. State

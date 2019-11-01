@@ -33,7 +33,6 @@
 
 <script>
 import { VueGoodTable } from 'vue-good-table'
-// import 'vue-good-table/dist/vue-good-table.css'
 import axios from '~/plugins/axios'
 
 export default {
@@ -142,16 +141,41 @@ export default {
   computed: {
     displayError () { return this.error !== '' }
   },
-  asyncData () {
-    return axios.get('/filacepac/api/fila')
-      .then((res) => {
-        return { rows: res.data }
-      })
-      .catch((e) => {
-        return { error: 'Erro' }
-      })
+  created () {
+    const filters = this.fetchFilterString(this.$route.query, this.columns)
+    filters ? this.fetchData(`/filacepac/api/fila${filters}`) : this.fetchData('/filacepac/api/fila')
   },
   methods: {
+    fetchData (path) {
+      this.isFetching = true
+      axios.get(path)
+        .then((res) => { this.rows = res.data })
+        .catch((e) => { this.error = 'Erro' })
+        .finally(() => { this.isFetching = false })
+    },
+
+    fetchFilterString (queries, columns) {
+      if (Object.keys(queries).length === 0) { return false } // no queries
+
+      const filters = []
+
+      const isValidQuery = (queryKey, columns) => {
+        return columns
+          .map(column => column.field)
+          .includes(queryKey)
+      }
+
+      for (const key in queries) {
+        if (isValidQuery(key, columns)) {
+          const concat = `${key}=${queries[key]}`
+          filters.push(concat)
+        }
+      }
+
+      if (filters.length) {
+        return `?${filters.join('/')}`// algo como -> ?Id=1/SubSetor=99
+      } else { return false }
+    },
     reloadApp () { window.location.reload(true) },
     formatStatus (statusObj) { return statusObj.Nome },
     formatFmData (str) { return str.replace('T', ', ') },

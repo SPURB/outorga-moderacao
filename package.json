@@ -5,13 +5,14 @@
   "author": "dev-spurbanismo",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
+    "dev": "NODE_ENV=dev nuxt",
+    "build": "NODE_ENV=prod nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "api:mock": "json-server --watch ./api-mock/db.json --port 5000"
+    "mock": "json-server --watch ./api-mock/db.json --port 5000",
+    "dev:mock": "NODE_ENV=mock nuxt"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
@@ -25,7 +26,9 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^6.1.0",
     "eslint-plugin-nuxt": ">=0.4.2",
+    "json-server": "^0.15.1",
     "node-sass": "^4.13.0",
-    "sass-loader": "^8.0.0"
+    "sass-loader": "^8.0.0",
+    "win-node-env": "^0.4.0"
   }
 }

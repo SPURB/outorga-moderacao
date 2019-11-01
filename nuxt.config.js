@@ -1,10 +1,18 @@
-//   baseURL: 'http://127.0.0.1:8080' // dev - apiBaseUrl
+const apiBaseUrl = (env) => {
+  switch (env) {
+    case 'dev': return 'http://spurbsp163'
+    case 'mock': return 'http://localhost:5000'
+    // case 'prod': return 'http://servicos.spurbanismo.sp.gov.br' // descomentar quando api estiver em produção
+    default: return 'http://spurbsp163'
+  }
+}
+
 export default {
   router: {
     base: '/dde/outorga-moderacao/'
   },
   env: {
-    apiBaseUrl: 'http://spurbsp163'
+    apiBaseUrl: apiBaseUrl(process.env.NODE_ENV)
   },
   mode: 'spa',
   /*

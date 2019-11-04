@@ -29,10 +29,10 @@
         @on-row-mouseleave="onRowMouseleave"
       />
       <footer>
-        <button @click.prevent="saveTable('outorga-ouc-faria-lima.json', rows)">
+        <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.json'), rows)">
           Salvar como .json
         </button>
-        <button @click.prevent="saveTable('outorga-ouc-faria-lima.csv', rows)">
+        <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.csv'), rows)">
           Salvar como .csv
         </button>
       </footer>
@@ -69,6 +69,12 @@ export default {
           type: 'string',
           formatFn: this.formatStatus,
           sortable: false
+        },
+        {
+          label: 'Id Status',
+          field: 'IdStatus',
+          type: 'number',
+          hidden: true
         },
         {
           label: 'E-mail',
@@ -156,6 +162,14 @@ export default {
     filters ? this.fetchData(`/filacepac/api/fila${filters}`) : this.fetchData('/filacepac/api/fila')
   },
   methods: {
+    addDateToFileName (name) {
+      const nameSplit = name.split('.') // ['name', 'extension']
+      const d = new Date()
+      const dateStr = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()}_${d.getHours()}h${d.getMinutes()}`
+      nameSplit.splice(nameSplit.length - 1, 0, dateStr)
+      return nameSplit.join('.')
+    },
+
     saveTable (name, content) {
       const nameSplit = name.split('.')
       const type = nameSplit[nameSplit.length - 1] // 'json' ou 'csv'

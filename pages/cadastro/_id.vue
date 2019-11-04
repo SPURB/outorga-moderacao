@@ -2,7 +2,9 @@
   <div class="cadastro">
     <header>
       <h2>Editando registro <span>{{ fila.Id }}</span></h2>
-      <button @click="backToIndex">&#8624; Voltar</button>
+      <button @click="backToIndex">
+        &#8624; Voltar
+      </button>
     </header>
     <form action="">
       <table>

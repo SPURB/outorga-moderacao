@@ -11,7 +11,7 @@
     "generate": "cross-env NODE_ENV=prod nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "mock": "json-server --watch ./api-mock/db.json --port 5000",
+    "mock": "json-server --watch ./api-mock/db.json --port 5000 --routes ./api-mock/routes.json",
     "dev:mock": "cross-env NODE_ENV=mock nuxt"
   },
   "dependencies": {

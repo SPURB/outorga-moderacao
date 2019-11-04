@@ -28,17 +28,14 @@
         @on-row-mouseenter="onRowMouseover"
         @on-row-mouseleave="onRowMouseleave"
       />
-      <div class="actions">
+      <footer>
         <button @click.prevent="saveTable('outorga-ouc-faria-lima.json', rows)">
-          Salvar json
+          Salvar como .json
         </button>
         <button @click.prevent="saveTable('outorga-ouc-faria-lima.csv', rows)">
-          Salvar csv
+          Salvar como .csv
         </button>
-        <button @click.prevent="enableCopy">
-          Modo cópia
-        </button>
-      </div>
+      </footer>
     </div>
   </div>
 </template>
@@ -148,8 +145,7 @@ export default {
       isFetching: false,
       status: [],
       rows: [],
-      error: '',
-      copyMode: false
+      error: ''
     }
   },
   computed: {
@@ -160,7 +156,6 @@ export default {
     filters ? this.fetchData(`/filacepac/api/fila${filters}`) : this.fetchData('/filacepac/api/fila')
   },
   methods: {
-    enableCopy () { this.copyMode = !this.copyMode },
     saveTable (name, content) {
       const nameSplit = name.split('.')
       const type = nameSplit[nameSplit.length - 1] // 'json' ou 'csv'
@@ -197,7 +192,13 @@ export default {
     fetchData (path) {
       this.isFetching = true
       axios.get(path)
-        .then((res) => { this.rows = res.data })
+        .then((res) => {
+          const resIsArray = Object.prototype.toString.call(res.data) === '[object Array]'
+          if (resIsArray) { this.rows = res.data }
+          else {
+            this.rows.push(res.data)
+          }
+        })
         .catch((e) => { this.error = 'Erro' })
         .finally(() => { this.isFetching = false })
     },
@@ -229,25 +230,24 @@ export default {
     formatStatus (statusObj) { return statusObj.Nome },
     formatFmData (str) { return str.replace('T', ', ') },
     onCellClick (params) {
-      if (this.copyMode) { return }
       // params.row - row object
       // params.column - column object
       // params.rowIndex - index of this row on the current page.
       // params.event - click event
-      const id = this.rows[params.rowIndex].Id
-      this.$router.push({ path: `/cadastro/${id}` })
+      if (params.column.field === 'Id') {
+        const id = this.rows[params.rowIndex].Id
+        this.$router.push({ path: `/cadastro/${id}` })
+      }
     },
     onRowMouseover (params) {
-      if (this.copyMode) { return }
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
-      document.body.style.cursor = 'pointer'
+      // document.body.style.cursor = 'pointer'
     },
     onRowMouseleave (row, pageIndex) {
-      if (this.copyMode) { return }
       // row - row object
       // pageIndex - index of this row on the current page.
-      document.body.style.cursor = 'default'
+      // document.body.style.cursor = 'default'
     }
   },
   head () {
@@ -304,6 +304,48 @@ export default {
       left: 0;
       width: 3.25rem !important;
       text-align: center;
+    }
+    tbody tr td:first-child:not([colspan]) {
+      padding: 0.5rem;
+      span {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: calc(0.25rem - 2px) calc(0.5rem - 2px);
+        background-color: #005249;
+        border-radius: 2rem;
+        border: 2px solid rgba(255, 255, 255, .2);
+        letter-spacing: -2px;
+        color: #FFF;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .48);
+        line-height: calc(16px * 1.6);
+        font-size: smaller;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .48);
+        transition: all ease-out .1s;
+        &::after {
+          position: absolute;
+          width: 100%;
+          left: 0;
+          top: calc(50% - 2px);
+          transform: translateY(-50%) scale(0.75, 1.25);
+          content: '→';
+          letter-spacing: -13px;
+          opacity: 0;
+          font-size: 1.25rem;
+          transition: all ease-out .2s;
+        }
+        &:hover {
+          background-color: #008375;
+          color: transparent;
+          text-shadow: none;
+          &::after {
+            letter-spacing: 0;
+            opacity: 1;
+            color: #FFF;
+          }
+        }
+      }
     }
     thead tr th:nth-child(2):not([colspan]), tbody tr td:nth-child(2):not([colspan]) {
       padding-left: 0;
@@ -385,6 +427,29 @@ export default {
           }
         }
       }
+    }
+  }
+}
+footer {
+  background-color: #005249;
+  padding: 1.75rem 3.25rem;
+  text-align: center;
+  button {
+    margin: 0 3.25rem 0 0;
+    &:last-child {
+      margin-right: 0;
+    }
+    border: 0;
+    padding: 1.25rem 1.5rem;
+    background-color: rgba(255, 255, 255, .04);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    color: #FFF;
+    font-size: initial;
+    cursor: pointer;
+    transition: all ease-out .2s;
+    &:hover {
+      background-color: #008375;
     }
   }
 }

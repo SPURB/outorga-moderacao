@@ -9,30 +9,43 @@
         Tentar novamente
       </button>
     </div>
-    <vue-good-table
-      v-else
-      :columns="columns"
-      :rows="rows"
-      :search-options="{
-        enabled: true,
-        placeholder: 'Procure por qualquer valor ou clique no rótulo para ordenar',
-      }"
-      :sort-options="{
-        enabled: true,
-        initialSortBy: [
-          { field: 'Id', type: 'asc' },
-          { field: 'Data', type: 'asc' }
-        ]
-      }"
-      @on-cell-click="onCellClick"
-      @on-row-mouseenter="onRowMouseover"
-      @on-row-mouseleave="onRowMouseleave"
-    />
+    <div v-else>
+      <vue-good-table
+        :columns="columns"
+        :rows="rows"
+        :search-options="{
+          enabled: true,
+          placeholder: 'Procure por qualquer valor ou clique no rótulo para ordenar',
+        }"
+        :sort-options="{
+          enabled: true,
+          initialSortBy: [
+            { field: 'Id', type: 'asc' },
+            { field: 'Data', type: 'asc' }
+          ]
+        }"
+        @on-cell-click="onCellClick"
+        @on-row-mouseenter="onRowMouseover"
+        @on-row-mouseleave="onRowMouseleave"
+      />
+      <div class="actions">
+        <button @click.prevent="saveTable('outorga-ouc-faria-lima.json', rows)">
+          Salvar json
+        </button>
+        <button @click.prevent="saveTable('outorga-ouc-faria-lima.csv', rows)">
+          Salvar csv
+        </button>
+        <button @click.prevent="enableCopy">
+          Modo cópia
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { VueGoodTable } from 'vue-good-table'
+import FileSaver from 'file-saver'
 import axios from '~/plugins/axios'
 
 export default {
@@ -135,7 +148,8 @@ export default {
       isFetching: false,
       status: [],
       rows: [],
-      error: ''
+      error: '',
+      copyMode: false
     }
   },
   computed: {
@@ -146,6 +160,40 @@ export default {
     filters ? this.fetchData(`/filacepac/api/fila${filters}`) : this.fetchData('/filacepac/api/fila')
   },
   methods: {
+    enableCopy () { this.copyMode = !this.copyMode },
+    saveTable (name, content) {
+      const nameSplit = name.split('.')
+      const type = nameSplit[nameSplit.length - 1] // 'json' ou 'csv'
+
+      if (type === 'json') {
+        const jsonBlob = new Blob([JSON.stringify(content)], { type: 'text/json; charset=utf-8' })
+        FileSaver.saveAs(jsonBlob, name)
+      }
+
+      else if (type === 'csv') {
+        const csvBlob = new Blob([this.convertToCSV(content)], { type: 'text/csv; charset=utf-8' })
+        FileSaver.saveAs(csvBlob, name)
+      }
+
+      else { throw new Error(`${type} não é um formato válido para conversão`) }
+    },
+
+    convertToCSV (objArray) {
+      const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
+      let str = `${Object.keys(objArray[0]).join(',')}\r\n` // header vem do primeiro objeto
+
+      array.forEach((obj) => {
+        let line = ''
+        for (const key in obj) {
+          if (line !== '') { line += ',' }
+          line += obj[key]
+        }
+        str += `${line}\r\n`
+      })
+
+      return str
+    },
+
     fetchData (path) {
       this.isFetching = true
       axios.get(path)
@@ -174,12 +222,14 @@ export default {
 
       if (filters.length) {
         return `?${filters.join('/')}`// algo como -> ?Id=1/SubSetor=99
-      } else { return false }
+      }
+      else { return false }
     },
     reloadApp () { window.location.reload(true) },
     formatStatus (statusObj) { return statusObj.Nome },
     formatFmData (str) { return str.replace('T', ', ') },
     onCellClick (params) {
+      if (this.copyMode) { return }
       // params.row - row object
       // params.column - column object
       // params.rowIndex - index of this row on the current page.
@@ -188,11 +238,13 @@ export default {
       this.$router.push({ path: `/cadastro/${id}` })
     },
     onRowMouseover (params) {
+      if (this.copyMode) { return }
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       document.body.style.cursor = 'pointer'
     },
     onRowMouseleave (row, pageIndex) {
+      if (this.copyMode) { return }
       // row - row object
       // pageIndex - index of this row on the current page.
       document.body.style.cursor = 'default'

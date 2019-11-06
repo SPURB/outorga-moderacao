@@ -13,20 +13,48 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <td class="updated">
-              <input id="inputInteressado" type="text" :value="fila.Interessado">
+            <td>
+              <input id="inputInteressado" name="Interessado" type="text" :value="fila.Interessado" @blur="checkUpdate($event)">
             </td>
           </tr>
           <tr>
             <td>Situação</td>
             <td>
-              <input id="status1" type="radio" name="status" value="1" :checked="getStatus(fila.Status, 1)">
+              <input
+                id="status1"
+                type="radio"
+                name="IdStatus"
+                value="1"
+                :checked="getStatus(fila.Status, 1)"
+                @click="checkUpdate($event)"
+              >
               <label for="status1">Checklist</label>
-              <input id="status2" type="radio" name="status" value="2" :checked="getStatus(fila.Status, 2)">
+              <input
+                id="status2"
+                type="radio"
+                name="IdStatus"
+                value="2"
+                :checked="getStatus(fila.Status, 2)"
+                @click="checkUpdate($event)"
+              >
               <label for="status2">Em análise</label>
-              <input id="status3" type="radio" name="status" value="3" :checked="getStatus(fila.Status, 3)">
+              <input
+                id="status3"
+                type="radio"
+                name="IdStatus"
+                value="3"
+                :checked="getStatus(fila.Status, 3)"
+                @click="checkUpdate($event)"
+              >
               <label for="status3">Indeferido</label>
-              <input id="status4" type="radio" name="status" value="4" :checked="getStatus(fila.Status, 4)">
+              <input
+                id="status4"
+                type="radio"
+                name="IdStatus"
+                value="4"
+                :checked="getStatus(fila.Status, 4)"
+                @click="checkUpdate($event)"
+              >
               <label for="status4">Aprovado</label>
             </td>
           </tr>
@@ -35,7 +63,13 @@
               <label for="inputEmail">E-mail</label>
             </td>
             <td>
-              <input id="inputEmail" type="text" :value="fila.Email">
+              <input
+                id="inputEmail"
+                name="Email"
+                type="text"
+                :value="fila.Email"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
@@ -43,15 +77,27 @@
               <label for="inputTelefone">Telefone</label>
             </td>
             <td>
-              <input id="inputTelefone" type="text" :value="fila.Telefone">
+              <input
+                id="inputTelefone"
+                name="Telefone"
+                type="text"
+                :value="fila.Telefone"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
-          <tr v-if="fila.Procurador">
+          <tr>
             <td>
               <label for="inputProcurador">Procurador</label>
             </td>
             <td>
-              <input id="inputProcurador" type="text" :value="fila.Procurador">
+              <input
+                id="inputProcurador"
+                name="Procurador"
+                type="text"
+                :value="fila.Procurador"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
@@ -59,8 +105,9 @@
               <label for="inputData">Data de criação</label>
             </td>
             <td>
-              <input id="inputData" type="date" :value="fila.Data.substring(0, 10)">
-              <input id="inputHora" type="time" :value="fila.Data.substring(11, 20)">
+              <span class="noEdit">
+                {{ fila.Data.substring(0, 10) }}, {{ fila.Data.substring(11, 19) }}
+              </span>
             </td>
           </tr>
           <tr>
@@ -68,7 +115,7 @@
               <label for="inputSei">SEI</label>
             </td>
             <td>
-              <input id="inputSei" type="text" :value="fila.Sei">
+              <textarea id="inputSei" rows="1" :value="fila.Sei" />
             </td>
           </tr>
           <tr>
@@ -76,7 +123,7 @@
               <label for="inputCertidao">Certidão</label>
             </td>
             <td>
-              <input id="inputCertidao" type="text" :value="fila.Certidao">
+              <textarea id="inputCertidao" rows="1" :value="fila.Certidao" />
             </td>
           </tr>
           <tr>
@@ -90,23 +137,78 @@
           <tr>
             <td>Operação Urbana</td>
             <td>
-              <input id="operacaoUrbana1" type="radio" name="operacaoUrbana" value="1" checked>
+              <input
+                id="operacaoUrbana1"
+                type="radio"
+                name="operacaoUrbana"
+                value="1"
+                checked
+              >
               <label for="operacaoUrbana1">Água Branca</label>
-              <input id="operacaoUrbana2" type="radio" name="operacaoUrbana" value="2">
+              <input
+                id="operacaoUrbana2"
+                type="radio"
+                name="operacaoUrbana"
+                value="2"
+              >
               <label for="operacaoUrbana2">Água Espraiada</label>
-              <input id="operacaoUrbana3" type="radio" name="operacaoUrbana" value="3">
+              <input
+                id="operacaoUrbana3"
+                type="radio"
+                name="operacaoUrbana"
+                value="3"
+              >
               <label for="operacaoUrbana3">Faria Lima</label>
-              <input id="operacaoUrbana4" type="radio" name="operacaoUrbana" value="4">
+              <input
+                id="operacaoUrbana4"
+                type="radio"
+                name="operacaoUrbana"
+                value="4"
+              >
               <label for="operacaoUrbana4">Centro</label>
             </td>
           </tr>
           <tr>
             <td>Setor</td>
-            <td>lista de stores filtrada por operaçao</td>
+            <td>
+              <input id="inputSetor" type="text" :value="fila.Setor">
+            </td>
           </tr>
           <tr>
             <td>Subsetor</td>
-            <td>lista de substores filtrada por setor</td>
+            <td>
+              <input id="inputSubsetor" type="text" :value="fila.SubSetor">
+            </td>
+          </tr>
+          <tr>
+            <td>Endereço</td>
+            <td>
+              <input id="inputEndereco" type="text" :value="fila.Endereco">
+            </td>
+          </tr>
+          <tr>
+            <td>Área do Terreno</td>
+            <td>
+              <input id="inputAreaTerreno" type="text" :value="fila.AreaTerreno">
+            </td>
+          </tr>
+          <tr>
+            <td>Zona</td>
+            <td>
+              <input id="inputZona" type="text" :value="fila.Zona">
+            </td>
+          </tr>
+          <tr>
+            <td>Uso</td>
+            <td>
+              <input id="inputUso" type="text" :value="fila.Uso">
+            </td>
+          </tr>
+          <tr>
+            <td>C.A. do Projeto</td>
+            <td>
+              <input id="inputCAProjeto" type="text" :value="fila.CAProjeto">
+            </td>
           </tr>
           <tr>
             <td>
@@ -127,7 +229,7 @@
           <tr>
             <td>CEPAC - Objeto</td>
             <td>
-              validar tipo de dado
+              <input id="inputCepacObjeto" type="number" :value="fila.CepacObjeto" step="1" min="0">
             </td>
           </tr>
           <tr>
@@ -146,12 +248,28 @@
               <input id="inputCepacModUso" type="number" :value="fila.CepacModUso" step="1" min="0">
             </td>
           </tr>
+          <tr>
+            <td>Código da Proposta</td>
+            <td>
+              <input id="inputCodigoProposta" type="text" :value="fila.CodigoProposta">
+            </td>
+          </tr>
+          <tr>
+            <td>Observações</td>
+            <td>
+              <textarea id="inputObs" type="text" :value="fila.Obs" rows="5" />
+            </td>
+          </tr>
         </tbody>
       </table>
     </form>
     <footer>
-      <button>Cancelar</button>
-      <button>Salvar</button>
+      <button @click="backToIndex">
+        Cancelar
+      </button>
+      <button>
+        Salvar
+      </button>
     </footer>
   </div>
 </template>
@@ -163,12 +281,17 @@ export default {
   data () {
     return {
       isFetching: false,
-      fila: {}
+      fila: {},
+      filaTemp: [],
+      updatedData: {}
     }
   },
   asyncData: ({ params }) => axios.get(`/filacepac/api/fila/${params.id}`)
     .then((res) => { return { fila: res.data } })
     .catch((e) => { return { error: e } }),
+  mounted () {
+    this.setFilaTemp(this.fila)
+  },
   methods: {
     backToIndex () {
       this.$router.push({ path: `/` })
@@ -180,6 +303,42 @@ export default {
       else {
         return false
       }
+    },
+    checkUpdate (event) {
+      const el = event.target
+      const field = el.name
+      const index = this.filaTemp.indexOf(this.filaTemp.filter((el) => { return el[0] === field })[0])
+      const filaData = Object.entries(this.filaTemp)[index][1]
+      if (field === 'IdStatus') {
+        const selected = document.querySelector(`input[name=${field}]:checked`)
+        if (parseInt(selected.value) !== filaData[1]) {
+          el.parentNode.classList.add('updated')
+          const toUpdate = Object.entries(this.updatedData).filter((key) => { return key[0] === field })[0]
+          toUpdate[1] = selected.value
+        }
+        else {
+          el.parentNode.classList.remove('updated')
+        }
+      }
+      else if (field !== 'IdStatus') {
+        if (el.value !== filaData[1]) {
+          el.parentNode.classList.add('updated')
+        }
+        else {
+          el.parentNode.classList.remove('updated')
+        }
+      }
+    },
+    setFilaTemp (obj) {
+      Object.entries(obj).filter((el) => {
+        if (el[1] === null) {
+          this.filaTemp.push([el[0], ''])
+        }
+        else {
+          this.filaTemp.push(el)
+        }
+      })
+      this.updatedData = obj
     }
   }
 }
@@ -189,6 +348,9 @@ div.cadastro {
   header {
     background-color: #005249;
     padding: 1rem 3.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
     h2 {
       white-space: nowrap;
       font-size: 1rem;
@@ -254,17 +416,18 @@ div.cadastro {
               content: '↻';
               position: absolute;
               left: -1rem;
-              top: 50%;
-              transform: translateY(-50%);
+              top: 49%;
+              transform: translateY(-100%);
               color: #008375;
               font-size: 1.5rem;
               opacity: 0;
-              transition: opacity ease-out .2s;
+              transition: all ease-out .2s;
             }
             &.updated::before {
               opacity: 1;
+              transform: translateY(-50%);
             }
-            input {
+            input, textarea {
               font-family: inherit;
               font-size: 1.25rem;
               padding: 0.25rem 0 0.5rem 0;
@@ -273,10 +436,11 @@ div.cadastro {
               border-bottom: 1px solid rgba(0, 0, 0, .12);
               transition: all ease-out .2s;
               &:focus {
-                border-bottom-color: rgba(0, 0, 0, .64);
+                border-color: rgba(0, 0, 0, .64);
               }
               &[type="text"] {
                 width: 100%;
+                white-space: pre-line;
               }
               &[type="date"], &[type="time"] {
                 margin: 0 1rem 0 0;
@@ -303,6 +467,19 @@ div.cadastro {
                 }
               }
             }
+            textarea {
+              border: 1px solid rgba(0, 0, 0, .12);
+              padding: 0.25rem 0.75rem;
+              line-height: 1.6;
+              background-color: rgba(255, 255, 255, .4);
+              border-radius: 0.25rem;
+              width: 100%;
+              resize: none;
+            }
+          }
+          span.noEdit {
+            font-size: 1.25rem;
+            cursor: not-allowed;
           }
         }
       }

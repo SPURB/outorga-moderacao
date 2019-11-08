@@ -1,6 +1,7 @@
 const apiBaseUrl = (env) => {
   switch (env) {
-    case 'dev': return 'http://spurbsp163'
+    case 'dev': return 'http://servicos.spurbanismo.sp.gov.br' // comentar quando 163 voltar
+    // case 'dev': return 'http://spurbsp163'
     case 'mock': return 'http://localhost:5000'
     // case 'prod': return 'http://servicos.spurbanismo.sp.gov.br' // descomentar quando api estiver em produção
     default: return 'http://spurbsp163'

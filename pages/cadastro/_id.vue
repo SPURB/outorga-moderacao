@@ -21,41 +21,41 @@
             <td>Situação</td>
             <td>
               <input
-                id="status1"
+                id="Checklist"
                 type="radio"
                 name="IdStatus"
                 value="1"
                 :checked="getStatus(fila.Status, 1)"
-                @click="checkUpdate($event)"
+                @click="checkStatusUpdate($event)"
               >
-              <label for="status1">Checklist</label>
+              <label for="Checklist">Checklist</label>
               <input
-                id="status2"
+                id="EmAnalise"
                 type="radio"
                 name="IdStatus"
                 value="2"
                 :checked="getStatus(fila.Status, 2)"
-                @click="checkUpdate($event)"
+                @click="checkStatusUpdate($event)"
               >
-              <label for="status2">Em análise</label>
+              <label for="EmAnalise">Em análise</label>
               <input
-                id="status3"
+                id="Indeferido"
                 type="radio"
                 name="IdStatus"
                 value="3"
                 :checked="getStatus(fila.Status, 3)"
-                @click="checkUpdate($event)"
+                @click="checkStatusUpdate($event)"
               >
-              <label for="status3">Indeferido</label>
+              <label for="Indeferido">Indeferido</label>
               <input
-                id="status4"
+                id="Aprovado"
                 type="radio"
                 name="IdStatus"
                 value="4"
                 :checked="getStatus(fila.Status, 4)"
-                @click="checkUpdate($event)"
+                @click="checkStatusUpdate($event)"
               >
-              <label for="status4">Aprovado</label>
+              <label for="Aprovado">Aprovado</label>
             </td>
           </tr>
           <tr>
@@ -115,7 +115,13 @@
               <label for="inputSei">SEI</label>
             </td>
             <td>
-              <textarea id="inputSei" rows="1" :value="fila.Sei" />
+              <textarea
+                id="inputSei"
+                name="Sei"
+                rows="1"
+                :value="fila.Sei"
+                @blur="checkUpdate($event)"
+              />
             </td>
           </tr>
           <tr>
@@ -123,7 +129,13 @@
               <label for="inputCertidao">Certidão</label>
             </td>
             <td>
-              <textarea id="inputCertidao" rows="1" :value="fila.Certidao" />
+              <textarea
+                id="inputCertidao"
+                name="Certidao"
+                rows="1"
+                :value="fila.Certidao"
+                @blur="checkUpdate($event)"
+              />
             </td>
           </tr>
           <tr>
@@ -131,83 +143,144 @@
               <label for="inputLicenciamento">Licenciamento</label>
             </td>
             <td>
-              <input id="inputLicenciamento" type="text" :value="fila.Licenciamento">
+              <textarea
+                id="inputLicenciamento"
+                name="Licenciamento"
+                rows="1"
+                :value="fila.Licenciamento"
+                @blur="checkUpdate($event)"
+              />
             </td>
           </tr>
           <tr>
             <td>Operação Urbana</td>
             <td>
               <input
-                id="operacaoUrbana1"
+                id="AguaBranca"
                 type="radio"
-                name="operacaoUrbana"
+                name="IdOperacaoUrbana"
                 value="1"
-                checked
+                :checked="getOU(fila.SetorObj, 1)"
+                @click="checkOUUpdate($event)"
               >
-              <label for="operacaoUrbana1">Água Branca</label>
+              <label for="AguaBranca">Água Branca</label>
               <input
-                id="operacaoUrbana2"
+                id="FariaLima"
                 type="radio"
-                name="operacaoUrbana"
+                name="IdOperacaoUrbana"
                 value="2"
+                :checked="getOU(fila.SetorObj, 2)"
+                @click="checkOUUpdate($event)"
               >
-              <label for="operacaoUrbana2">Água Espraiada</label>
+              <label for="FariaLima">Faria Lima</label>
               <input
-                id="operacaoUrbana3"
+                id="AguaEspraiada"
                 type="radio"
-                name="operacaoUrbana"
+                name="IdOperacaoUrbana"
                 value="3"
+                :checked="getOU(fila.SetorObj, 3)"
+                @click="checkOUUpdate($event)"
               >
-              <label for="operacaoUrbana3">Faria Lima</label>
+              <label for="AguaEspraiada">Água Espraiada</label>
               <input
-                id="operacaoUrbana4"
+                id="Centro"
                 type="radio"
-                name="operacaoUrbana"
+                name="IdOperacaoUrbana"
                 value="4"
+                :checked="getOU(fila.SetorObj, 4)"
+                @click="checkOUUpdate($event)"
               >
-              <label for="operacaoUrbana4">Centro</label>
+              <label for="Centro">Centro</label>
             </td>
           </tr>
           <tr>
             <td>Setor</td>
             <td>
-              <input id="inputSetor" type="text" :value="fila.Setor">
+              <template v-for="(setor, index) in everySetor = Setores">
+                <input
+                  :id="'setor_' + Object.keys(setor)[0]"
+                  :key="'input' + index.toString()"
+                  type="radio"
+                  name="IdSetor"
+                  :value="Object.keys(setor)[0]"
+                  :checked="getSetor(fila.SetorObj, Object.keys(setor)[0])"
+                  @click="checkSetorUpdate($event)"
+                  @update="checkSetorUpdate($event)"
+                >
+                <label :key="index" :for="'setor_' + Object.keys(setor)[0]">{{ Object.entries(setor)[0][1] }}</label>
+              </template>
             </td>
           </tr>
           <tr>
             <td>Subsetor</td>
             <td>
-              <input id="inputSubsetor" type="text" :value="fila.SubSetor">
+              <input
+                id="inputSubsetor"
+                name="SubSetor"
+                type="text"
+                :value="fila.SubSetor"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
             <td>Endereço</td>
             <td>
-              <input id="inputEndereco" type="text" :value="fila.Endereco">
+              <textarea
+                id="inputEndereco"
+                name="Endereco"
+                rows="1"
+                :value="fila.Endereco"
+                @blur="checkUpdate($event)"
+              />
             </td>
           </tr>
           <tr>
             <td>Área do Terreno</td>
             <td>
-              <input id="inputAreaTerreno" type="text" :value="fila.AreaTerreno">
+              <input
+                id="inputAreaTerreno"
+                name="AreaTerreno"
+                type="text"
+                :value="fila.AreaTerreno"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
             <td>Zona</td>
             <td>
-              <input id="inputZona" type="text" :value="fila.Zona">
+              <input
+                id="inputZona"
+                name="Zona"
+                type="text"
+                :value="fila.Zona"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
             <td>Uso</td>
             <td>
-              <input id="inputUso" type="text" :value="fila.Uso">
+              <input
+                id="inputUso"
+                name="Uso"
+                type="text"
+                :value="fila.Uso"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
             <td>
-              <input id="inputCAProjeto" type="text" :value="fila.CAProjeto">
+              <input
+                id="inputCAProjeto"
+                name="CAProjeto"
+                type="text"
+                :value="fila.CAProjeto"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
@@ -215,7 +288,13 @@
               <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
             </td>
             <td>
-              <input id="inputAreaAdResidencial" type="number" :value="fila.AreaAdResidencial" step="0.01" min="0">
+              <input
+                id="inputAreaAdResidencial"
+                name="AreaAdResidencial"
+                type="number"
+                :value="fila.AreaAdResidencial"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
@@ -223,13 +302,27 @@
               <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
             </td>
             <td>
-              <input id="inputAreaAdNaoResidencial" type="number" :value="fila.AreaAdNaoResidencial" step="0.01" min="0">
+              <input
+                id="inputAreaAdNaoResidencial"
+                name="AreaAdNaoResidencial"
+                type="number"
+                :value="fila.AreaAdNaoResidencial"
+                step="0.01"
+                min="0"
+              >
             </td>
           </tr>
           <tr>
             <td>CEPAC - Objeto</td>
             <td>
-              <input id="inputCepacObjeto" type="number" :value="fila.CepacObjeto" step="1" min="0">
+              <input
+                id="inputCepacObjeto"
+                name="CepacObjeto"
+                type="number"
+                :value="fila.CepacObjeto"
+                step="1"
+                min="0"
+              >
             </td>
           </tr>
           <tr>
@@ -237,7 +330,14 @@
               <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
             </td>
             <td>
-              <input id="inputCepacAreaAdicional" type="number" :value="fila.CepacAreaAdicional" step="0.01" min="0">
+              <input
+                id="inputCepacAreaAdicional"
+                name="CepacAreaAdicional"
+                type="number"
+                :value="fila.CepacAreaAdicional"
+                step="0.01"
+                min="0"
+              >
             </td>
           </tr>
           <tr>
@@ -245,19 +345,39 @@
               <label for="inputCepacModUso">CEPAC - Modo de uso</label>
             </td>
             <td>
-              <input id="inputCepacModUso" type="number" :value="fila.CepacModUso" step="1" min="0">
+              <input
+                id="inputCepacModUso"
+                name="CepacModUso"
+                type="number"
+                :value="fila.CepacModUso"
+                step="1"
+                min="0"
+              >
             </td>
           </tr>
           <tr>
             <td>Código da Proposta</td>
             <td>
-              <input id="inputCodigoProposta" type="text" :value="fila.CodigoProposta">
+              <input
+                id="inputCodigoProposta"
+                name="CodigoProposta"
+                type="text"
+                :value="fila.CodigoProposta"
+                @blur="checkUpdate($event)"
+              >
             </td>
           </tr>
           <tr>
             <td>Observações</td>
             <td>
-              <textarea id="inputObs" type="text" :value="fila.Obs" rows="5" />
+              <textarea
+                id="inputObs"
+                name="Obs"
+                type="text"
+                :value="fila.Obs"
+                rows="5"
+                @blur="checkUpdate($event)"
+              />
             </td>
           </tr>
         </tbody>
@@ -283,14 +403,22 @@ export default {
       isFetching: false,
       fila: {},
       filaTemp: [],
-      updatedData: {}
+      updatedData: {},
+      allSetores: [
+        [{ '5': 'JABAQUARA' }, { '6': 'CHUCRI ZAIDAN' }, { '7': 'MARGINAL PINHEIROS' }, { '8': 'BERRINI' }, { '9': 'BROOKLIN' }],
+        [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
+        [{ '11': 'A' }, { '12': 'B' }, { '13': 'C' }, { '14': 'D' }, { '15': 'E' }],
+        [{ '10': 'CENTRO' }]
+      ],
+      Setores: undefined
     }
   },
-  asyncData: ({ params }) => axios.get(`/filacepac/api/fila/${params.id}`)
+  asyncData: ({ params }) => axios.get(`/cepacs/api/fila/${params.id}`) // apontar get para `/filacepac/api/fila/${params.id}`
     .then((res) => { return { fila: res.data } })
     .catch((e) => { return { error: e } }),
   mounted () {
     this.setFilaTemp(this.fila)
+    this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
   },
   methods: {
     backToIndex () {
@@ -304,29 +432,72 @@ export default {
         return false
       }
     },
-    checkUpdate (event) {
-      const el = event.target
-      const field = el.name
-      const index = this.filaTemp.indexOf(this.filaTemp.filter((el) => { return el[0] === field })[0])
-      const filaData = Object.entries(this.filaTemp)[index][1]
-      if (field === 'IdStatus') {
-        const selected = document.querySelector(`input[name=${field}]:checked`)
-        if (parseInt(selected.value) !== filaData[1]) {
-          el.parentNode.classList.add('updated')
-          const toUpdate = Object.entries(this.updatedData).filter((key) => { return key[0] === field })[0]
-          toUpdate[1] = selected.value
-        }
-        else {
-          el.parentNode.classList.remove('updated')
-        }
+    getOU (setorObj, inputValue) {
+      if (setorObj.IdOperacaoUrbana === inputValue) {
+        return true
       }
-      else if (field !== 'IdStatus') {
-        if (el.value !== filaData[1]) {
-          el.parentNode.classList.add('updated')
-        }
-        else {
-          el.parentNode.classList.remove('updated')
-        }
+      else {
+        return false
+      }
+    },
+    getSetor (setorObj, inputValue) {
+      if (setorObj.Id === parseInt(inputValue)) {
+        return true
+      }
+      else {
+        return false
+      }
+    },
+    checkUpdate (event) {
+      const el = event.target // DOM element
+      const field = el.name // "name" attribute
+      const index = this.filaTemp.indexOf(this.filaTemp.filter((el) => { return el[0] === field })[0]) // position of the data inside the whole object
+      const filaData = Object.entries(this.filaTemp)[index][1] // ex. [ "Data", 2003-01-01T00:00:00" ]
+      if (el.value.toString() !== filaData[1].toString()) {
+        el.parentNode.classList.add('updated')
+      }
+      else {
+        el.parentNode.classList.remove('updated')
+      }
+    },
+    checkStatusUpdate (event) {
+      const el = event.target // DOM element
+      const field = el.name // "name" attribute
+      const index = this.filaTemp.indexOf(this.filaTemp.filter((el) => { return el[0] === field })[0]) // position of the data inside the whole object
+      const filaData = Object.entries(this.filaTemp)[index][1] // ex. [ "Data", 2003-01-01T00:00:00" ]
+      const selected = document.querySelector(`input[name=${field}]:checked`)
+      if (parseInt(selected.value) !== filaData[1]) {
+        el.parentNode.classList.add('updated')
+        const toUpdate = Object.entries(this.updatedData).filter((key) => { return key[0] === field })[0]
+        toUpdate[1] = selected.value
+      }
+      else {
+        el.parentNode.classList.remove('updated')
+      }
+    },
+    checkOUUpdate (event) {
+      const el = event.target // DOM element
+      const field = el.name // "name" attribute
+      const ouId = this.filaTemp.filter((el) => { return el[0] === 'SetorObj' })[0][1].IdOperacaoUrbana
+      const selected = document.querySelector(`input[name=${field}]:checked`) // input value
+      if (parseInt(selected.value) !== ouId) {
+        el.parentNode.classList.add('updated')
+      }
+      else {
+        el.parentNode.classList.remove('updated')
+      }
+      this.setSetores(selected.value)
+    },
+    checkSetorUpdate (event) {
+      const el = event.target // DOM element
+      const field = el.name // "name" attribute
+      const setorId = this.filaTemp.filter((el) => { return el[0] === field })[0][1]
+      const selected = document.querySelector(`input[name=${field}]:checked`)
+      if (parseInt(selected.value) !== setorId) {
+        el.parentNode.classList.add('updated')
+      }
+      else {
+        el.parentNode.classList.remove('updated')
       }
     },
     setFilaTemp (obj) {
@@ -339,6 +510,10 @@ export default {
         }
       })
       this.updatedData = obj
+    },
+    setSetores (IdOu) {
+      this.Setores = this.allSetores[IdOu - 1]
+      return Object.entries(this.Setores)
     }
   }
 }
@@ -474,6 +649,10 @@ div.cadastro {
               background-color: rgba(255, 255, 255, .4);
               border-radius: 0.25rem;
               width: 100%;
+              height: 4.2rem;
+              &#inputObs {
+                height: unset;
+              }
               resize: none;
             }
           }

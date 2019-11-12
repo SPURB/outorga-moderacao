@@ -1,7 +1,7 @@
 const apiBaseUrl = (env) => {
   switch (env) {
-    case 'dev': return 'http://servicos.spurbanismo.sp.gov.br/cepacs/api/' // só get
-    // case 'dev': return 'http://spurbsp163/cepacs/api/'
+    // case 'dev': return 'http://servicos.spurbanismo.sp.gov.br/cepacs/api/' // só get
+    case 'dev': return 'http://spurbsp163/cepacs/api/'
     case 'mock': return 'http://localhost:5000/cepacs/api/'
     default: return 'http://spurbsp163/cepacs/api/'
   }
@@ -46,6 +46,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/vee-validate'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -72,6 +73,9 @@ export default {
   ** Build configuration
   */
   build: {
+    transpile: [
+      'vee-validate/dist/rules'
+    ],
     /*
     ** You can extend webpack config here
     */

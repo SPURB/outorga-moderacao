@@ -12,7 +12,7 @@
       </button>
     </div>
     <div v-else class="tabela">
-      <button @click.prevent="$router.push('cadastro/criar')" class="actions__create">
+      <button class="actions__create" @click.prevent="$router.push('cadastro/criar')">
         Criar novo cadastro
       </button>
       <vue-good-table

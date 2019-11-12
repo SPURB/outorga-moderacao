@@ -1,5 +1,16 @@
 <template>
-  <div class="criar">
+  <ValidationObserver v-slot="{ valid, errors }" tag="div" :class="'criar'">
+    <!-- <div :class="{ faded: !isFetching }" class="preloader">
+      <h2>Carregando</h2>
+    </div>
+    <div v-if="displayError" class="error">
+      <h2>Erro</h2>
+      <p>{{ errorMessage }}</p>
+      <button @click="reloadApp">
+        <span>&#8635;</span>
+        Tentar novamente
+      </button>
+    </div> -->
     <header>
       <h2>Criar novo registro</h2>
       <button @click="$router.push('/')">
@@ -13,18 +24,19 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
               <input
                 id="inputInteressado"
                 v-model="Interessado"
                 name="Interessado"
                 type="text"
               >
-            </td>
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Situação</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" :rules="{ required: { allowFalse: false } }" tag="td">
               <input
                 id="Checklist"
                 v-model="IdStatus"
@@ -61,89 +73,97 @@
                 value="4"
               >
               <label for="Aprovado">Aprovado</label>
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputEmail">E-mail</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|email" tag="td">
               <input
                 id="inputEmail"
                 v-model="Email"
                 name="Email"
                 type="email"
               >
-            </td>
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputTelefone">Telefone</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="numeric|min:8|max:15" tag="td">
               <input
                 id="inputTelefone"
                 v-model="Telefone"
                 name="Telefone"
                 type="text"
+                placeholder="00 00000 0000"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputProcurador">Procurador</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:120" tag="td">
               <input
                 id="inputProcurador"
                 v-model="Procurador"
                 name="Procurador"
                 type="text"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputSei">SEI</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:1200" tag="td">
               <textarea
                 id="inputSei"
                 v-model="Sei"
                 name="Sei"
                 rows="1"
+                placeholder="2020-0.000.000-0"
               />
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCertidao">Certidão</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
               <textarea
                 id="inputCertidao"
                 v-model="Certidao"
                 name="Certidao"
                 rows="1"
               />
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputLicenciamento">Licenciamento</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
               <textarea
                 id="inputLicenciamento"
                 v-model="Licenciamento"
                 name="Licenciamento"
                 rows="1"
               />
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Operação Urbana</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" :rules="{ required: { allowFalse: false } }" tag="td">
               <input
                 id="AguaBranca"
                 v-model="ouc"
@@ -176,110 +196,121 @@
                 value="oucc"
               >
               <label for="Centro">Centro</label>
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
-          <tr>
-            <td v-if="ouc!==''">
+          <tr v-if="ouc!==''">
+            <td>
               Setor
             </td>
             <td>
               <template v-for="(setor, index) in Setores">
                 <input
                   :id="`setor_${setor.id}`"
-                  :value="setor.id"
-                  :name="setor.nome"
                   :key="index + 1000"
                   v-model="IdSetor"
+                  :value="setor.id"
+                  :name="setor.nome"
                   type="radio"
                 >
-                <label :for="`setor_${setor.id}`" :key="index + 100">{{ setor.nome }}</label>
+                <label :key="index + 100" :for="`setor_${setor.id}`">{{ setor.nome }}</label>
               </template>
+              <span>{{ errors[0] }}</span>
             </td>
           </tr>
           <tr>
             <td>SubSetor</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:150" tag="td">
               <input
                 id="inputSubSetor"
                 v-model="SubSetor"
                 name="SubSetor"
                 type="text"
+                placeholder="99Z"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Endereço</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
               <textarea
                 id="inputEndereco"
                 v-model="Endereco"
                 name="Endereco"
                 rows="1"
+                placeholder="Rua São Bento, 450"
               />
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
-            <td>Área do Terreno</td>
-            <td>
+            <td>Área do Terreno (m²)</td>
+            <ValidationProvider v-slot="{ errors }" rules="min_value:0.01" tag="td">
               <input
                 id="inputAreaTerreno"
                 v-model="AreaTerreno"
                 name="AreaTerreno"
-                type="text"
+                type="number"
+                step="0.01"
+                min="0"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Zona</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:100" tag="td">
               <input
                 id="inputZona"
                 v-model="Zona"
                 name="Zona"
                 type="text"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Uso</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2|max:50" tag="td">
               <input
                 id="inputUso"
                 v-model="Uso"
                 name="Uso"
                 type="text"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
               <input
                 id="inputCAProjeto"
                 v-model="CAProjeto"
                 name="CAProjeto"
-                type="text"
+                type="number"
               >
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
               <input
                 id="inputAreaAdResidencial"
                 v-model="AreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model="AreaAdNaoResidencial"
@@ -288,11 +319,12 @@
                 step="0.01"
                 min="0"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>CEPAC - Objeto</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
               <input
                 id="inputCepacObjeto"
                 v-model="CepacObjeto"
@@ -301,13 +333,14 @@
                 step="1"
                 min="0"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
               <input
                 id="inputCepacAreaAdicional"
                 v-model="CepacAreaAdicional"
@@ -316,13 +349,14 @@
                 step="0.01"
                 min="0"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCepacModUso">CEPAC - Modo de uso</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
               <input
                 id="inputCepacModUso"
                 v-model="CepacModUso"
@@ -331,22 +365,24 @@
                 step="1"
                 min="0"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Código da Proposta</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:1|max:100" tag="td">
               <input
                 id="inputCodigoProposta"
                 v-model="CodigoProposta"
                 name="CodigoProposta"
                 type="text"
               >
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Observações</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="min:3|max:2000" tag="td">
               <textarea
                 id="inputObs"
                 v-model="Obs"
@@ -354,7 +390,8 @@
                 type="text"
                 rows="5"
               />
-            </td>
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
         </tbody>
       </table>
@@ -363,17 +400,22 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button @click.prevent="novaFila">
+      <button id="salvar" :disabled="!valid" @click.prevent="novaFila">
         Salvar
       </button>
     </footer>
-  </div>
+  </ValidationObserver>
 </template>
 <script>
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import axios from '~/plugins/axios'
 
 export default {
   name: 'Criar',
+  components: {
+    ValidationProvider,
+    ValidationObserver
+  },
   data () {
     return {
       SubSetor: '',
@@ -400,23 +442,34 @@ export default {
       IdStatus: 0,
       IdSetor: 0,
       mapSetores: {
-        '1': 'Setor um',
-        '2': 'Setor dois',
-        '3': 'Setor três',
-        '4': 'Setor quatro',
-        '5': 'Setor cinco',
-        '6': 'Setor seis',
-        '7': 'Setor sete',
-        '8': 'Setor Oito'
+        '1': 'HÉLIO PELLEGRINO',
+        '2': 'FARIA LIMA',
+        '3': 'PINHEIROS',
+        '4': 'OLIMPÍADAS',
+        '5': 'JABAQUARA',
+        '6': 'CHUCRI ZAIDAN',
+        '7': 'MARGINAL PINHEIROS',
+        '8': 'BERRINI',
+        '9': 'BROOKLIN',
+        '10': 'CENTRO',
+        '11': 'A',
+        '12': 'B',
+        '13': 'C',
+        '14': 'D',
+        '15': 'E'
       },
       mapOucSetores: {
-        oucab: [ '1', '2' ],
-        oucfl: [ '3', '4' ],
-        oucae: [ '5', '6', '7' ],
-        oucc: [ '8' ]
+        oucfl: [ '1', '2', '3', '4' ],
+        oucae: [ '5', '6', '7', '8', '9' ],
+        oucc: [ '10' ],
+        oucab: [ '11', '12', '13', '14', '15' ]
       },
       ouc: '',
-      Setores: []
+      Setores: [],
+      displayError: false,
+      fetchError: false,
+      isFetching: false,
+      errorMessage: ''
     }
   },
   watch: {
@@ -430,27 +483,32 @@ export default {
     }
   },
   methods: {
+    reloadApp () { window.location.reload(true) },
     novaFila () {
       axios.post('fila', {
-        AreaAdNaoResidencial: this.AreaAdNaoResidencial,
-        CepacAreaAdicional: this.CepacAreaAdicional,
-        CepacModUso: this.CepacModUso,
+        Certidao: this.Certidao,
+        Interessado: this.Interessado,
+        Licenciamento: this.Licenciamento,
+        Sei: this.Sei,
+        AreaAdResidencial: parseInt(this.AreaAdResidencial),
+        AreaAdNaoResidencial: parseInt(this.AreaAdNaoResidencial),
+        CepacAreaAdicional: parseInt(this.CepacAreaAdicional),
+        CepacModUso: parseInt(this.CepacModUso),
         Email: this.Email,
         Telefone: this.Telefone,
         Procurador: this.Procurador,
-        CepacObjeto: this.CepacObjeto,
+        CepacObjeto: parseInt(this.CepacObjeto),
         Endereco: this.Endereco,
         AreaTerreno: this.AreaTerreno,
         Zona: this.Zona,
         Uso: this.Uso,
-        CAProjeto: this.CAProjeto,
+        CAProjeto: parseInt(this.CAProjeto),
         Obs: this.Obs,
         CodigoProposta: this.CodigoProposta,
-        UsuarioAlteracao: this.UsuarioAlteracao,
-        IdStatus: this.IdStatus,
-        IdSetor: this.IdSetor
+        IdStatus: parseInt(this.IdStatus),
+        IdSetor: parseInt(this.IdSetor)
       })
-        .then(res => console.log(res))
+        .then(res => alert(res.data.Id))
         .catch(err => console.error(err))
     }
   }
@@ -458,4 +516,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~/assets/formCadastro.scss';
+#salvar:disabled {
+  cursor: unset;
+  background-color: red;
+}
+
 </style>

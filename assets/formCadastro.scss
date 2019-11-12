@@ -92,7 +92,7 @@
               &:focus {
                 border-color: rgba(0, 0, 0, .64);
               }
-              &[type="text"] {
+              &[type="text"], &[type="email"] {
                 width: 100%;
                 white-space: pre-line;
               }

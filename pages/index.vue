@@ -12,9 +12,6 @@
       </button>
     </div>
     <div v-else class="tabela">
-      <button class="actions__create" @click.prevent="$router.push('cadastro/criar')">
-        Criar novo cadastro
-      </button>
       <vue-good-table
         :columns="columns"
         :rows="rows"
@@ -46,6 +43,9 @@
         </button>
         <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.csv'), rows)">
           Salvar como .csv
+        </button>
+        <button class="actions__create" @click.prevent="$router.push('cadastro/criar')">
+          Criar novo cadastro
         </button>
       </footer>
     </div>
@@ -295,10 +295,6 @@ export default {
     formatOperacaoUrbana (setorObj) { return setorObj.OperacaoUrbana.Nome },
     formatFmData (str) { return str.replace('T', ', ') },
     onCellClick (params) {
-      // params.row - row object
-      // params.column - column object
-      // params.rowIndex - index of this row on the current page.
-      // params.event - click event
       if (params.column.field === 'Id') {
         const id = params.row.Id
         this.$router.push({ path: `/cadastro/${id}` })
@@ -312,17 +308,17 @@ export default {
         document.getElementById('main').appendChild(tip)
       }
     }
-  },
-  head () {
-    return {
-      // title: 'SP Urbanismo | Moderção de CEPAC',
-      // meta: [{ hid: 'relatorios', name: 'relatorios', content: 'Relatórios da São Paulo Urbanismo' }]
-    }
   }
 }
 </script>
 <style lang="scss">
-div.index {
+.actions__create {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+}
+
+.index {
   .preloader {
     position: absolute;
     top: 0;
@@ -335,7 +331,7 @@ div.index {
     z-index: 2;
     background-color: #008375;
     color: #FFF;
-    transition: all ease-in .4s .2s;
+    transition: all ease-in 0.25s 0.15s;
     h2 {
       font-size: 1rem;
       font-weight: normal;
@@ -344,6 +340,7 @@ div.index {
       user-select: none;
     }
     &.faded {
+      opacity: 0.5;
       max-height: 0;
       h2 {
         opacity: 0;

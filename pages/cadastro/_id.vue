@@ -16,13 +16,7 @@
               <label for="inputInteressado">Interessado</label>
             </td>
             <td>
-              <input
-                id="inputInteressado"
-                v-model="fila.Interessado"
-                name="Interessado"
-                type="text"
-                @keyup="checkInput($event, 'Interessado')"
-              >
+              <input id="inputInteressado" v-model="fila.Interessado" name="Interessado" type="text" @keyup="checkInput($event, 'Interessado')">
             </td>
           </tr>
           <tr>
@@ -409,12 +403,12 @@
           <div class="tableWrap">
             <table>
               <tbody>
-                <tr v-for="(changedValue, index) in toConfirm.changed" :key="index">
+                <tr v-for="(changedValue, key) in toConfirm.changed" :key="key">
                   <td class="label">
-                    <span>{{ index }}</span>
+                    <span>{{ filaNiceName[key] }}</span>
                   </td>
                   <td class="oldValue">
-                    <span>{{ toConfirm.old[index] }}</span>
+                    <span>{{ toConfirm.old[key] }}</span>
                   </td>
                   <td class="arrow">
                     <span>&rarr;</span>
@@ -439,14 +433,22 @@
           <template v-if="putResponse.success">
             <h4>Sucesso</h4>
             <p>Suas alterações foram gravadas</p>
-            <button @click="reload">Fechar e voltar para a ficha</button>
+            <button @click="reload">
+              Fechar e voltar para a ficha
+            </button>
           </template>
           <template v-if="putResponse.error">
             <h4>Erro</h4>
             <p>Ocorreu um ero ao gravar suas alterações</p>
-            <p class="errorMsg">{{ putResponse.data }}</p>
-            <button @click="backToForm">Fechar e voltar para a ficha</button>
-            <button @click="put">Tentar novamente</button>
+            <p class="errorMsg">
+              {{ putResponse.data }}
+            </p>
+            <button @click="backToForm">
+              Fechar e voltar para a ficha
+            </button>
+            <button @click="put">
+              Tentar novamente
+            </button>
           </template>
         </div>
       </main>
@@ -455,6 +457,7 @@
 </template>
 <script>
 import axios from '~/plugins/axios'
+import { fila as filaNiceName } from '~/utils/glossario'
 
 export default {
   name: 'Cadastro',
@@ -481,7 +484,8 @@ export default {
         success: undefined,
         error: undefined,
         data: undefined
-      }
+      },
+      filaNiceName
     }
   },
 

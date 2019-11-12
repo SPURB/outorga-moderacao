@@ -1,3 +1,27 @@
+span.error {
+  background-color: white;
+  color: white;
+  &.active {
+    transition: all ease-in-out .1s;
+    width: max-content;
+    background-color: #EB5757;
+    padding: 0.35rem;
+    border-radius: 3px;
+    top: 6px;
+    position: relative;
+    font-size: small;
+  }
+}
+
+#salvar:disabled {
+  cursor: unset;
+  background-color:#7B6262;
+}
+
+tbody{
+  overflow: auto;
+}
+
 .cadastro, .criar {
   header {
     background-color: #005249;
@@ -40,13 +64,16 @@
       &:hover {
         opacity: 1;
       }
+      &:disabled {
+        cursor: unset;
+        background-color:#EB5757;
+      }
     }
     span {
       color: #FFF;
       font-size: 0.75rem;
       text-transform: uppercase;
       opacity: 0.4;
-      &.lastEdit {}
     }
   }
   form {
@@ -99,7 +126,7 @@
               &:focus {
                 border-color: rgba(0, 0, 0, .64);
               }
-              &[type="text"] {
+              &[type="text"], &[type="email"] {
                 width: 100%;
                 white-space: pre-line;
               }

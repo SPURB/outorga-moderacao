@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <div class="preloader" :class="{ faded: !isFetching }">
+    <div :class="{ faded: !isFetching }" class="preloader">
       <h2>Carregando</h2>
     </div>
     <div v-if="displayError" class="error">
@@ -12,6 +12,9 @@
       </button>
     </div>
     <div v-else class="tabela">
+      <button @click.prevent="$router.push('cadastro/criar')" class="actions__create">
+        Criar novo cadastro
+      </button>
       <vue-good-table
         :columns="columns"
         :rows="rows"
@@ -37,7 +40,7 @@
         }"
         @on-cell-click="onCellClick"
       />
-      <footer>
+      <footer class="actions">
         <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.json'), rows)">
           Salvar como .json
         </button>

@@ -1,8 +1,8 @@
 <template>
-  <div class="cadastro">
+  <div class="criar">
     <header>
-      <h2>Editando registro <span>{{ fila.Id }}</span></h2>
-      <button @click.prevent="$router.push('/')">
+      <h2>Criar novo registro</h2>
+      <button @click="$router.push('/')">
         &#8624; Voltar
       </button>
     </header>
@@ -14,7 +14,12 @@
               <label for="inputInteressado">Interessado</label>
             </td>
             <td>
-              <input id="inputInteressado" v-model="fila.Interessado" @keyup="checkInput($event, 'Interessado')" name="Interessado" type="text">
+              <input
+                id="inputInteressado"
+                v-model="Interessado"
+                name="Interessado"
+                type="text"
+              >
             </td>
           </tr>
           <tr>
@@ -22,8 +27,8 @@
             <td>
               <input
                 id="Checklist"
-                :checked="getStatus(fila.Status, 1)"
-                @click="checkUpdateById($event, 'IdStatus', 1)"
+                v-model="IdStatus"
+                checked="false"
                 type="radio"
                 name="IdStatus"
                 value="1"
@@ -31,8 +36,8 @@
               <label for="Checklist">Checklist</label>
               <input
                 id="EmAnalise"
-                :checked="getStatus(fila.Status, 2)"
-                @click="checkUpdateById($event, 'IdStatus', 2)"
+                v-model="IdStatus"
+                checked="false"
                 type="radio"
                 name="IdStatus"
                 value="2"
@@ -40,8 +45,8 @@
               <label for="EmAnalise">Em análise</label>
               <input
                 id="Indeferido"
-                :checked="getStatus(fila.Status, 3)"
-                @click="checkUpdateById($event, 'IdStatus', 3)"
+                v-model="IdStatus"
+                checked="false"
                 type="radio"
                 name="IdStatus"
                 value="3"
@@ -49,8 +54,8 @@
               <label for="Indeferido">Indeferido</label>
               <input
                 id="Aprovado"
-                :checked="getStatus(fila.Status, 4)"
-                @click="checkUpdateById($event, 'IdStatus', 4)"
+                v-model="IdStatus"
+                checked="false"
                 type="radio"
                 name="IdStatus"
                 value="4"
@@ -65,10 +70,9 @@
             <td>
               <input
                 id="inputEmail"
-                v-model="fila.Email"
-                @keyup="checkInput($event, 'Email')"
+                v-model="Email"
                 name="Email"
-                type="text"
+                type="email"
               >
             </td>
           </tr>
@@ -79,8 +83,7 @@
             <td>
               <input
                 id="inputTelefone"
-                v-model="fila.Telefone"
-                @keyup="checkInput($event, 'Telefone')"
+                v-model="Telefone"
                 name="Telefone"
                 type="text"
               >
@@ -93,21 +96,10 @@
             <td>
               <input
                 id="inputProcurador"
-                v-model="fila.Procurador"
-                @keyup="checkInput($event, 'Procurador')"
+                v-model="Procurador"
                 name="Procurador"
                 type="text"
               >
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="inputData">Data de criação</label>
-            </td>
-            <td>
-              <span class="noEdit">
-                {{ fila.Data.substring(0, 10) }}, {{ fila.Data.substring(11, 19) }}
-              </span>
             </td>
           </tr>
           <tr>
@@ -117,8 +109,7 @@
             <td>
               <textarea
                 id="inputSei"
-                v-model="fila.Sei"
-                @keyup="checkInput($event, 'Sei')"
+                v-model="Sei"
                 name="Sei"
                 rows="1"
               />
@@ -131,8 +122,7 @@
             <td>
               <textarea
                 id="inputCertidao"
-                v-model="fila.Certidao"
-                @keyup="checkInput($event, 'Certidao')"
+                v-model="Certidao"
                 name="Certidao"
                 rows="1"
               />
@@ -145,8 +135,7 @@
             <td>
               <textarea
                 id="inputLicenciamento"
-                v-model="fila.Licenciamento"
-                @blur="checkInput($event, 'Licenciamento')"
+                v-model="Licenciamento"
                 name="Licenciamento"
                 rows="1"
               />
@@ -157,66 +146,62 @@
             <td>
               <input
                 id="AguaBranca"
-                :checked="getOU(fila.SetorObj, 1)"
-                @click="checkOUUpdate($event)"
+                v-model="ouc"
                 type="radio"
                 name="IdOperacaoUrbana"
-                value="1"
+                value="oucab"
               >
               <label for="AguaBranca">Água Branca</label>
               <input
                 id="FariaLima"
-                :checked="getOU(fila.SetorObj, 2)"
-                @click="checkOUUpdate($event)"
+                v-model="ouc"
                 type="radio"
                 name="IdOperacaoUrbana"
-                value="2"
+                value="oucfl"
               >
               <label for="FariaLima">Faria Lima</label>
               <input
                 id="AguaEspraiada"
-                :checked="getOU(fila.SetorObj, 3)"
-                @click="checkOUUpdate($event)"
+                v-model="ouc"
                 type="radio"
                 name="IdOperacaoUrbana"
-                value="3"
+                value="oucae"
               >
               <label for="AguaEspraiada">Água Espraiada</label>
               <input
                 id="Centro"
-                :checked="getOU(fila.SetorObj, 4)"
-                @click="checkOUUpdate($event)"
+                v-model="ouc"
                 type="radio"
                 name="IdOperacaoUrbana"
-                value="4"
+                value="oucc"
               >
               <label for="Centro">Centro</label>
             </td>
           </tr>
           <tr>
-            <td>Setor</td>
+            <td v-if="ouc!==''">
+              Setor
+            </td>
             <td>
-              <template v-for="(setor, index) in everySetor = Setores">
+              <template v-for="(setor, index) in Setores">
                 <input
-                  :id="'setor_' + Object.keys(setor)[0]"
-                  :key="'input' + index.toString()"
-                  :value="Object.keys(setor)[0]"
-                  :checked="getSetor(fila.SetorObj, Object.keys(setor)[0])"
-                  @click="checkSetorUpdate($event, Object.keys(setor)[0])"
+                  :id="`setor_${setor.id}`"
+                  :value="setor.id"
+                  :name="setor.nome"
+                  :key="index + 1000"
+                  v-model="IdSetor"
                   type="radio"
-                  name="IdSetor"
                 >
-                <label :key="index" :for="'setor_' + Object.keys(setor)[0]">{{ Object.entries(setor)[0][1] }}</label>
+                <label :for="`setor_${setor.id}`" :key="index + 100">{{ setor.nome }}</label>
               </template>
             </td>
           </tr>
           <tr>
-            <td>Subsetor</td>
+            <td>SubSetor</td>
             <td>
               <input
                 id="inputSubSetor"
-                v-model="fila.SubSetor"
-                @keyup="checkInput($event, 'SubSetor')"
+                v-model="SubSetor"
                 name="SubSetor"
                 type="text"
               >
@@ -227,8 +212,7 @@
             <td>
               <textarea
                 id="inputEndereco"
-                v-model="fila.Endereco"
-                @keyup="checkInput($event, 'Endereco')"
+                v-model="Endereco"
                 name="Endereco"
                 rows="1"
               />
@@ -239,8 +223,7 @@
             <td>
               <input
                 id="inputAreaTerreno"
-                v-model="fila.AreaTerreno"
-                @keyup="checkInput($event, 'AreaTerreno')"
+                v-model="AreaTerreno"
                 name="AreaTerreno"
                 type="text"
               >
@@ -251,8 +234,7 @@
             <td>
               <input
                 id="inputZona"
-                v-model="fila.Zona"
-                @keyup="checkInput($event, 'Zona')"
+                v-model="Zona"
                 name="Zona"
                 type="text"
               >
@@ -263,8 +245,7 @@
             <td>
               <input
                 id="inputUso"
-                v-model="fila.Uso"
-                @keyup="checkInput($event, 'Uso')"
+                v-model="Uso"
                 name="Uso"
                 type="text"
               >
@@ -275,8 +256,7 @@
             <td>
               <input
                 id="inputCAProjeto"
-                v-model="fila.CAProjeto"
-                @keyup="checkInput($event, 'CAProjeto')"
+                v-model="CAProjeto"
                 name="CAProjeto"
                 type="text"
               >
@@ -289,8 +269,7 @@
             <td>
               <input
                 id="inputAreaAdResidencial"
-                v-model="fila.AreaAdResidencial"
-                @keyup="checkInput($event, 'AreaAdResidencial')"
+                v-model="AreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
               >
@@ -303,8 +282,7 @@
             <td>
               <input
                 id="inputAreaAdNaoResidencial"
-                v-model="fila.AreaAdNaoResidencial"
-                @keyup="checkInput($event, 'AreaAdNaoResidencial')"
+                v-model="AreaAdNaoResidencial"
                 name="AreaAdNaoResidencial"
                 type="number"
                 step="0.01"
@@ -317,8 +295,7 @@
             <td>
               <input
                 id="inputCepacObjeto"
-                v-model="fila.CepacObjeto"
-                @keyup="checkInput($event, 'CepacObjeto')"
+                v-model="CepacObjeto"
                 name="CepacObjeto"
                 type="number"
                 step="1"
@@ -333,8 +310,7 @@
             <td>
               <input
                 id="inputCepacAreaAdicional"
-                v-model="fila.CepacAreaAdicional"
-                @keyup="checkInput($event, 'CepacAreaAdicional')"
+                v-model="CepacAreaAdicional"
                 name="CepacAreaAdicional"
                 type="number"
                 step="0.01"
@@ -349,8 +325,7 @@
             <td>
               <input
                 id="inputCepacModUso"
-                v-model="fila.CepacModUso"
-                @keyup="checkInput($event, 'CepacModUso')"
+                v-model="CepacModUso"
                 name="CepacModUso"
                 type="number"
                 step="1"
@@ -363,8 +338,7 @@
             <td>
               <input
                 id="inputCodigoProposta"
-                v-model="fila.CodigoProposta"
-                @keyup="checkInput($event, 'CodigoProposta')"
+                v-model="CodigoProposta"
                 name="CodigoProposta"
                 type="text"
               >
@@ -375,8 +349,7 @@
             <td>
               <textarea
                 id="inputObs"
-                v-model="fila.Obs"
-                @keyup="checkInput($event, 'Obs')"
+                v-model="Obs"
                 name="Obs"
                 type="text"
                 rows="5"
@@ -390,7 +363,7 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button @click.prevent="purgeAndPut(filaUntouched, fila)">
+      <button @click.prevent="novaFila">
         Salvar
       </button>
     </footer>
@@ -400,135 +373,85 @@
 import axios from '~/plugins/axios'
 
 export default {
-  name: 'Cadastro',
+  name: 'Criar',
   data () {
     return {
-      isFetching: false,
-      fila: {},
-      filaUntouched: {},
-      filaTemp: [],
-      allSetores: [
-        [{ '5': 'JABAQUARA' }, { '6': 'CHUCRI ZAIDAN' }, { '7': 'MARGINAL PINHEIROS' }, { '8': 'BERRINI' }, { '9': 'BROOKLIN' }],
-        [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
-        [{ '11': 'A' }, { '12': 'B' }, { '13': 'C' }, { '14': 'D' }, { '15': 'E' }],
-        [{ '10': 'CENTRO' }]
-      ],
-      Setores: undefined
+      SubSetor: '',
+      Certidao: '',
+      Interessado: '',
+      Licenciamento: '',
+      Sei: '',
+      AreaAdResidencial: 0,
+      AreaAdNaoResidencial: 0,
+      CepacAreaAdicional: 0,
+      CepacModUso: 0,
+      Email: '',
+      Telefone: '',
+      Procurador: '',
+      CepacObjeto: 0,
+      Endereco: '',
+      AreaTerreno: '',
+      Zona: '',
+      Uso: '',
+      CAProjeto: '',
+      Obs: '',
+      CodigoProposta: '',
+      UsuarioAlteracao: '',
+      IdStatus: 0,
+      IdSetor: 0,
+      mapSetores: {
+        '1': 'Setor um',
+        '2': 'Setor dois',
+        '3': 'Setor três',
+        '4': 'Setor quatro',
+        '5': 'Setor cinco',
+        '6': 'Setor seis',
+        '7': 'Setor sete',
+        '8': 'Setor Oito'
+      },
+      mapOucSetores: {
+        oucab: [ '1', '2' ],
+        oucfl: [ '3', '4' ],
+        oucae: [ '5', '6', '7' ],
+        oucc: [ '8' ]
+      },
+      ouc: '',
+      Setores: []
     }
   },
-
-  asyncData: ({ params }) => axios.get(`fila/${params.id}`)
-    .then((res) => { return { fila: res.data } })
-    .catch((e) => { return { error: e } }),
-
-  mounted () {
-    this.setFilaTemp(this.fila)
-    this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
-
-    for (const key in this.fila) { // precisa do for aqui para evitar que a instância vue não entender valores de 'fila' como um valor imutável
-      this.filaUntouched[key] = this.fila[key]
+  watch: {
+    ouc (key) {
+      this.Setores = this.mapOucSetores[key].map((id) => {
+        return {
+          id,
+          nome: this.mapSetores[id]
+        }
+      })
     }
   },
   methods: {
-    purgeAndPut (oldFila, newFila) {
-      const changedFila = {}
-
-      for (const key in oldFila) {
-        if (newFila[key] !== oldFila[key]) { changedFila[key] = newFila[key] }
-      }
-
-      const haveChanges = Object.keys(changedFila).length >= 1
-
-      if (haveChanges) {
-        console.log(changedFila) // fazer put de changedFila
-      }
-      else { alert(`Nenhuma alteração neste formulário para este id: ${oldFila.Id}`) }
-    },
-    getStatus (statusObj, inputValue) {
-      if (statusObj.Id === parseInt(inputValue)) {
-        return true
-      }
-      else {
-        return false
-      }
-    },
-    getOU (setorObj, inputValue) {
-      if (setorObj.IdOperacaoUrbana === inputValue) {
-        return true
-      }
-      else {
-        return false
-      }
-    },
-    getSetor (setorObj, inputValue) {
-      if (setorObj.Id === parseInt(inputValue)) {
-        return true
-      }
-      else {
-        return false
-      }
-    },
-    checkInput (event, filaKey) {
-      const el = event.target
-      const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
-
-      if (isTouchedAndNew) {
-        el.parentNode.classList.add('updated')
-      }
-      else {
-        el.parentNode.classList.remove('updated')
-      }
-    },
-    checkUpdateById (event, key, id) {
-      const el = event.target
-      const isEqualtoOriginal = this.filaUntouched[key] === id
-
-      if (!isEqualtoOriginal) {
-        el.parentNode.classList.add('updated')
-        this.fila[key] = id
-      }
-      else {
-        el.parentNode.classList.remove('updated')
-      }
-    },
-    checkOUUpdate (event) {
-      const el = event.target // DOM element
-      const field = el.name // "name" attribute
-      const ouId = this.filaTemp.filter((el) => { return el[0] === 'SetorObj' })[0][1].IdOperacaoUrbana
-      const selected = document.querySelector(`input[name=${field}]:checked`) // input value
-      if (parseInt(selected.value) !== ouId) {
-        el.parentNode.classList.add('updated')
-      }
-      else {
-        el.parentNode.classList.remove('updated')
-      }
-      this.setSetores(selected.value)
-    },
-    checkSetorUpdate (event, id) {
-      const el = event.target
-      const idSubSetor = parseInt(id)
-
-      if (this.filaUntouched.idSubsetor !== idSubSetor) {
-        el.parentNode.classList.add('updated')
-        this.fila.IdSetor = idSubSetor
-      }
-      else {
-        el.parentNode.classList.remove('updated')
-      }
-    },
-    setFilaTemp (obj) {
-      Object.entries(obj).filter((el) => {
-        if (el[1] === null) {
-          this.filaTemp.push([el[0], ''])
-        }
-        else {
-          this.filaTemp.push(el)
-        }
+    novaFila () {
+      axios.post('fila', {
+        AreaAdNaoResidencial: this.AreaAdNaoResidencial,
+        CepacAreaAdicional: this.CepacAreaAdicional,
+        CepacModUso: this.CepacModUso,
+        Email: this.Email,
+        Telefone: this.Telefone,
+        Procurador: this.Procurador,
+        CepacObjeto: this.CepacObjeto,
+        Endereco: this.Endereco,
+        AreaTerreno: this.AreaTerreno,
+        Zona: this.Zona,
+        Uso: this.Uso,
+        CAProjeto: this.CAProjeto,
+        Obs: this.Obs,
+        CodigoProposta: this.CodigoProposta,
+        UsuarioAlteracao: this.UsuarioAlteracao,
+        IdStatus: this.IdStatus,
+        IdSetor: this.IdSetor
       })
-    },
-    setSetores (IdOu) {
-      this.Setores = this.allSetores[IdOu - 1]
-      return Object.entries(this.Setores)
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
     }
   }
 }

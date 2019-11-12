@@ -1,0 +1,168 @@
+.cadastro, .criar {
+  header {
+    background-color: #005249;
+    padding: 1rem 3.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    h2 {
+      white-space: nowrap;
+      font-size: 1rem;
+      font-weight: normal;
+      color: #FFF;
+      span {
+        display: inline-block;
+        background-color: rgba(0, 0, 0, .24);
+        padding: 0 0.75rem;
+        margin-left: 0.25rem;
+        min-width: 3rem;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .48);
+        vertical-align: middle;
+        position: relative;
+      }
+    }
+    button {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background-color: transparent;
+      font-family: inherit;
+      color: #FFF;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: all ease-out .1s;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  form {
+    background-color: #FFF;
+    width: 100%;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      tbody tr {
+        &:nth-child(2n) td {
+          background-color: #F5F5F5;
+        }
+        td {
+          padding: 1rem;
+          position: relative;
+          &:first-child {
+            width: 12rem;
+            padding-left: 3.25rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #777;
+            user-select: none;
+            -moz-user-select: none;
+          }
+          &:nth-child(2) {
+            padding-right: 3.25rem;
+            &::before {
+              content: '↻';
+              position: absolute;
+              left: -1rem;
+              top: 49%;
+              transform: translateY(-100%);
+              color: #008375;
+              font-size: 1.5rem;
+              opacity: 0;
+              transition: all ease-out .2s;
+            }
+            &.updated::before {
+              opacity: 1;
+              transform: translateY(-50%);
+            }
+            input, textarea {
+              font-family: inherit;
+              font-size: 1.25rem;
+              padding: 0.25rem 0 0.5rem 0;
+              background-color: transparent;
+              border: none;
+              border-bottom: 1px solid rgba(0, 0, 0, .12);
+              transition: all ease-out .2s;
+              &:focus {
+                border-color: rgba(0, 0, 0, .64);
+              }
+              &[type="text"] {
+                width: 100%;
+                white-space: pre-line;
+              }
+              &[type="date"], &[type="time"] {
+                margin: 0 1rem 0 0;
+              }
+              &[type="radio"] {
+                display: none;
+                & + label {
+                  font-size: 1.25rem;
+                  margin-right: 1rem;
+                  color: #BDBDBD;
+                  transition: color ease-out .1s;
+                  cursor: pointer;
+                }
+                &:checked + label {
+                  @keyframes blink {
+                    0% { color: #008375; }
+                    20% { color: #BDBDBD; }
+                    40% { color: #008375; }
+                    60% { color: #BDBDBD; }
+                    80% { color: #000; }
+                  }
+                  color: #000;
+                  animation: blink ease-in-out 0.75s;
+                }
+              }
+            }
+            textarea {
+              border: 1px solid rgba(0, 0, 0, .12);
+              padding: 0.25rem 0.75rem;
+              line-height: 1.6;
+              background-color: rgba(255, 255, 255, .4);
+              border-radius: 0.25rem;
+              width: 100%;
+              height: 4.2rem;
+              &#inputObs {
+                height: unset;
+              }
+              resize: none;
+            }
+          }
+          span.noEdit {
+            font-size: 1.25rem;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+  footer {
+    background-color: #005249;
+    padding: 1.75rem 3.25rem;
+    text-align: center;
+    button {
+      &:first-child {
+        margin-right: 3.25rem;
+      }
+      border: 0;
+      padding: 1.25rem 1.5rem;
+      background-color: rgba(255, 255, 255, .04);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      color: #FFF;
+      font-size: initial;
+      cursor: pointer;
+      transition: all ease-out .2s;
+      &:hover {
+        background-color: #008375;
+      }
+    }
+  }
+}

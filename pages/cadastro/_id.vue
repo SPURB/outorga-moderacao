@@ -14,7 +14,8 @@
               <label for="inputInteressado">Interessado</label>
             </td>
             <td>
-              <input id="inputInteressado" name="Interessado" type="text" :value="fila.Interessado" @blur="checkUpdate($event)">
+              <!-- <input id="inputInteressado" v-model="fila.Interessado" name="Interessado" type="text" @blur="checkUpdate($event)"> -->
+              <input id="inputInteressado" v-model="fila.Interessado" name="Interessado" type="text" @keyup="checkInput($event, 'Interessado')">
             </td>
           </tr>
           <tr>
@@ -26,7 +27,7 @@
                 name="IdStatus"
                 value="1"
                 :checked="getStatus(fila.Status, 1)"
-                @click="checkStatusUpdate($event)"
+                @click="checkUpdateById($event, 'IdStatus', 1)"
               >
               <label for="Checklist">Checklist</label>
               <input
@@ -35,7 +36,7 @@
                 name="IdStatus"
                 value="2"
                 :checked="getStatus(fila.Status, 2)"
-                @click="checkStatusUpdate($event)"
+                @click="checkUpdateById($event, 'IdStatus', 2)"
               >
               <label for="EmAnalise">Em análise</label>
               <input
@@ -44,7 +45,7 @@
                 name="IdStatus"
                 value="3"
                 :checked="getStatus(fila.Status, 3)"
-                @click="checkStatusUpdate($event)"
+                @click="checkUpdateById($event, 'IdStatus', 3)"
               >
               <label for="Indeferido">Indeferido</label>
               <input
@@ -53,7 +54,7 @@
                 name="IdStatus"
                 value="4"
                 :checked="getStatus(fila.Status, 4)"
-                @click="checkStatusUpdate($event)"
+                @click="checkUpdateById($event, 'IdStatus', 4)"
               >
               <label for="Aprovado">Aprovado</label>
             </td>
@@ -67,8 +68,8 @@
                 id="inputEmail"
                 name="Email"
                 type="text"
-                :value="fila.Email"
-                @blur="checkUpdate($event)"
+                v-model="fila.Email"
+                @keyup="checkInput($event, 'Email')"
               >
             </td>
           </tr>
@@ -81,8 +82,8 @@
                 id="inputTelefone"
                 name="Telefone"
                 type="text"
-                :value="fila.Telefone"
-                @blur="checkUpdate($event)"
+                v-model="fila.Telefone"
+                @keyup="checkInput($event, 'Telefone')"
               >
             </td>
           </tr>
@@ -95,8 +96,8 @@
                 id="inputProcurador"
                 name="Procurador"
                 type="text"
-                :value="fila.Procurador"
-                @blur="checkUpdate($event)"
+                v-model="fila.Procurador"
+                @keyup="checkInput($event, 'Procurador')"
               >
             </td>
           </tr>
@@ -119,8 +120,8 @@
                 id="inputSei"
                 name="Sei"
                 rows="1"
-                :value="fila.Sei"
-                @blur="checkUpdate($event)"
+                v-model="fila.Sei"
+                @keyup="checkInput($event, 'Sei')"
               />
             </td>
           </tr>
@@ -133,8 +134,8 @@
                 id="inputCertidao"
                 name="Certidao"
                 rows="1"
-                :value="fila.Certidao"
-                @blur="checkUpdate($event)"
+                v-model="fila.Certidao"
+                @keyup="checkInput($event, 'Certidao')"
               />
             </td>
           </tr>
@@ -147,8 +148,8 @@
                 id="inputLicenciamento"
                 name="Licenciamento"
                 rows="1"
-                :value="fila.Licenciamento"
-                @blur="checkUpdate($event)"
+                v-model="fila.Licenciamento"
+                @blur="checkInput($event, 'Licenciamento')"
               />
             </td>
           </tr>
@@ -163,6 +164,9 @@
                 :checked="getOU(fila.SetorObj, 1)"
                 @click="checkOUUpdate($event)"
               >
+                <!-- value="2"
+                :checked="getStatus(fila.Status, 2)"
+                @click="checkUpdateById($event, 'IdStatus', 2)" -->
               <label for="AguaBranca">Água Branca</label>
               <input
                 id="FariaLima"
@@ -218,8 +222,8 @@
                 id="inputSubsetor"
                 name="SubSetor"
                 type="text"
-                :value="fila.SubSetor"
-                @blur="checkUpdate($event)"
+                v-model="fila.SubSetor"
+                @blur="checkInput($event, 'SubSetor')"
               >
             </td>
           </tr>
@@ -230,8 +234,8 @@
                 id="inputEndereco"
                 name="Endereco"
                 rows="1"
-                :value="fila.Endereco"
-                @blur="checkUpdate($event)"
+                v-model="fila.Endereco"
+                @keyup="checkInput($event, 'Endereco')"
               />
             </td>
           </tr>
@@ -242,8 +246,8 @@
                 id="inputAreaTerreno"
                 name="AreaTerreno"
                 type="text"
-                :value="fila.AreaTerreno"
-                @blur="checkUpdate($event)"
+                v-model="fila.AreaTerreno"
+                @keyup="checkInput($event, 'AreaTerreno')"
               >
             </td>
           </tr>
@@ -254,8 +258,8 @@
                 id="inputZona"
                 name="Zona"
                 type="text"
-                :value="fila.Zona"
-                @blur="checkUpdate($event)"
+                v-model="fila.Zona"
+                @keyup="checkInput($event, 'Zona')"
               >
             </td>
           </tr>
@@ -266,8 +270,8 @@
                 id="inputUso"
                 name="Uso"
                 type="text"
-                :value="fila.Uso"
-                @blur="checkUpdate($event)"
+                v-model="fila.Uso"
+                @keyup="checkInput($event, 'Uso')"
               >
             </td>
           </tr>
@@ -278,8 +282,8 @@
                 id="inputCAProjeto"
                 name="CAProjeto"
                 type="text"
-                :value="fila.CAProjeto"
-                @blur="checkUpdate($event)"
+                v-model="fila.CAProjeto"
+                @keyup="checkInput($event, 'CAProjeto')"
               >
             </td>
           </tr>
@@ -292,8 +296,8 @@
                 id="inputAreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
-                :value="fila.AreaAdResidencial"
-                @blur="checkUpdate($event)"
+                v-model="fila.AreaAdResidencial"
+                @keyup="checkInput($event, 'AreaAdResidencial')"
               >
             </td>
           </tr>
@@ -305,8 +309,8 @@
               <input
                 id="inputAreaAdNaoResidencial"
                 name="AreaAdNaoResidencial"
+                v-model="fila.AreaAdNaoResidencial"
                 type="number"
-                :value="fila.AreaAdNaoResidencial"
                 step="0.01"
                 min="0"
               >
@@ -318,8 +322,9 @@
               <input
                 id="inputCepacObjeto"
                 name="CepacObjeto"
+                v-model="fila.CepacObjeto"
+                @keyup="checkInput($event, 'CepacObjeto')"
                 type="number"
-                :value="fila.CepacObjeto"
                 step="1"
                 min="0"
               >
@@ -334,7 +339,8 @@
                 id="inputCepacAreaAdicional"
                 name="CepacAreaAdicional"
                 type="number"
-                :value="fila.CepacAreaAdicional"
+                v-model="fila.CepacAreaAdicional"
+                @keyup="checkInput($event, 'CepacAreaAdicional')"
                 step="0.01"
                 min="0"
               >
@@ -349,7 +355,8 @@
                 id="inputCepacModUso"
                 name="CepacModUso"
                 type="number"
-                :value="fila.CepacModUso"
+                v-model="fila.CepacModUso"
+                @keyup="checkInput($event, 'CepacModUso')"
                 step="1"
                 min="0"
               >
@@ -362,8 +369,8 @@
                 id="inputCodigoProposta"
                 name="CodigoProposta"
                 type="text"
-                :value="fila.CodigoProposta"
-                @blur="checkUpdate($event)"
+                v-model="fila.CodigoProposta"
+                @keyup="checkInput($event, 'CodigoProposta')"
               >
             </td>
           </tr>
@@ -374,9 +381,9 @@
                 id="inputObs"
                 name="Obs"
                 type="text"
-                :value="fila.Obs"
+                v-model="fila.Obs"
                 rows="5"
-                @blur="checkUpdate($event)"
+                @keyup="checkInput($event, 'Obs')"
               />
             </td>
           </tr>
@@ -402,6 +409,7 @@ export default {
     return {
       isFetching: false,
       fila: {},
+      filaUntouched: {},
       filaTemp: [],
       updatedData: {},
       allSetores: [
@@ -413,19 +421,23 @@ export default {
       Setores: undefined
     }
   },
-  asyncData: ({ params }) => axios.get(`/cepacs/api/fila/${params.id}`) // apontar get para `/filacepac/api/fila/${params.id}`
+  asyncData: ({ params }) => axios.get(`fila/${params.id}`)
     .then((res) => { return { fila: res.data } })
     .catch((e) => { return { error: e } }),
   mounted () {
     this.setFilaTemp(this.fila)
     this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
+
+    for (const key in this.fila) { // precisa do for aqui para o a instância vue não entender como um valor imutável de mesma origem
+      this.filaUntouched[key] = this.fila[key]
+    }
   },
   methods: {
     backToIndex () {
       this.$router.push({ path: `/` })
     },
     getStatus (statusObj, inputValue) {
-      if (statusObj.Id === inputValue) {
+      if (statusObj.Id === parseInt(inputValue)) {
         return true
       }
       else {
@@ -448,28 +460,24 @@ export default {
         return false
       }
     },
-    checkUpdate (event) {
-      const el = event.target // DOM element
-      const field = el.name // "name" attribute
-      const index = this.filaTemp.indexOf(this.filaTemp.filter((el) => { return el[0] === field })[0]) // position of the data inside the whole object
-      const filaData = Object.entries(this.filaTemp)[index][1] // ex. [ "Data", 2003-01-01T00:00:00" ]
-      if (el.value.toString() !== filaData[1].toString()) {
+    checkInput (event, filaKey) {
+      const el = event.target
+      const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
+
+      if (isTouchedAndNew) {
         el.parentNode.classList.add('updated')
       }
       else {
         el.parentNode.classList.remove('updated')
       }
     },
-    checkStatusUpdate (event) {
-      const el = event.target // DOM element
-      const field = el.name // "name" attribute
-      const index = this.filaTemp.indexOf(this.filaTemp.filter((el) => { return el[0] === field })[0]) // position of the data inside the whole object
-      const filaData = Object.entries(this.filaTemp)[index][1] // ex. [ "Data", 2003-01-01T00:00:00" ]
-      const selected = document.querySelector(`input[name=${field}]:checked`)
-      if (parseInt(selected.value) !== filaData[1]) {
+    checkUpdateById (event, key, id) {
+      const el = event.target
+      const isEqualtoOriginal = this.filaUntouched[key] === id
+
+      if (!isEqualtoOriginal) {
         el.parentNode.classList.add('updated')
-        const toUpdate = Object.entries(this.updatedData).filter((key) => { return key[0] === field })[0]
-        toUpdate[1] = selected.value
+        this.fila[key] = id
       }
       else {
         el.parentNode.classList.remove('updated')

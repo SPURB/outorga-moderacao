@@ -205,7 +205,7 @@ export default {
   },
   created () {
     const filters = this.fetchFilterString(this.$route.query, this.columns)
-    filters ? this.fetchData(`/filacepac/api/fila${filters}`) : this.fetchData('/filacepac/api/fila')
+    filters ? this.fetchData(`fila${filters}`) : this.fetchData('fila')
   },
   methods: {
     addDateToFileName (name) {

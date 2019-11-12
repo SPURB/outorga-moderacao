@@ -1,7 +1,7 @@
 const apiBaseUrl = (env) => {
   switch (env) {
-    case 'dev': return 'http://servicos.spurbanismo.sp.gov.br/cepacs/api/' // só get
-    // case 'dev': return 'http://spurbsp163/cepacs/api/'
+    // case 'dev': return 'http://servicos.spurbanismo.sp.gov.br/cepacs/api/' // só get
+    case 'dev': return 'http://spurbsp163/cepacs/api/'
     case 'mock': return 'http://localhost:5000/cepacs/api/'
     default: return 'http://spurbsp163/cepacs/api/'
   }

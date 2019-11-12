@@ -5,6 +5,8 @@
       <button @click.prevent="$router.push('/')">
         &#8624; Voltar
       </button>
+      <span>&middot;</span>
+      <span class="lastEdit">Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
     <form>
       <table>
@@ -14,7 +16,13 @@
               <label for="inputInteressado">Interessado</label>
             </td>
             <td>
-              <input id="inputInteressado" v-model="fila.Interessado" @keyup="checkInput($event, 'Interessado')" name="Interessado" type="text">
+              <input
+                id="inputInteressado"
+                v-model="fila.Interessado"
+                name="Interessado"
+                type="text"
+                @keyup="checkInput($event, 'Interessado')"
+              >
             </td>
           </tr>
           <tr>
@@ -23,37 +31,37 @@
               <input
                 id="Checklist"
                 :checked="getStatus(fila.Status, 1)"
-                @click="checkUpdateById($event, 'IdStatus', 1)"
                 type="radio"
                 name="IdStatus"
                 value="1"
+                @click="checkUpdateById($event, 'IdStatus', 1)"
               >
               <label for="Checklist">Checklist</label>
               <input
                 id="EmAnalise"
                 :checked="getStatus(fila.Status, 2)"
-                @click="checkUpdateById($event, 'IdStatus', 2)"
                 type="radio"
                 name="IdStatus"
                 value="2"
+                @click="checkUpdateById($event, 'IdStatus', 2)"
               >
               <label for="EmAnalise">Em análise</label>
               <input
                 id="Indeferido"
                 :checked="getStatus(fila.Status, 3)"
-                @click="checkUpdateById($event, 'IdStatus', 3)"
                 type="radio"
                 name="IdStatus"
                 value="3"
+                @click="checkUpdateById($event, 'IdStatus', 3)"
               >
               <label for="Indeferido">Indeferido</label>
               <input
                 id="Aprovado"
                 :checked="getStatus(fila.Status, 4)"
-                @click="checkUpdateById($event, 'IdStatus', 4)"
                 type="radio"
                 name="IdStatus"
                 value="4"
+                @click="checkUpdateById($event, 'IdStatus', 4)"
               >
               <label for="Aprovado">Aprovado</label>
             </td>
@@ -66,9 +74,9 @@
               <input
                 id="inputEmail"
                 v-model="fila.Email"
-                @keyup="checkInput($event, 'Email')"
                 name="Email"
                 type="text"
+                @keyup="checkInput($event, 'Email')"
               >
             </td>
           </tr>
@@ -80,9 +88,9 @@
               <input
                 id="inputTelefone"
                 v-model="fila.Telefone"
-                @keyup="checkInput($event, 'Telefone')"
                 name="Telefone"
                 type="text"
+                @keyup="checkInput($event, 'Telefone')"
               >
             </td>
           </tr>
@@ -94,9 +102,9 @@
               <input
                 id="inputProcurador"
                 v-model="fila.Procurador"
-                @keyup="checkInput($event, 'Procurador')"
                 name="Procurador"
                 type="text"
+                @keyup="checkInput($event, 'Procurador')"
               >
             </td>
           </tr>
@@ -118,9 +126,9 @@
               <textarea
                 id="inputSei"
                 v-model="fila.Sei"
-                @keyup="checkInput($event, 'Sei')"
                 name="Sei"
                 rows="1"
+                @keyup="checkInput($event, 'Sei')"
               />
             </td>
           </tr>
@@ -132,9 +140,9 @@
               <textarea
                 id="inputCertidao"
                 v-model="fila.Certidao"
-                @keyup="checkInput($event, 'Certidao')"
                 name="Certidao"
                 rows="1"
+                @keyup="checkInput($event, 'Certidao')"
               />
             </td>
           </tr>
@@ -146,9 +154,9 @@
               <textarea
                 id="inputLicenciamento"
                 v-model="fila.Licenciamento"
-                @blur="checkInput($event, 'Licenciamento')"
                 name="Licenciamento"
                 rows="1"
+                @blur="checkInput($event, 'Licenciamento')"
               />
             </td>
           </tr>
@@ -158,37 +166,37 @@
               <input
                 id="AguaBranca"
                 :checked="getOU(fila.SetorObj, 1)"
-                @click="checkOUUpdate($event)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="1"
+                @click="checkOUUpdate($event)"
               >
               <label for="AguaBranca">Água Branca</label>
               <input
                 id="FariaLima"
                 :checked="getOU(fila.SetorObj, 2)"
-                @click="checkOUUpdate($event)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="2"
+                @click="checkOUUpdate($event)"
               >
               <label for="FariaLima">Faria Lima</label>
               <input
                 id="AguaEspraiada"
                 :checked="getOU(fila.SetorObj, 3)"
-                @click="checkOUUpdate($event)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="3"
+                @click="checkOUUpdate($event)"
               >
               <label for="AguaEspraiada">Água Espraiada</label>
               <input
                 id="Centro"
                 :checked="getOU(fila.SetorObj, 4)"
-                @click="checkOUUpdate($event)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="4"
+                @click="checkOUUpdate($event)"
               >
               <label for="Centro">Centro</label>
             </td>
@@ -202,9 +210,9 @@
                   :key="'input' + index.toString()"
                   :value="Object.keys(setor)[0]"
                   :checked="getSetor(fila.SetorObj, Object.keys(setor)[0])"
-                  @click="checkSetorUpdate($event, Object.keys(setor)[0])"
                   type="radio"
                   name="IdSetor"
+                  @click="checkSetorUpdate($event, Object.keys(setor)[0])"
                 >
                 <label :key="index" :for="'setor_' + Object.keys(setor)[0]">{{ Object.entries(setor)[0][1] }}</label>
               </template>
@@ -216,9 +224,9 @@
               <input
                 id="inputSubSetor"
                 v-model="fila.SubSetor"
-                @keyup="checkInput($event, 'SubSetor')"
                 name="SubSetor"
                 type="text"
+                @keyup="checkInput($event, 'SubSetor')"
               >
             </td>
           </tr>
@@ -228,9 +236,9 @@
               <textarea
                 id="inputEndereco"
                 v-model="fila.Endereco"
-                @keyup="checkInput($event, 'Endereco')"
                 name="Endereco"
                 rows="1"
+                @keyup="checkInput($event, 'Endereco')"
               />
             </td>
           </tr>
@@ -240,9 +248,9 @@
               <input
                 id="inputAreaTerreno"
                 v-model="fila.AreaTerreno"
-                @keyup="checkInput($event, 'AreaTerreno')"
                 name="AreaTerreno"
                 type="text"
+                @keyup="checkInput($event, 'AreaTerreno')"
               >
             </td>
           </tr>
@@ -252,9 +260,9 @@
               <input
                 id="inputZona"
                 v-model="fila.Zona"
-                @keyup="checkInput($event, 'Zona')"
                 name="Zona"
                 type="text"
+                @keyup="checkInput($event, 'Zona')"
               >
             </td>
           </tr>
@@ -264,9 +272,9 @@
               <input
                 id="inputUso"
                 v-model="fila.Uso"
-                @keyup="checkInput($event, 'Uso')"
                 name="Uso"
                 type="text"
+                @keyup="checkInput($event, 'Uso')"
               >
             </td>
           </tr>
@@ -276,9 +284,9 @@
               <input
                 id="inputCAProjeto"
                 v-model="fila.CAProjeto"
-                @keyup="checkInput($event, 'CAProjeto')"
                 name="CAProjeto"
                 type="text"
+                @keyup="checkInput($event, 'CAProjeto')"
               >
             </td>
           </tr>
@@ -290,9 +298,9 @@
               <input
                 id="inputAreaAdResidencial"
                 v-model="fila.AreaAdResidencial"
-                @keyup="checkInput($event, 'AreaAdResidencial')"
                 name="AreaAdResidencial"
                 type="number"
+                @keyup="checkInput($event, 'AreaAdResidencial')"
               >
             </td>
           </tr>
@@ -304,11 +312,11 @@
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model="fila.AreaAdNaoResidencial"
-                @keyup="checkInput($event, 'AreaAdNaoResidencial')"
                 name="AreaAdNaoResidencial"
                 type="number"
                 step="0.01"
                 min="0"
+                @keyup="checkInput($event, 'AreaAdNaoResidencial')"
               >
             </td>
           </tr>
@@ -318,11 +326,11 @@
               <input
                 id="inputCepacObjeto"
                 v-model="fila.CepacObjeto"
-                @keyup="checkInput($event, 'CepacObjeto')"
                 name="CepacObjeto"
                 type="number"
                 step="1"
                 min="0"
+                @keyup="checkInput($event, 'CepacObjeto')"
               >
             </td>
           </tr>
@@ -334,11 +342,11 @@
               <input
                 id="inputCepacAreaAdicional"
                 v-model="fila.CepacAreaAdicional"
-                @keyup="checkInput($event, 'CepacAreaAdicional')"
                 name="CepacAreaAdicional"
                 type="number"
                 step="0.01"
                 min="0"
+                @keyup="checkInput($event, 'CepacAreaAdicional')"
               >
             </td>
           </tr>
@@ -350,11 +358,11 @@
               <input
                 id="inputCepacModUso"
                 v-model="fila.CepacModUso"
-                @keyup="checkInput($event, 'CepacModUso')"
                 name="CepacModUso"
                 type="number"
                 step="1"
                 min="0"
+                @keyup="checkInput($event, 'CepacModUso')"
               >
             </td>
           </tr>
@@ -364,9 +372,9 @@
               <input
                 id="inputCodigoProposta"
                 v-model="fila.CodigoProposta"
-                @keyup="checkInput($event, 'CodigoProposta')"
                 name="CodigoProposta"
                 type="text"
+                @keyup="checkInput($event, 'CodigoProposta')"
               >
             </td>
           </tr>
@@ -376,10 +384,10 @@
               <textarea
                 id="inputObs"
                 v-model="fila.Obs"
-                @keyup="checkInput($event, 'Obs')"
                 name="Obs"
                 type="text"
                 rows="5"
+                @keyup="checkInput($event, 'Obs')"
               />
             </td>
           </tr>
@@ -390,10 +398,59 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button @click.prevent="purgeAndPut(filaUntouched, fila)">
+      <button @click.prevent="purge(filaUntouched, fila)">
         Salvar
       </button>
     </footer>
+    <div id="confirmModal" :class="{ hasChanged: toConfirm.state, hasntChanged: !toConfirm.state }">
+      <main :class="{ review: putResponse.pending, response: putResponse.data }">
+        <template v-if="toConfirm.state">
+          <h3>Revise as alterações que você fez</h3>
+          <div class="tableWrap">
+            <table>
+              <tbody>
+                <tr v-for="(changedValue, index) in toConfirm.changed" :key="index">
+                  <td class="label">
+                    <span>{{ index }}</span>
+                  </td>
+                  <td class="oldValue">
+                    <span>{{ toConfirm.old[index] }}</span>
+                  </td>
+                  <td class="arrow">
+                    <span>&rarr;</span>
+                  </td>
+                  <td class="newValue">
+                    <span>{{ changedValue }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="action">
+            <button class="esc" @click="backToForm">
+              Cancelar e voltar
+            </button>
+            <button class="confirm" @click="put">
+              Confirmar e registrar
+            </button>
+          </div>
+        </template>
+        <div class="response" :class="{ success: putResponse.success, error: putResponse.error }">
+          <template v-if="putResponse.success">
+            <h4>Sucesso</h4>
+            <p>Suas alterações foram gravadas</p>
+            <button @click="reload">Fechar e voltar para a ficha</button>
+          </template>
+          <template v-if="putResponse.error">
+            <h4>Erro</h4>
+            <p>Ocorreu um ero ao gravar suas alterações</p>
+            <p class="errorMsg">{{ putResponse.data }}</p>
+            <button @click="backToForm">Fechar e voltar para a ficha</button>
+            <button @click="put">Tentar novamente</button>
+          </template>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
 <script>
@@ -413,7 +470,18 @@ export default {
         [{ '11': 'A' }, { '12': 'B' }, { '13': 'C' }, { '14': 'D' }, { '15': 'E' }],
         [{ '10': 'CENTRO' }]
       ],
-      Setores: undefined
+      Setores: undefined,
+      toConfirm: {
+        state: false,
+        changed: {},
+        old: {}
+      },
+      putResponse: {
+        pending: true,
+        success: undefined,
+        error: undefined,
+        data: undefined
+      }
     }
   },
 
@@ -430,7 +498,7 @@ export default {
     }
   },
   methods: {
-    purgeAndPut (oldFila, newFila) {
+    purge (oldFila, newFila) {
       const changedFila = {}
 
       for (const key in oldFila) {
@@ -440,9 +508,18 @@ export default {
       const haveChanges = Object.keys(changedFila).length >= 1
 
       if (haveChanges) {
-        console.log(changedFila) // fazer put de changedFila
+        this.toConfirm.changed = changedFila
+        for (const key in changedFila) {
+          this.toConfirm.old[key] = this.filaUntouched[key]
+        }
+        document.body.style.overflow = 'hidden'
+        document.getElementById('confirmModal').setAttribute('style', `top: ${Math.abs(document.body.getBoundingClientRect().top)}px`)
+        this.toConfirm.state = true
       }
-      else { alert(`Nenhuma alteração neste formulário para este id: ${oldFila.Id}`) }
+      else {
+        this.toConfirm.changed = null
+        this.toConfirm.state = false
+      }
     },
     getStatus (statusObj, inputValue) {
       if (statusObj.Id === parseInt(inputValue)) {
@@ -494,12 +571,13 @@ export default {
     checkOUUpdate (event) {
       const el = event.target // DOM element
       const field = el.name // "name" attribute
-      const ouId = this.filaTemp.filter((el) => { return el[0] === 'SetorObj' })[0][1].IdOperacaoUrbana
+      const ouId = this.fila.SetorObj.IdOperacaoUrbana
       const selected = document.querySelector(`input[name=${field}]:checked`) // input value
+
       if (parseInt(selected.value) !== ouId) {
         el.parentNode.classList.add('updated')
       }
-      else {
+      else if (parseInt(selected.value) === ouId) {
         el.parentNode.classList.remove('updated')
       }
       this.setSetores(selected.value)
@@ -529,6 +607,31 @@ export default {
     setSetores (IdOu) {
       this.Setores = this.allSetores[IdOu - 1]
       return Object.entries(this.Setores)
+    },
+    backToForm () {
+      this.toConfirm.state = false
+      document.body.style.overflow = 'auto'
+    },
+    put () {
+      axios.put(`fila/${this.$route.params.id}`, this.toConfirm.changed)
+        .then((res) => {
+          this.putResponse.pending = false
+          this.putResponse.success = true
+          this.putResponse.data = res
+          // location.reload()
+        })
+        .catch((e) => {
+          this.putResponse.pending = false
+          this.putResponse.error = true
+          this.putResponse.data = e
+        })
+    },
+    reload () {
+      location.reload()
+      window.scrollTo(0, 0)
+    },
+    dateDisplay (dateStr) {
+      return dateStr.replace('T', ', às ')
     }
   }
 }

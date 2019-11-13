@@ -1,18 +1,3 @@
-span.error {
-  background-color: white;
-  color: white;
-  &.active {
-    transition: all ease-in-out .1s;
-    width: max-content;
-    background-color: #EB5757;
-    padding: 0.35rem;
-    border-radius: 3px;
-    top: 6px;
-    position: relative;
-    font-size: small;
-  }
-}
-
 #salvar:disabled {
   cursor: unset;
   background-color:#7B6262;
@@ -69,7 +54,7 @@ tbody{
         background-color:#EB5757;
       }
     }
-    span {
+    span.lastEdit {
       color: #FFF;
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -97,6 +82,11 @@ tbody{
             color: #777;
             user-select: none;
             -moz-user-select: none;
+            span.opt {
+              display: block;
+              font-size: 0.6rem;
+              color: #BDBDBD;
+            }
           }
           &:nth-child(2) {
             padding-right: 3.25rem;
@@ -168,10 +158,77 @@ tbody{
               }
               resize: none;
             }
+            &.sql {
+              main.inputWrap {
+                div.outer {
+                  position: relative;
+                  display: inline-block;
+                  margin: 0 1rem 0.5rem 0;
+                  border-radius: 0.25rem;
+                  overflow: hidden;
+                  input {
+                    border: 1px solid rgba(0, 0, 0, .12);
+                    border-radius: inherit;
+                    padding: 0.25rem 0.5rem;
+                    background-color: rgba(255, 255, 255, .4);
+                    &:invalid {
+                      color: #EB5757;
+                      border-color: #EB5757;
+                      & + .remove {
+                        display: none;
+                      }
+                    }
+                    & + .remove {
+                      position: absolute;
+                      display: inline-block;
+                      top: 0;
+                      right: 0;
+                      height: 100%;
+                      padding: 0 0.5rem;
+                      background-color: #BDBDBD;
+                      border: 1px solid rgba(0, 0, 0, .12);
+                      font-size: 1.5rem;
+                      color: #FFF;
+                      line-height: 1.3;
+                      cursor: pointer;
+                      transition: background-color ease-out .1s;
+                      &:hover {
+                        background-color: #EB5757;
+                      }
+                    }
+                    &:focus {
+                      border-color: rgba(0, 0, 0, .64);
+                    }
+                  }
+                }
+                .outer.include {
+                  & > input {
+                    & + .remove {
+                      background-color: #008375;
+                      &:hover {
+                        background-color: #005249;
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
           span.noEdit {
             font-size: 1.25rem;
             cursor: not-allowed;
+          }
+          span.error {
+            color: #FFF;
+            &.active {
+              position: relative;
+              top: 0.5rem;
+              background-color: #EB5757;
+              padding: 0.35rem 0.5rem;
+              border-radius: 0.25rem;
+              font-size: small;
+              transition: all ease-in-out .2s;
+            }
           }
         }
       }

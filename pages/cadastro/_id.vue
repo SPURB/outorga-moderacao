@@ -1,12 +1,11 @@
 <template>
-  <div class="cadastro">
+  <ValidationObserver v-slot="{ valid, errors }" tag="div" :class="'cadastro'">
     <header>
       <h2>Editando registro <span>{{ fila.Id }}</span></h2>
       <button @click.prevent="$router.push('/')">
         &#8624; Voltar
       </button>
-      <span>&middot;</span>
-      <span class="lastEdit">Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
+      <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
     <form>
       <table>
@@ -15,13 +14,14 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
               <input id="inputInteressado" v-model="fila.Interessado" name="Interessado" type="text" @keyup="checkInput($event, 'Interessado')">
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Situação</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" :rules="{ required: { allowFalse: false } }" tag="td">
               <input
                 id="Checklist"
                 :checked="getStatus(fila.Status, 1)"
@@ -58,13 +58,13 @@
                 @click="checkUpdateById($event, 'IdStatus', 4)"
               >
               <label for="Aprovado">Aprovado</label>
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputEmail">E-mail</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|email" tag="td">
               <input
                 id="inputEmail"
                 v-model="fila.Email"
@@ -72,13 +72,14 @@
                 type="text"
                 @keyup="checkInput($event, 'Email')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputTelefone">Telefone</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|min:8|max:13" tag="td">
               <input
                 id="inputTelefone"
                 v-model="fila.Telefone"
@@ -86,11 +87,13 @@
                 type="text"
                 @keyup="checkInput($event, 'Telefone')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputProcurador">Procurador</label>
+              <span class="opt">Opcional</span>
             </td>
             <td>
               <input
@@ -114,7 +117,7 @@
           </tr>
           <tr>
             <td>
-              <label for="inputSei">SEI</label>
+              <label for="inputSei">PA/SEI</label>
             </td>
             <td>
               <textarea
@@ -129,6 +132,7 @@
           <tr>
             <td>
               <label for="inputCertidao">Certidão</label>
+              <span class="opt">Opcional</span>
             </td>
             <td>
               <textarea
@@ -143,6 +147,7 @@
           <tr>
             <td>
               <label for="inputLicenciamento">Licenciamento</label>
+              <span class="opt">Opcional</span>
             </td>
             <td>
               <textarea
@@ -273,6 +278,23 @@
             </td>
           </tr>
           <tr>
+            <td>Contribuintes (SQL)</td>
+            <td class="sql">
+              <main class="inputWrap">
+                <div v-for="sql in sqls" :key="sql.Id" class="outer">
+                  <input
+                    :value="sql.NumeroSql"
+                    pattern="([0-9]{3}.){2}([0-9]{4})-[0-9]{1}"
+                  >
+                  <!-- <a class="remove" @click="removeSql($event)">&Cross;</a> -->
+                </div><div class="outer include">
+                  <input type="text" placeholder="Insira outro SQL aqui" pattern="([0-9]{3}.){2}([0-9]{4})-[0-9]{1}">
+                  <a class="remove" @click="pushSql($event)">+</a>
+                </div>
+              </main>
+            </td>
+          </tr>
+          <tr>
             <td>C.A. do Projeto</td>
             <td>
               <input
@@ -315,20 +337,6 @@
             </td>
           </tr>
           <tr>
-            <td>CEPAC - Objeto</td>
-            <td>
-              <input
-                id="inputCepacObjeto"
-                v-model="fila.CepacObjeto"
-                name="CepacObjeto"
-                type="number"
-                step="1"
-                min="0"
-                @keyup="checkInput($event, 'CepacObjeto')"
-              >
-            </td>
-          </tr>
-          <tr>
             <td>
               <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
             </td>
@@ -346,7 +354,7 @@
           </tr>
           <tr>
             <td>
-              <label for="inputCepacModUso">CEPAC - Modo de uso</label>
+              <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
             <td>
               <input
@@ -453,20 +461,26 @@
         </div>
       </main>
     </div>
-  </div>
+  </ValidationObserver>
 </template>
 <script>
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 
 export default {
   name: 'Cadastro',
+  components: {
+    ValidationProvider,
+    ValidationObserver
+  },
   data () {
     return {
       isFetching: false,
-      fila: {},
+      fila: [],
+      sqls: [],
       filaUntouched: {},
-      filaTemp: [],
+      sqlsUntouched: {},
       allSetores: [
         [{ '5': 'JABAQUARA' }, { '6': 'CHUCRI ZAIDAN' }, { '7': 'MARGINAL PINHEIROS' }, { '8': 'BERRINI' }, { '9': 'BROOKLIN' }],
         [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
@@ -488,29 +502,25 @@ export default {
       filaNiceName
     }
   },
-
-  asyncData: ({ params }) => axios.get(`fila/${params.id}`)
-    .then((res) => { return { fila: res.data } })
-    .catch((e) => { return { error: e } }),
-
+  async asyncData ({ params }) {
+    const fila = await axios.get(`fila/${params.id}`)
+    const sqls = await axios.get(`sqls?IdFilaCepac=${params.id}`)
+    return { fila: fila.data, sqls: sqls.data }
+  },
   mounted () {
-    this.setFilaTemp(this.fila)
     this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
-
     for (const key in this.fila) { // precisa do for aqui para evitar que a instância vue não entender valores de 'fila' como um valor imutável
       this.filaUntouched[key] = this.fila[key]
     }
+    this.sqlsUntouched = this.sqls
   },
   methods: {
     purge (oldFila, newFila) {
       const changedFila = {}
-
       for (const key in oldFila) {
         if (newFila[key] !== oldFila[key]) { changedFila[key] = newFila[key] }
       }
-
       const haveChanges = Object.keys(changedFila).length >= 1
-
       if (haveChanges) {
         this.toConfirm.changed = changedFila
         for (const key in changedFila) {
@@ -598,16 +608,6 @@ export default {
         el.parentNode.classList.remove('updated')
       }
     },
-    setFilaTemp (obj) {
-      Object.entries(obj).filter((el) => {
-        if (el[1] === null) {
-          this.filaTemp.push([el[0], ''])
-        }
-        else {
-          this.filaTemp.push(el)
-        }
-      })
-    },
     setSetores (IdOu) {
       this.Setores = this.allSetores[IdOu - 1]
       return Object.entries(this.Setores)
@@ -635,7 +635,16 @@ export default {
       window.scrollTo(0, 0)
     },
     dateDisplay (dateStr) {
-      return dateStr.replace('T', ', às ')
+      return dateStr.replace('T', ', às ').substring(0, 20) + 'h'
+    },
+    pushSql (event) {
+      const input = event.target.parentNode.firstElementChild
+      this.sqls.push({ 'NumeroSql': input.value }) // terminar de popular o objeto
+      // inserir a seguinte logica no metodo put()
+      // 1. comparar sqls com sqlsUntouched
+      // 2. put nas alterações
+      // 3. post nas inserções
+      // observar issue #1 do repositorio
     }
   }
 }

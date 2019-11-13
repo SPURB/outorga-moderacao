@@ -38,14 +38,16 @@
         @on-cell-click="onCellClick"
       />
       <footer class="actions">
+        <button @click.prevent="$router.push('cadastro/criar')">
+          <span>+</span> Criar novo cadastro
+        </button>
         <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.json'), rows)">
+          <span style="font-size: 0.8rem">{ }</span>
           Salvar como .json
         </button>
         <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.csv'), rows)">
+          <span style="font-size: 0.8rem">&boxplus;</span>
           Salvar como .csv
-        </button>
-        <button class="actions__create" @click.prevent="$router.push('cadastro/criar')">
-          Criar novo cadastro
         </button>
       </footer>
     </div>
@@ -105,7 +107,7 @@ export default {
           formatFn: this.formatFmData
         },
         {
-          label: 'SEI',
+          label: 'PA/SEI',
           field: 'Sei',
           type: 'string'
         },
@@ -172,17 +174,12 @@ export default {
           type: 'number'
         },
         {
-          label: 'CEPAC - Objeto',
-          field: 'CepacObjeto',
-          type: 'string'
-        },
-        {
           label: 'CEPAC - Área adicional',
           field: 'CepacAreaAdicional',
           type: 'number'
         },
         {
-          label: 'CEPAC - Modo de uso',
+          label: 'CEPAC - Parâmetros',
           field: 'CepacModUso',
           type: 'number'
         },
@@ -312,11 +309,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.actions__create {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-}
 
 .index {
   .preloader {
@@ -565,24 +557,24 @@ export default {
     .vgt-wrap__footer {
       display: flex;
       flex-flow: row nowrap;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       padding: 2rem 3.25rem 0;
       background-color: #005249;
       .footer__row-count {
-        padding: 0.25rem 0.5rem;
+        line-height: 1.2;
+        padding: 1rem 1.25rem;
         background-color: rgba(255, 255, 255, .04);
         border-radius: 0.25rem;
         color: #FFF;
         order: 2;
-        margin-left: 2.4rem;
         select {
           font-family: inherit;
           font-size: inherit;
           color: #005249;
           border: 0;
           background-color: #FFF;
-          margin-left: 0.25rem;
+          margin-left: 0.75rem;
         }
       }
       .footer__navigation {
@@ -592,15 +584,15 @@ export default {
         color: #FFF;
         a.footer__navigation__page-btn {
           display: inline-block;
-          padding: 0.25rem 0.5rem;
-          width: 100%;
-          max-width: 5rem;
+          padding: 1rem 1.25rem;
           background-color: rgba(255, 255, 255, .04);
           border-radius: 0.25rem;
           text-decoration: none;
           text-align: center;
           transition: all ease-out .1s;
           color: inherit;
+          font-size: 1rem;
+          line-height: 1.2;
           user-select: none;
           -moz-user-select: none;
           &:first-child {
@@ -622,22 +614,25 @@ export default {
           }
         }
         .footer__navigation__info {
-          display: inline;
+          display: inline-block;
+          background-color: rgba(0, 0, 0, .08);
+          padding: 1rem 1.25rem;
+          line-height: 1.2;
+          border-radius: 0.25rem;
         }
       }
     }
   }
   footer {
     background-color: #005249;
-    padding: 2rem 3.25rem;
-    text-align: center;
+    padding: 2rem 3.25rem 0;
     button {
-      margin: 0 2rem 0 0;
+      margin: 0 2rem 2rem 0;
       &:last-child {
         margin-right: 0;
       }
       border: 0;
-      padding: 0.5rem 0.75rem;
+      padding: 1rem 1.25rem;
       background-color: rgba(255, 255, 255, .04);
       border-radius: 0.25rem;
       font-family: inherit;
@@ -647,6 +642,14 @@ export default {
       transition: all ease-out .2s;
       &:hover {
         background-color: #008375;
+      }
+      span {
+        display: inline-block;
+        width: 1.2rem;
+        line-height: 1.2rem;
+        border-radius: 1.2rem;
+        background-color: rgba(255, 255, 255, .2);
+        margin: 0 0.25rem 0 0;
       }
     }
   }

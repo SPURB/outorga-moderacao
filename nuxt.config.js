@@ -9,7 +9,7 @@ const apiBaseUrl = (env) => {
 
 export default {
   router: {
-    base: '/dde/outorga-moderacao/'
+    base: '/outorga-moderacao/'
   },
   env: {
     apiBaseUrl: apiBaseUrl(process.env.NODE_ENV)

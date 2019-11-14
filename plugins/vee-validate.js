@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { extend, localize } from 'vee-validate'
-import { required, email, alpha, numeric, between, min, min_value, max, regex } from 'vee-validate/dist/rules'
+import { required, email, alpha, alpha_spaces, alpha_num, numeric, between, min, min_value, max, regex } from 'vee-validate/dist/rules'
 import ptbr from 'vee-validate/dist/locale/pt_BR.json'
 
 extend('required', {
@@ -35,6 +35,16 @@ extend('email', {
 extend('alpha', {
   ...alpha,
   message: 'Apenas letras do alfabeto (aA-zZ)'
+})
+
+extend('alpha_num', {
+  ...alpha_num,
+  message: 'Apenas números (0-9) letras do alfabeto (aA-zZ)'
+})
+
+extend('alpha_spaces', {
+  ...alpha_spaces,
+  message: 'Apenas letras do alfabeto (aA-zZ) e espaços'
 })
 
 extend('numeric', {

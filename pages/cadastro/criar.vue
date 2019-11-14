@@ -107,6 +107,7 @@
           <tr>
             <td>
               <label for="inputProcurador">Procurador</label>
+              <span class="opt">Opcional</span>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:120" tag="td">
               <input
@@ -136,6 +137,7 @@
           <tr>
             <td>
               <label for="inputCertidao">Certidão</label>
+              <span class="opt">Opcional</span>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
               <textarea
@@ -150,6 +152,7 @@
           <tr>
             <td>
               <label for="inputLicenciamento">Licenciamento</label>
+              <span class="opt">Opcional</span>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
               <textarea
@@ -200,9 +203,7 @@
             </ValidationProvider>
           </tr>
           <tr v-if="ouc!==''">
-            <td>
-              Setor
-            </td>
+            <td>Setor</td>
             <td>
               <template v-for="(setor, index) in Setores">
                 <input
@@ -219,7 +220,9 @@
             </td>
           </tr>
           <tr>
-            <td>SubSetor</td>
+            <td>
+              <label for="inputSubSetor">SubSetor</label>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min:1|max:100" tag="td">
               <input
                 id="inputSubSetor"
@@ -232,7 +235,9 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Endereço</td>
+            <td>
+              <label for="inputEndereco">Endereço</label>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
               <textarea
                 id="inputEndereco"
@@ -243,7 +248,9 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Área do Terreno (m²)</td>
+            <td>
+              <label for="inputAreaTerreno">Área do Terreno (m²)</label>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min_value:0.01" tag="td">
               <input
                 id="inputAreaTerreno"
@@ -257,7 +264,9 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Zona</td>
+            <td>
+              <label for="inputZona">Zona</label>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:100" tag="td">
               <input
                 id="inputZona"
@@ -269,7 +278,9 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Uso</td>
+            <td>
+              <label for="inputUso">Uso</label>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:50" tag="td">
               <input
                 id="inputUso"
@@ -279,6 +290,21 @@
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
+          </tr>
+          <tr>
+            <td>Contribuintes</td>
+            <td>
+              <input type="number">
+            </td>
+            <!-- <ValidationProvider v-slot="{ errors }" rules="min:2|max:50" tag="td">
+              <input
+                id="inputUso"
+                v-model="Uso"
+                name="Uso"
+                type="text"
+              >
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider> -->
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
@@ -353,7 +379,7 @@
           </tr>
           <tr>
             <td>
-              <label for="inputCepacModUso">CEPAC - Modo de uso</label>
+              <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
               <input
@@ -368,7 +394,9 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Código da Proposta</td>
+            <td>
+              <label for="inputCodigoProposta">Código da Proposta</label>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min:1|max:100" tag="td">
               <input
                 id="inputCodigoProposta"
@@ -380,7 +408,10 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Observações</td>
+            <td>
+              <label for="inputObs">Observações</label>
+              <span class="opt">Opcional</span>
+            </td>
             <ValidationProvider v-slot="{ errors }" rules="min:3|max:2000" tag="td">
               <textarea
                 id="inputObs"

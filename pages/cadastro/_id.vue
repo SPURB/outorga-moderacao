@@ -15,7 +15,13 @@
               <label for="inputInteressado">Interessado</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
-              <input id="inputInteressado" v-model="fila.Interessado" name="Interessado" type="text" @keyup="checkInput($event, 'Interessado')">
+              <input
+                id="inputInteressado"
+                v-model="fila.Interessado"
+                name="Interessado"
+                type="text"
+                @keyup="checkInput($event, 'Interessado', errors)"
+              >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
@@ -70,7 +76,7 @@
                 v-model="fila.Email"
                 name="Email"
                 type="text"
-                @keyup="checkInput($event, 'Email')"
+                @keyup="checkInput($event, 'Email', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -85,7 +91,7 @@
                 v-model="fila.Telefone"
                 name="Telefone"
                 type="text"
-                @keyup="checkInput($event, 'Telefone')"
+                @keyup="checkInput($event, 'Telefone', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -95,15 +101,16 @@
               <label for="inputProcurador">Procurador</label>
               <span class="opt">Opcional</span>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="alpha_spaces" tag="td">
               <input
                 id="inputProcurador"
                 v-model="fila.Procurador"
                 name="Procurador"
                 type="text"
-                @keyup="checkInput($event, 'Procurador')"
+                @keyup="checkInput($event, 'Procurador', errors)"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
@@ -119,15 +126,16 @@
             <td>
               <label for="inputSei">PA/SEI</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <textarea
                 id="inputSei"
                 v-model="fila.Sei"
                 name="Sei"
                 rows="1"
-                @keyup="checkInput($event, 'Sei')"
+                @keyup="checkInput($event, 'Sei', errors)"
               />
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
@@ -140,7 +148,7 @@
                 v-model="fila.Certidao"
                 name="Certidao"
                 rows="1"
-                @keyup="checkInput($event, 'Certidao')"
+                @keyup="checkInput($event, 'Certidao', errors)"
               />
             </td>
           </tr>
@@ -219,19 +227,20 @@
           </tr>
           <tr>
             <td>Subsetor</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|alpha_num" tag="td">
               <input
                 id="inputSubSetor"
                 v-model="fila.SubSetor"
                 name="SubSetor"
                 type="text"
-                @keyup="checkInput($event, 'SubSetor')"
+                @keyup="checkInput($event, 'SubSetor', errors)"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Endereço</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <textarea
                 id="inputEndereco"
                 v-model="fila.Endereco"
@@ -239,11 +248,12 @@
                 rows="1"
                 @keyup="checkInput($event, 'Endereco')"
               />
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
-            <td>Área do Terreno</td>
-            <td>
+            <td>Área do Terreno (m²)</td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputAreaTerreno"
                 v-model="fila.AreaTerreno"
@@ -251,11 +261,12 @@
                 type="text"
                 @keyup="checkInput($event, 'AreaTerreno')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Zona</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|alpha_num" tag="td">
               <input
                 id="inputZona"
                 v-model="fila.Zona"
@@ -263,11 +274,12 @@
                 type="text"
                 @keyup="checkInput($event, 'Zona')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Uso</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputUso"
                 v-model="fila.Uso"
@@ -275,36 +287,48 @@
                 type="text"
                 @keyup="checkInput($event, 'Uso')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>Contribuintes (SQL)</td>
-            <td class="sql">
+            <td>
+              <span v-for="sql in sqls" :key="sqls.indexOf(sql)" class="noEdit sql">
+                {{ sql.NumeroSql }}
+              </span>
+            </td>
+            <!-- <td class="sql">
               <main class="inputWrap">
-                <div v-for="sql in sqls" :key="sql.Id" class="outer">
-                  <input
-                    :value="sql.NumeroSql"
-                    pattern="([0-9]{3}.){2}([0-9]{4})-[0-9]{1}"
-                  >
-                  <!-- <a class="remove" @click="removeSql($event)">&Cross;</a> -->
-                </div><div class="outer include">
+                <ValidationProvider
+                  v-for="sql in sqls"
+                  :key="sql.Id"
+                  v-slot="{ errors }"
+                  class="outer"
+                  :rules="{ regex: /([0-9]{3}.){2}([0-9]{4})-[0-9]{1}/ }"
+                  tag="div"
+                >
+                  <input v-model="sql.NumeroSql">
+                  <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+                  <a class="remove" @click="removeSql($event)">&Cross;</a>
+                </ValidationProvider><div class="outer include">
                   <input type="text" placeholder="Insira outro SQL aqui" pattern="([0-9]{3}.){2}([0-9]{4})-[0-9]{1}">
                   <a class="remove" @click="pushSql($event)">+</a>
                 </div>
               </main>
-            </td>
+            </td> -->
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required|numeric" tag="td">
               <input
                 id="inputCAProjeto"
                 v-model="fila.CAProjeto"
                 name="CAProjeto"
                 type="text"
-                @keyup="checkInput($event, 'CAProjeto')"
+                @keyup="checkInput($event, 'CAProjeto', errors)"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
@@ -369,7 +393,9 @@
             </td>
           </tr>
           <tr>
-            <td>Código da Proposta</td>
+            <td>
+              <label for="inputCodigoProposta">Código da Proposta</label>
+            </td>
             <td>
               <input
                 id="inputCodigoProposta"
@@ -381,7 +407,10 @@
             </td>
           </tr>
           <tr>
-            <td>Observações</td>
+            <td>
+              <label for="inputObs">Observações</label>
+              <span class="opt">Opcional</span>
+            </td>
             <td>
               <textarea
                 id="inputObs"
@@ -400,7 +429,7 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button @click.prevent="purge(filaUntouched, fila)">
+      <button :disabled="{ 'true': errors[0] }" @click.prevent="purge(filaUntouched, fila)">
         Salvar
       </button>
     </footer>
@@ -559,21 +588,21 @@ export default {
         return false
       }
     },
-    checkInput (event, filaKey) {
+    checkInput (event, filaKey, errorsObj = []) {
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
-
-      if (isTouchedAndNew) {
-        el.parentNode.classList.add('updated')
+      if (this.filaUntouched[filaKey]) {
+        if (isTouchedAndNew && !errorsObj[0]) { el.parentNode.classList.add('updated') }
+        else { el.parentNode.classList.remove('updated') }
       }
-      else {
-        el.parentNode.classList.remove('updated')
+      else if (this.filaUntouched[filaKey] === null) {
+        if (this.fila[filaKey] && !errorsObj[0]) { el.parentNode.classList.add('updated') }
+        else { el.parentNode.classList.remove('updated') }
       }
     },
     checkUpdateById (event, key, id) {
       const el = event.target
       const isEqualtoOriginal = this.filaUntouched[key] === id
-
       if (!isEqualtoOriginal) {
         el.parentNode.classList.add('updated')
         this.fila[key] = id
@@ -587,7 +616,6 @@ export default {
       const field = el.name // "name" attribute
       const ouId = this.fila.SetorObj.IdOperacaoUrbana
       const selected = document.querySelector(`input[name=${field}]:checked`) // input value
-
       if (parseInt(selected.value) !== ouId) {
         el.parentNode.classList.add('updated')
       }
@@ -599,7 +627,6 @@ export default {
     checkSetorUpdate (event, id) {
       const el = event.target
       const idSubSetor = parseInt(id)
-
       if (this.filaUntouched.idSubsetor !== idSubSetor) {
         el.parentNode.classList.add('updated')
         this.fila.IdSetor = idSubSetor
@@ -639,7 +666,21 @@ export default {
     },
     pushSql (event) {
       const input = event.target.parentNode.firstElementChild
-      this.sqls.push({ 'NumeroSql': input.value }) // terminar de popular o objeto
+      let isRepeated
+      if (input.value) {
+        this.sqls.filter((sqlObj) => {
+          if (sqlObj.NumeroSql === input.value) {
+            isRepeated = true
+          }
+          else {
+            isRepeated = false
+          }
+        })
+        if (!isRepeated) {
+          this.sqls.push({ 'NumeroSql': input.value })
+          input.value = ''
+        }
+      }
       // inserir a seguinte logica no metodo put()
       // 1. comparar sqls com sqlsUntouched
       // 2. put nas alterações

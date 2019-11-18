@@ -1,16 +1,5 @@
 <template>
   <ValidationObserver v-slot="{ valid, errors }" tag="div" :class="'criar'">
-    <!-- <div :class="{ faded: !isFetching }" class="preloader">
-      <h2>Carregando</h2>
-    </div>
-    <div v-if="displayError" class="error">
-      <h2>Erro</h2>
-      <p>{{ errorMessage }}</p>
-      <button @click="reloadApp">
-        <span>&#8635;</span>
-        Tentar novamente
-      </button>
-    </div> -->
     <header>
       <h2>Criar novo registro</h2>
       <button @click="$router.push('/')">
@@ -99,7 +88,6 @@
                 v-model="Telefone"
                 name="Telefone"
                 type="text"
-                placeholder="11987654321"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -121,7 +109,7 @@
           </tr>
           <tr>
             <td>
-              <label for="inputSei">SEI</label>
+              <label for="inputSei">PA/SEI</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:1200" tag="td">
               <textarea
@@ -129,7 +117,6 @@
                 v-model="Sei"
                 name="Sei"
                 rows="1"
-                placeholder="2020-0.000.000-0"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -229,7 +216,6 @@
                 v-model="SubSetor"
                 name="SubSetor"
                 type="text"
-                placeholder="99Z"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -292,19 +278,32 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Contribuintes</td>
+            <td>Contribuintes (SQL)</td>
             <td>
-              <input type="number">
+              <ul class="sqls">
+                <ValidationProvider
+                  v-for="sql in sqls"
+                  :key="sql.id"
+                  v-slot="{ errors }"
+                  rules="min:2|max:30"
+                  tag="li"
+                  class="sqls__item"
+                >
+                  <input
+                    v-model="sql.content"
+                    name="sql"
+                    type="text"
+                  >
+                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
+                    -
+                  </button>
+                  <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </ul>
+              <button class="add" @click.prevent="addSql">
+                +
+              </button>
             </td>
-            <!-- <ValidationProvider v-slot="{ errors }" rules="min:2|max:50" tag="td">
-              <input
-                id="inputUso"
-                v-model="Uso"
-                name="Uso"
-                type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
-            </ValidationProvider> -->
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
@@ -342,20 +341,6 @@
                 name="AreaAdNaoResidencial"
                 type="number"
                 step="0.01"
-                min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
-            </ValidationProvider>
-          </tr>
-          <tr>
-            <td>CEPAC - Objeto</td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
-              <input
-                id="inputCepacObjeto"
-                v-model="CepacObjeto"
-                name="CepacObjeto"
-                type="number"
-                step="1"
                 min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -412,25 +397,30 @@
               <label for="inputObs">Observações</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:3|max:2000" tag="td">
-              <textarea
-                id="inputObs"
-                v-model="Obs"
-                name="Obs"
-                type="text"
-                rows="5"
-              />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            <textarea
+              id="inputObs"
+              v-model="Obs"
+              name="Obs"
+              type="text"
+              rows="5"
+            />
             </ValidationProvider>
           </tr>
         </tbody>
       </table>
     </form>
+    <Message
+      v-if="showModal"
+      :message="form.message"
+      :error="form.error"
+      :is-fetching="form.isFetching"
+      @close="showModal = false"
+    />
     <footer>
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button id="salvar" :disabled="!valid" @click.prevent="novaFila">
+      <button id="salvar" @click.prevent="novaFila(valid, errors)">
         Salvar
       </button>
     </footer>
@@ -438,6 +428,7 @@
 </template>
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import Message from '~/components/Message'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 
@@ -445,7 +436,8 @@ export default {
   name: 'Criar',
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    Message
   },
   data () {
     return {
@@ -498,11 +490,17 @@ export default {
       filaNiceName,
       ouc: '',
       Setores: [],
-      displayError: false,
-      fetchError: false,
-      isFetching: false,
-      errorMessage: ''
+      sqls: [],
+      showModal: false,
+      form: {
+        isFetching: false,
+        error: false,
+        message: ''
+      }
     }
+  },
+  computed: {
+    sqlsToSend () { return this.sqls.map(sql => sql.content) }
   },
   watch: {
     ouc (key) {
@@ -515,41 +513,86 @@ export default {
     }
   },
   methods: {
-    reloadApp () { window.location.reload(true) },
-    novaFila () {
-      axios.post('fila', {
-        Certidao: this.Certidao,
-        Interessado: this.Interessado,
-        Licenciamento: this.Licenciamento,
-        Sei: this.Sei,
-        AreaAdResidencial: parseInt(this.AreaAdResidencial),
-        AreaAdNaoResidencial: parseInt(this.AreaAdNaoResidencial),
-        CepacAreaAdicional: parseInt(this.CepacAreaAdicional),
-        CepacModUso: parseInt(this.CepacModUso),
-        Email: this.Email,
-        Telefone: this.Telefone,
-        Procurador: this.Procurador,
-        CepacObjeto: parseInt(this.CepacObjeto),
-        Endereco: this.Endereco,
-        AreaTerreno: parseInt(this.AreaTerreno),
-        Zona: this.Zona,
-        Uso: this.Uso,
-        CAProjeto: parseInt(this.CAProjeto),
-        Obs: this.Obs,
-        CodigoProposta: this.CodigoProposta,
-        IdStatus: parseInt(this.IdStatus),
-        IdSetor: parseInt(this.IdSetor)
-      })
-        .then((res) => {
-          const id = res.data.Id
-          const url = window.location.href.replace('criar', id)
-          alert(`
-            Cadastro realizado com sucesso! o Identifador do cadastro é: ${id}
-            A url deste registro para edição é:
-            ${url}
-        `)
+    removeSql (sql) {
+      const indexSql = this.sqls.indexOf(sql)
+      this.sqls.splice(indexSql, 1)
+    },
+    addSql () {
+      if (this.sqls.length) {
+        const biggerId = this.sqls
+          .map(sql => sql.id)
+          .reduce((a, b) => a > b ? a : b)
+
+        this.sqls.push({
+          id: biggerId + 1,
+          content: ''
         })
-        .catch(err => console.error(err))
+      }
+      else {
+        this.sqls.push({
+          id: 1,
+          content: ''
+        })
+      }
+    },
+    reloadApp () { window.location.reload(true) },
+    novaFila (isValid, errors) {
+      this.showModal = true
+      if (!isValid) {
+        this.form.isFetching = false
+        this.form.error = true
+        this.form.message = 'Erro no formulário'
+      }
+      else {
+        this.form.isFetching = true
+        this.form.error = false
+        this.form.message = 'Criando cadastro no banco de dados'
+
+        axios.post('fila', {
+          Certidao: this.Certidao,
+          Interessado: this.Interessado,
+          Licenciamento: this.Licenciamento,
+          Sei: this.Sei,
+          AreaAdResidencial: parseInt(this.AreaAdResidencial),
+          AreaAdNaoResidencial: parseInt(this.AreaAdNaoResidencial),
+          CepacAreaAdicional: parseInt(this.CepacAreaAdicional),
+          CepacModUso: parseInt(this.CepacModUso),
+          Email: this.Email,
+          Telefone: this.Telefone,
+          Procurador: this.Procurador,
+          CepacObjeto: parseInt(this.CepacObjeto),
+          Endereco: this.Endereco,
+          AreaTerreno: parseInt(this.AreaTerreno),
+          Zona: this.Zona,
+          Uso: this.Uso,
+          CAProjeto: parseInt(this.CAProjeto),
+          Obs: this.Obs,
+          CodigoProposta: this.CodigoProposta,
+          IdStatus: parseInt(this.IdStatus),
+          IdSetor: parseInt(this.IdSetor)
+        })
+          .then((res) => {
+            const IdFilaCepac = res.data.Id
+            const errors = []
+            this.sqlsToSend.forEach((sql) => {
+              axios.post('sqls', {
+                NumeroSql: sql,
+                IdFilaCepac
+              })
+                .catch((err) => {
+                  this.form.error = true
+                  errors.push(err.data)
+                  this.form.message = errors.split(' ')
+                })
+            })
+          })
+          .catch((err) => {
+            console.error(err)
+            this.form.isFetching = false
+            this.form.error = true
+            this.form.message = err.message
+          })
+      }
     }
   }
 }

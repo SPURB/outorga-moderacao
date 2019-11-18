@@ -429,7 +429,8 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button :disabled="{ 'true': errors[0] }" @click.prevent="purge(filaUntouched, fila)">
+      <!-- <button :disabled="{ 'true': errors[0] }" @click.prevent="purge(filaUntouched, fila)"> -->
+      <button @click.prevent="purge(filaUntouched, fila)">
         Salvar
       </button>
     </footer>

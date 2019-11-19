@@ -3,6 +3,9 @@
     <main :class="{ 'error': error, 'fetching': isFetching, 'success': error === false }">
       <div class="message__content">
         {{ message }}
+        <a v-if="error === false" @click.prevent="goToRegistro(idCadastro)">
+          Acesse o novo registro
+        </a>
       </div>
       <div class="message__actions">
         <button class="actions__item" @click="$emit('close')">
@@ -27,10 +30,19 @@ export default {
     isFetching: {
       type: Boolean,
       required: true
+    },
+    idCadastro: {
+      type: String,
+      required: true
     }
   },
   computed: {
     thisHeight () { return Math.abs(document.body.getBoundingClientRect().top) + 'px' }
+  },
+  methods: {
+    goToRegistro (path) {
+      this.$router.push(`/cadastro/${path}`)
+    }
   }
 }
 </script>
@@ -62,7 +74,16 @@ export default {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
     border-top: 0.5rem solid transparent;
     animation: surge ease-out .4s;
-    .message__content { font-size: 1.25rem; }
+    .message__content {
+      font-size: 1.25rem;
+      & > a {
+        display: block;
+        color: #008375;
+        text-decoration: none;
+        font-size: 1.25rem;
+        margin: 0.5rem 0;
+      }
+    }
     .message__actions button {
       background-color: transparent;
       border: none;

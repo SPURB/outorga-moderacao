@@ -595,6 +595,7 @@ export default {
             this.form.isFetching = false
             this.form.error = false
             this.form.message = 'Registro gerado com sucesso'
+            this.form.idCadastro = res
           })
           .catch((err) => {
             console.error(err)

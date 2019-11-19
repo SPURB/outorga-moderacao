@@ -39,7 +39,7 @@
       />
       <footer class="actions">
         <button @click.prevent="$router.push('cadastro/criar')">
-          <span>+</span> Criar novo cadastro
+          <span>+</span> Criar novo registro
         </button>
         <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.json'), rows)">
           <span style="font-size: 0.8rem">{ }</span>
@@ -215,24 +215,19 @@ export default {
       nameSplit.splice(nameSplit.length - 1, 0, dateStr)
       return nameSplit.join('.')
     },
-
     saveTable (name, content) {
       const nameSplit = name.split('.')
       const type = nameSplit[nameSplit.length - 1] // 'json' ou 'csv'
-
       if (type === 'json') {
         const jsonBlob = new Blob([JSON.stringify(content)], { type: 'text/json; charset=utf-8' })
         FileSaver.saveAs(jsonBlob, name)
       }
-
       else if (type === 'csv') {
         const csvBlob = new Blob([this.convertToCSV(content)], { type: 'text/csv; charset=utf-8' })
         FileSaver.saveAs(csvBlob, name)
       }
-
       else { throw new Error(`${type} não é um formato válido para conversão`) }
     },
-
     convertToCSV (objArray) {
       const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
       let str = `${Object.keys(objArray[0]).join(',')}\r\n` // header vem do primeiro objeto
@@ -245,10 +240,8 @@ export default {
         }
         str += `${line}\r\n`
       })
-
       return str
     },
-
     fetchData (path) {
       this.isFetching = true
       axios.get(path)
@@ -262,25 +255,20 @@ export default {
         .catch((e) => { this.error = e })
         .finally(() => { this.isFetching = false })
     },
-
     fetchFilterString (queries, columns) {
       if (Object.keys(queries).length === 0) { return false } // no queries
-
       const filters = []
-
       const isValidQuery = (queryKey, columns) => {
         return columns
           .map(column => column.field)
           .includes(queryKey)
       }
-
       for (const key in queries) {
         if (isValidQuery(key, columns)) {
           const concat = `${key}=${queries[key]}`
           filters.push(concat)
         }
       }
-
       if (filters.length) {
         return `?${filters.join('/')}`// algo como -> ?Id=1/SubSetor=99
       }

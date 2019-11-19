@@ -285,7 +285,7 @@
                   v-for="sql in sqls"
                   :key="sql.id"
                   v-slot="{ errors }"
-                  rules="min:2|max:30"
+                  :rules="{ regex: /([0-9]{3}.){2}([0-9]{4})-[0-9]{1}/ }"
                   tag="li"
                   class="sqls__item"
                 >
@@ -295,13 +295,13 @@
                     type="text"
                   >
                   <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
-                    -
+                    Remover este
                   </button>
                   <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
                 </ValidationProvider>
               </ul>
               <button class="add" @click.prevent="addSql">
-                +
+                Adicionar SQL
               </button>
             </td>
           </tr>
@@ -397,14 +397,15 @@
               <label for="inputObs">Observações</label>
               <span class="opt">Opcional</span>
             </td>
-            <textarea
-              id="inputObs"
-              v-model="Obs"
-              name="Obs"
-              type="text"
-              rows="5"
-            />
-            </ValidationProvider>
+            <td>
+              <textarea
+                id="inputObs"
+                v-model="Obs"
+                name="Obs"
+                type="text"
+                rows="5"
+              />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -510,6 +511,14 @@ export default {
           nome: this.mapSetores[id]
         }
       })
+    },
+    showModal (state) {
+      if (state) {
+        document.body.style.overflow = 'hidden'
+      }
+      else {
+        document.body.style.overflow = 'auto'
+      }
     }
   },
   methods: {
@@ -579,12 +588,13 @@ export default {
                 NumeroSql: sql,
                 IdFilaCepac
               })
-                .catch((err) => {
-                  this.form.error = true
-                  errors.push(err.data)
-                  this.form.message = errors.split(' ')
-                })
             })
+            return IdFilaCepac
+          })
+          .then((res) => {
+            this.form.isFetching = false
+            this.form.error = false
+            this.form.message = 'Registro gerado com sucesso'
           })
           .catch((err) => {
             console.error(err)

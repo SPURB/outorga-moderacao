@@ -319,7 +319,7 @@
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <ValidationProvider v-slot="{ errors }" rules="required|numeric" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputCAProjeto"
                 v-model="fila.CAProjeto"
@@ -334,53 +334,57 @@
             <td>
               <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputAreaAdResidencial"
                 v-model="fila.AreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
+                step="any"
                 @keyup="checkInput($event, 'AreaAdResidencial')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model="fila.AreaAdNaoResidencial"
                 name="AreaAdNaoResidencial"
                 type="number"
-                step="0.01"
+                step="any"
                 min="0"
                 @keyup="checkInput($event, 'AreaAdNaoResidencial')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputCepacAreaAdicional"
                 v-model="fila.CepacAreaAdicional"
                 name="CepacAreaAdicional"
                 type="number"
-                step="0.01"
+                step="any"
                 min="0"
                 @keyup="checkInput($event, 'CepacAreaAdicional')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputCepacModUso"
                 v-model="fila.CepacModUso"
@@ -390,13 +394,14 @@
                 min="0"
                 @keyup="checkInput($event, 'CepacModUso')"
               >
-            </td>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCodigoProposta">Código da Proposta</label>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputCodigoProposta"
                 v-model="fila.CodigoProposta"
@@ -404,7 +409,7 @@
                 type="text"
                 @keyup="checkInput($event, 'CodigoProposta')"
               >
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
@@ -435,7 +440,7 @@
       </button>
     </footer>
     <div id="confirmModal" :class="{ hasChanged: toConfirm.state, hasntChanged: !toConfirm.state }">
-      <main :class="{ review: putResponse.pending, response: putResponse.data }">
+      <main :class="{ review: putResponse.pending === undefined, fetching: putResponse.pending === true, response: putResponse.data }">
         <template v-if="toConfirm.state">
           <h3>Revise as alterações que você fez</h3>
           <div class="tableWrap">
@@ -467,6 +472,9 @@
             </button>
           </div>
         </template>
+        <div class="fetcher" :class="{ active: putResponse.pending }">
+          Registrando
+        </div>
         <div class="response" :class="{ success: putResponse.success, error: putResponse.error }">
           <template v-if="putResponse.success">
             <h4>Sucesso</h4>
@@ -524,7 +532,7 @@ export default {
         old: {}
       },
       putResponse: {
-        pending: true,
+        pending: undefined,
         success: undefined,
         error: undefined,
         data: undefined
@@ -645,6 +653,7 @@ export default {
       document.body.style.overflow = 'auto'
     },
     put () {
+      this.putResponse.pending = true
       axios.put(`fila/${this.$route.params.id}`, this.toConfirm.changed)
         .then((res) => {
           this.putResponse.pending = false

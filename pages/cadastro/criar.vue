@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ valid, errors }" tag="div" :class="'criar'">
+  <ValidationObserver v-slot="{ valid, errors }" :class="'criar'" tag="div">
     <header>
       <h2>Criar novo registro</h2>
       <button @click="$router.push('/')">
@@ -25,7 +25,7 @@
           </tr>
           <tr>
             <td>Situação</td>
-            <ValidationProvider v-slot="{ errors }" :rules="{ required: { allowFalse: false } }" tag="td">
+            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
               <input
                 id="Checklist"
                 v-model="IdStatus"
@@ -231,6 +231,7 @@
                 name="Endereco"
                 rows="1"
               />
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -295,13 +296,13 @@
                     type="text"
                     placeholder="000.000.0000-0"
                   >
-                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
+                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
                     Remover este
                   </button>
                   <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
                 </ValidationProvider>
               </ul>
-              <button class="add" @click.prevent="addSql">
+              <button @click.prevent="addSql" class="add">
                 Adicionar SQL
               </button>
             </td>
@@ -315,6 +316,7 @@
                 name="CAProjeto"
                 type="number"
               >
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
           <tr>

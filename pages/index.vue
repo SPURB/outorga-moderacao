@@ -253,7 +253,7 @@ export default {
           }
         })
         .catch((e) => { this.error = e })
-        .finally(() => { this.isFetching = false })
+        .then(() => { this.isFetching = false })
     },
     fetchFilterString (queries, columns) {
       if (Object.keys(queries).length === 0) { return false } // no queries

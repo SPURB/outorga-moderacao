@@ -1,5 +1,5 @@
 <template>
-  <div class="message" :style="{ top: thisHeight }">
+  <div :style="{ top: thisHeight }" class="message">
     <main :class="{ 'error': error, 'fetching': isFetching, 'success': error === false }">
       <div class="message__content">
         {{ message }}
@@ -8,7 +8,7 @@
         </a>
       </div>
       <div class="message__actions">
-        <button class="actions__item" @click="$emit('close')">
+        <button @click="$emit('close')" class="actions__item">
           Fechar
         </button>
       </div>

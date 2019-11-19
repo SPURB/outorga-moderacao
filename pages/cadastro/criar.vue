@@ -293,6 +293,7 @@
                     v-model="sql.content"
                     name="sql"
                     type="text"
+                    placeholder="000.000.0000-0"
                   >
                   <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
                     Remover este
@@ -415,6 +416,7 @@
       :message="form.message"
       :error="form.error"
       :is-fetching="form.isFetching"
+      :id-cadastro="form.idCadastro"
       @close="showModal = false"
     />
     <footer>
@@ -496,7 +498,8 @@ export default {
       form: {
         isFetching: false,
         error: false,
-        message: ''
+        message: '',
+        idCadastro: 0
       }
     }
   },
@@ -582,7 +585,6 @@ export default {
         })
           .then((res) => {
             const IdFilaCepac = res.data.Id
-            const errors = []
             this.sqlsToSend.forEach((sql) => {
               axios.post('sqls', {
                 NumeroSql: sql,
@@ -591,11 +593,11 @@ export default {
             })
             return IdFilaCepac
           })
-          .then((res) => {
+          .then((id) => {
             this.form.isFetching = false
             this.form.error = false
             this.form.message = 'Registro gerado com sucesso'
-            this.form.idCadastro = res
+            this.form.idCadastro = id
           })
           .catch((err) => {
             console.error(err)

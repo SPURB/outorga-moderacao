@@ -32,7 +32,7 @@ export default {
       required: true
     },
     idCadastro: {
-      type: String,
+      type: Number,
       required: true
     }
   },
@@ -40,8 +40,11 @@ export default {
     thisHeight () { return Math.abs(document.body.getBoundingClientRect().top) + 'px' }
   },
   methods: {
-    goToRegistro (path) {
-      this.$router.push(`/cadastro/${path}`)
+    goToRegistro (id) {
+      if (id) {
+        this.$router.push({ path: `/cadastro/${id}` })
+      }
+      else { throw new Error(`Valor de id não pode ${id}`) }
     }
   }
 }

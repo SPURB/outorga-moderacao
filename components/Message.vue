@@ -3,9 +3,9 @@
     <main :class="{ 'error': error, 'fetching': isFetching, 'success': error === false }">
       <div class="message__content">
         {{ message }}
-        <a v-if="error === false" @click.prevent="goToRegistro(idCadastro)">
+        <button v-if="error === false" @click.prevent="goToRegistro(idCadastro)">
           Acesse o novo registro
-        </a>
+        </button>
       </div>
       <div class="message__actions">
         <button @click="$emit('close')" class="actions__item">
@@ -85,6 +85,20 @@ export default {
         text-decoration: none;
         font-size: 1.25rem;
         margin: 0.5rem 0;
+      }
+      & > button {
+        border: none;
+        padding: 1rem 2rem;
+        margin: 1rem 0;
+        text-decoration: none;
+        background:#008375;
+        color:#ffffff;
+        font-family: sans-serif;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        text-align: center;
+        border-radius: 4px
       }
     }
     .message__actions button {

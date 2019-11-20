@@ -82,13 +82,14 @@
             <td>
               <label for="inputTelefone">Telefone</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric|min:8|max:15" tag="td">
-              <input
+            <ValidationProvider v-slot="{ errors }" rules="numeric|min:10|max:15" tag="td">
+              <the-mask
                 id="inputTelefone"
                 v-model="Telefone"
+                :mask="['(##) ####-####', '(##) #####-####']"
                 name="Telefone"
-                type="text"
-              >
+                type="tel"
+              />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
@@ -112,9 +113,10 @@
               <label for="inputSei">PA/SEI</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:1200" tag="td">
-              <textarea
+              <the-mask
                 id="inputSei"
                 v-model="Sei"
+                :mask="['####.####/#######-#']"
                 name="Sei"
                 rows="1"
               />
@@ -127,11 +129,13 @@
               <span class="opt">Opcional</span>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
-              <textarea
+              <the-mask
                 id="inputCertidao"
                 v-model="Certidao"
+                :mask="['XX-###/#### - ##/##/####']"
                 name="Certidao"
                 rows="1"
+                placeholder="FL-000/2020 - dd/mm/aaaa"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -285,21 +289,18 @@
                 <ValidationProvider
                   v-for="sql in sqls"
                   :key="sql.id"
-                  v-slot="{ errors }"
-                  :rules="{ regex: /([0-9]{3}.){2}([0-9]{4})-[0-9]{1}/ }"
                   tag="li"
                   class="sqls__item"
                 >
-                  <input
+                  <the-mask
                     v-model="sql.content"
+                    :mask="['###.###.####-#']"
                     name="sql"
                     type="text"
-                    placeholder="000.000.0000-0"
-                  >
+                  />
                   <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
                     Remover este
                   </button>
-                  <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
                 </ValidationProvider>
               </ul>
               <button @click.prevent="addSql" class="add">
@@ -309,7 +310,7 @@
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
               <input
                 id="inputCAProjeto"
                 v-model="CAProjeto"
@@ -323,7 +324,7 @@
             <td>
               <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
               <input
                 id="inputAreaAdResidencial"
                 v-model="AreaAdResidencial"
@@ -386,12 +387,13 @@
               <label for="inputCodigoProposta">Código da Proposta</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:1|max:100" tag="td">
-              <input
+              <the-mask
                 id="inputCodigoProposta"
                 v-model="CodigoProposta"
+                :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
                 name="CodigoProposta"
                 type="text"
-              >
+              />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
@@ -433,6 +435,7 @@
 </template>
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { TheMask } from 'vue-the-mask'
 import Message from '~/components/Message'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
@@ -442,6 +445,7 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
+    TheMask,
     Message
   },
   data () {
@@ -562,6 +566,9 @@ export default {
         this.form.error = false
         this.form.message = 'Criando cadastro no banco de dados'
 
+        const d = new Date()
+        const now = `${d.getFullYear()}:${d.getMonth()}:${d.getDay()}T${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+
         axios.post('fila', {
           Certidao: this.Certidao,
           Interessado: this.Interessado,
@@ -576,14 +583,15 @@ export default {
           Procurador: this.Procurador,
           CepacObjeto: parseInt(this.CepacObjeto),
           Endereco: this.Endereco,
-          AreaTerreno: parseInt(this.AreaTerreno),
+          AreaTerreno: parseInt(this.AreaTerreno.replace(',', '.')),
           Zona: this.Zona,
           Uso: this.Uso,
           CAProjeto: parseInt(this.CAProjeto),
           Obs: this.Obs,
           CodigoProposta: this.CodigoProposta,
           IdStatus: parseInt(this.IdStatus),
-          IdSetor: parseInt(this.IdSetor)
+          IdSetor: parseInt(this.IdSetor),
+          Date: now
         })
           .then((res) => {
             const IdFilaCepac = res.data.Id

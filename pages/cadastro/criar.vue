@@ -13,7 +13,7 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|alpha" tag="td">
               <input
                 id="inputInteressado"
                 v-model="Interessado"
@@ -82,7 +82,7 @@
             <td>
               <label for="inputTelefone">Telefone</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric|min:10|max:15" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <the-mask
                 id="inputTelefone"
                 v-model="Telefone"
@@ -98,7 +98,7 @@
               <label for="inputProcurador">Procurador</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:120" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="alpha" tag="td">
               <input
                 id="inputProcurador"
                 v-model="Procurador"
@@ -112,7 +112,7 @@
             <td>
               <label for="inputSei">PA/SEI</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:1200" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="numeric|required" tag="td">
               <the-mask
                 id="inputSei"
                 v-model="Sei"
@@ -128,11 +128,11 @@
               <label for="inputCertidao">Certidão</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="alpha_num|min:9|max:17" tag="td">
               <the-mask
                 id="inputCertidao"
                 v-model="Certidao"
-                :mask="['XX-###/#### - ##/##/####']"
+                :mask="['SS-###/#### - ##/##/####']"
                 name="Certidao"
                 rows="1"
                 placeholder="FL-000/2020 - dd/mm/aaaa"
@@ -195,7 +195,7 @@
           </tr>
           <tr v-if="ouc !== ''">
             <td>Setor</td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" :rules="required" tag="td">
               <template v-for="(setor, index) in Setores">
                 <input
                   :id="`setor_${setor.id}`"
@@ -208,13 +208,13 @@
                 <label :key="index + 100" :for="`setor_${setor.id}`">{{ setor.nome }}</label>
               </template>
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputSubSetor">SubSetor</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:1|max:100" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|alpha_num" tag="td">
               <input
                 id="inputSubSetor"
                 v-model="SubSetor"
@@ -228,7 +228,7 @@
             <td>
               <label for="inputEndereco">Endereço</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min:2" tag="td">
               <textarea
                 id="inputEndereco"
                 v-model="Endereco"
@@ -242,14 +242,13 @@
             <td>
               <label for="inputAreaTerreno">Área do Terreno (m²)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min_value:0.01" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0.01" tag="td">
               <input
                 id="inputAreaTerreno"
                 v-model="AreaTerreno"
                 name="AreaTerreno"
                 type="number"
                 step="0.01"
-                min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -258,7 +257,7 @@
             <td>
               <label for="inputZona">Zona</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:100" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min:2" tag="td">
               <input
                 id="inputZona"
                 v-model="Zona"
@@ -272,7 +271,7 @@
             <td>
               <label for="inputUso">Uso</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:50" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputUso"
                 v-model="Uso"
@@ -310,12 +309,14 @@
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCAProjeto"
                 v-model="CAProjeto"
                 name="CAProjeto"
                 type="number"
+                step="any"
+                min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -324,12 +325,14 @@
             <td>
               <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputAreaAdResidencial"
                 v-model="AreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
+                step="any"
+                min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -338,13 +341,13 @@
             <td>
               <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model="AreaAdNaoResidencial"
                 name="AreaAdNaoResidencial"
                 type="number"
-                step="0.01"
+                step="any"
                 min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -354,13 +357,13 @@
             <td>
               <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min_value:0" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCepacAreaAdicional"
                 v-model="CepacAreaAdicional"
                 name="CepacAreaAdicional"
                 type="number"
-                step="0.01"
+                step="any"
                 min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -370,13 +373,13 @@
             <td>
               <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCepacModUso"
                 v-model="CepacModUso"
                 name="CepacModUso"
                 type="number"
-                step="1"
+                step="any"
                 min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -386,11 +389,12 @@
             <td>
               <label for="inputCodigoProposta">Código da Proposta</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:1|max:100" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:10" tag="td">
               <the-mask
                 id="inputCodigoProposta"
                 v-model="CodigoProposta"
                 :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
+                placeholder="FL-000/00"
                 name="CodigoProposta"
                 type="text"
               />
@@ -574,19 +578,19 @@ export default {
           Interessado: this.Interessado,
           Licenciamento: this.Licenciamento,
           Sei: this.Sei,
-          AreaAdResidencial: parseInt(this.AreaAdResidencial),
-          AreaAdNaoResidencial: parseInt(this.AreaAdNaoResidencial),
-          CepacAreaAdicional: parseInt(this.CepacAreaAdicional),
+          AreaAdResidencial: parseFloat(this.AreaAdResidencial.replace(',', '.')),
+          AreaAdNaoResidencial: parseFloat(this.AreaAdNaoResidencial.replace(',', '.')),
+          CepacAreaAdicional: parseFloat(this.CepacAreaAdicional.replace(',', '.')),
           CepacModUso: parseInt(this.CepacModUso),
           Email: this.Email,
           Telefone: this.Telefone,
           Procurador: this.Procurador,
-          CepacObjeto: parseInt(this.CepacObjeto),
+          CepacObjeto: parseFloat(this.CepacObjeto.replace(',', '.')),
           Endereco: this.Endereco,
-          AreaTerreno: parseInt(this.AreaTerreno.replace(',', '.')),
+          AreaTerreno: parseFloat(this.AreaTerreno.replace(',', '.')),
           Zona: this.Zona,
           Uso: this.Uso,
-          CAProjeto: parseInt(this.CAProjeto),
+          CAProjeto: parseFloat(this.CAProjeto.replace(',', '.')),
           Obs: this.Obs,
           CodigoProposta: this.CodigoProposta,
           IdStatus: parseInt(this.IdStatus),

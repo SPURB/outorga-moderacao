@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { extend, localize } from 'vee-validate'
-import { required, email, alpha, alpha_spaces, alpha_num, numeric, between, min, min_value, max, regex } from 'vee-validate/dist/rules'
+import { required, email, alpha, alpha_spaces, alpha_num, numeric, between, min, min_value, max, regex, digits } from 'vee-validate/dist/rules'
 import ptbr from 'vee-validate/dist/locale/pt_BR.json'
 
 extend('required', {
@@ -55,6 +55,11 @@ extend('numeric', {
 extend('regex', {
   ...regex,
   message: 'Padrão inválido'
+})
+
+extend('digits', {
+  ...digits,
+  message: 'Quantidade de caracteres inválida'
 })
 
 localize({ ptbr })

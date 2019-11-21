@@ -86,13 +86,14 @@
               <label for="inputTelefone">Telefone</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required|min:8|max:13" tag="td">
-              <input
+              <the-mask
                 id="inputTelefone"
                 v-model="fila.Telefone"
+                :mask="['(##) ####-####', '(##) #####-####']"
                 name="Telefone"
-                type="text"
+                type="tel"
                 @keyup="checkInput($event, 'Telefone', errors)"
-              >
+              />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
@@ -127,12 +128,12 @@
               <label for="inputSei">PA/SEI</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
-              <textarea
+              <the-mask
                 id="inputSei"
                 v-model="fila.Sei"
+                :mask="['####.####/#######-#']"
                 name="Sei"
-                rows="1"
-                @keyup="checkInput($event, 'Sei', errors)"
+                @keyup.native="checkInput($event, 'Sei', errors)"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -143,13 +144,13 @@
               <span class="opt">Opcional</span>
             </td>
             <td>
-              <textarea
+              <input
                 id="inputCertidao"
                 v-model="fila.Certidao"
                 name="Certidao"
                 rows="1"
                 @keyup="checkInput($event, 'Certidao', errors)"
-              />
+              >
             </td>
           </tr>
           <tr>
@@ -300,7 +301,7 @@
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCAProjeto"
                 v-model="fila.CAProjeto"
@@ -315,13 +316,14 @@
             <td>
               <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputAreaAdResidencial"
                 v-model="fila.AreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
                 step="any"
+                min="0"
                 @keyup="checkInput($event, 'AreaAdResidencial')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -331,7 +333,7 @@
             <td>
               <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model="fila.AreaAdNaoResidencial"
@@ -348,7 +350,7 @@
             <td>
               <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCepacAreaAdicional"
                 v-model="fila.CepacAreaAdicional"
@@ -365,7 +367,7 @@
             <td>
               <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCepacModUso"
                 v-model="fila.CepacModUso"
@@ -485,6 +487,7 @@
 </template>
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { TheMask } from 'vue-the-mask'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 
@@ -492,7 +495,8 @@ export default {
   name: 'Cadastro',
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    TheMask
   },
   data () {
     return {
@@ -582,12 +586,17 @@ export default {
     checkInput (event, filaKey, errorsObj = []) {
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
+      // console.log(parseFloat(this.fila[filaKey].replace(',', '.')), this.filaUntouched[filaKey], parseFloat(this.fila[filaKey].replace(',', '.')) === this.filaUntouched[filaKey])
       if (this.filaUntouched[filaKey]) {
         if (isTouchedAndNew && !errorsObj[0]) { el.parentNode.classList.add('updated') }
         else { el.parentNode.classList.remove('updated') }
       }
       else if (this.filaUntouched[filaKey] === null) {
         if (this.fila[filaKey] && !errorsObj[0]) { el.parentNode.classList.add('updated') }
+        else { el.parentNode.classList.remove('updated') }
+      }
+      else if (typeof (this.filaUntouched[filaKey]) === 'number') { // não está reconhecendo CepacModUso nem CepacAreaAdicional como 'number' AQUI, se descomentar o primeiro console.log desse metodo o typeof retorna 'number'.
+        if (parseFloat(this.fila[filaKey].replace(',', '.')) !== this.filaUntouched[filaKey]) { el.parentNode.classList.add('updated') }
         else { el.parentNode.classList.remove('updated') }
       }
     },

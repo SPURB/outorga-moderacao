@@ -95,11 +95,11 @@ tbody{
               position: absolute;
               left: -1rem;
               top: 49%;
-              transform: translateY(-100%);
+              transform: translateY(-60%);
               color: #008375;
               font-size: 1.5rem;
               opacity: 0;
-              transition: all ease-out .2s;
+              transition: all ease-in .05s;
             }
             &.updated::before {
               opacity: 1;

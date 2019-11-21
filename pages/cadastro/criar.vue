@@ -193,7 +193,7 @@
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
-          <tr v-if="ouc!==''">
+          <tr v-if="ouc !== ''">
             <td>Setor</td>
             <td>
               <template v-for="(setor, index) in Setores">
@@ -298,12 +298,12 @@
                     name="sql"
                     type="text"
                   />
-                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
+                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
                     Remover este
                   </button>
                 </ValidationProvider>
               </ul>
-              <button @click.prevent="addSql" class="add">
+              <button class="add" @click.prevent="addSql">
                 Adicionar SQL
               </button>
             </td>
@@ -492,9 +492,9 @@ export default {
       },
       mapOucSetores: {
         oucfl: [ '1', '2', '3', '4' ],
-        oucae: [ '5', '6', '7', '8', '9' ],
+        oucae: [ '11', '12', '13', '14', '15' ],
         oucc: [ '10' ],
-        oucab: [ '11', '12', '13', '14', '15' ]
+        oucab: [ '5', '6', '7', '8', '9' ]
       },
       filaNiceName,
       ouc: '',

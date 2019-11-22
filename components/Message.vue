@@ -2,7 +2,7 @@
   <div :style="{ top: thisHeight }" class="message">
     <main :class="{ 'error': error, 'fetching': isFetching, 'success': error === false }">
       <div class="message__content">
-        {{ message }}
+        <p>{{ message }}</p>
         <button v-if="error === false" @click.prevent="goToRegistro(idCadastro)">
           Acesse o novo registro
         </button>
@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     goToRegistro (id) {
+      document.body.style.overflow = 'auto'
       if (id) {
         this.$router.push({ path: `/cadastro/${id}` })
       }
@@ -78,7 +79,9 @@ export default {
     border-top: 0.5rem solid transparent;
     animation: surge ease-out .4s;
     .message__content {
-      font-size: 1.25rem;
+      p {
+        font-size: 1.25rem;
+      }
       & > a {
         display: block;
         color: #008375;
@@ -88,12 +91,12 @@ export default {
       }
       & > button {
         border: none;
-        padding: 1rem 2rem;
+        padding: 1rem 1.5rem;
         margin: 1rem 0;
         text-decoration: none;
         background:#008375;
         color:#ffffff;
-        font-family: sans-serif;
+        font-family: inherit;
         font-size: 1rem;
         line-height: 1;
         cursor: pointer;

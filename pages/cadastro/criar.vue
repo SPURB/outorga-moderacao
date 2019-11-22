@@ -87,6 +87,7 @@
                 id="inputTelefone"
                 v-model="Telefone"
                 :mask="['(##) ####-####', '(##) #####-####']"
+                masked="masked"
                 name="Telefone"
                 type="tel"
               />
@@ -98,7 +99,7 @@
               <label for="inputProcurador">Procurador</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="alpha" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="alpha_spaces" tag="td">
               <input
                 id="inputProcurador"
                 v-model="Procurador"
@@ -117,6 +118,7 @@
                 id="inputSei"
                 v-model="Sei"
                 :mask="['####.####/#######-#']"
+                masked="masked"
                 name="Sei"
                 rows="1"
               />
@@ -133,6 +135,7 @@
                 id="inputCertidao"
                 v-model="Certidao"
                 :mask="['SS-###/#### - ##/##/####']"
+                masked="masked"
                 name="Certidao"
                 rows="1"
                 placeholder="FL-000/2020 - dd/mm/aaaa"
@@ -294,6 +297,7 @@
                   <the-mask
                     v-model="sql.content"
                     :mask="['###.###.####-#']"
+                    masked="masked"
                     name="sql"
                     type="text"
                   />
@@ -394,6 +398,7 @@
                 id="inputCodigoProposta"
                 v-model="CodigoProposta"
                 :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
+                masked="masked"
                 placeholder="FL-000/00"
                 name="CodigoProposta"
                 type="text"
@@ -570,8 +575,8 @@ export default {
         this.form.error = false
         this.form.message = 'Criando cadastro no banco de dados'
 
-        const d = new Date()
-        const now = `${d.getFullYear()}:${d.getMonth()}:${d.getDay()}T${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+        const d = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000)) // milsegundos agora menos milisegundos do fuso
+        const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
 
         axios.post('fila', {
           Certidao: this.Certidao,
@@ -595,6 +600,7 @@ export default {
           CodigoProposta: this.CodigoProposta,
           IdStatus: parseInt(this.IdStatus),
           IdSetor: parseInt(this.IdSetor),
+          SubSetor: this.SubSetor,
           Date: now
         })
           .then((res) => {

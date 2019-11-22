@@ -673,4 +673,43 @@ export default {
     animation: displayTip ease-in-out 2s;
   }
 }
+@media (max-width: 760px) {
+  .index {
+    .tabela {
+      .vgt-wrap {
+        .vgt-inner-wrap {
+          .vgt-global-search {
+            padding: 1rem;
+            .vgt-global-search__input .vgt-input {
+              padding: 0 0 0 2.25rem;
+              border-bottom: none;
+            }
+          }
+          .vgt-wrap__footer {
+            flex-flow: column nowrap;
+            padding: 1rem;
+            .footer__navigation {
+              margin-bottom: 1rem;
+              .footer__navigation__info, .footer__navigation__page-btn {
+                padding: 0.25rem 0.5rem;
+                &.disabled { padding: 0; }
+              }
+            }
+            .footer__row-count {
+              padding: 0.25rem 0.5rem;
+            }
+          }
+        }
+      }
+    }
+    footer.actions {
+      padding: 0 1rem 1rem 1rem;
+      text-align: center;
+      button {
+        padding: 0.25rem 0.5rem;
+        margin: 0 1rem 1rem 0;
+      }
+    }
+  }
+}
 </style>

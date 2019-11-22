@@ -85,14 +85,15 @@
             <td>
               <label for="inputTelefone">Telefone</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:8|max:13" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <the-mask
                 id="inputTelefone"
                 v-model="fila.Telefone"
                 :mask="['(##) ####-####', '(##) #####-####']"
-                name="Telefone"
+                masked="masked"
                 type="tel"
-                @keyup="checkInput($event, 'Telefone', errors)"
+                name="Telefone"
+                @keyup.native="checkInput($event, 'Telefone', errors)"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -132,6 +133,7 @@
                 id="inputSei"
                 v-model="fila.Sei"
                 :mask="['####.####/#######-#']"
+                masked="masked"
                 name="Sei"
                 @keyup.native="checkInput($event, 'Sei', errors)"
               />
@@ -147,6 +149,8 @@
               <input
                 id="inputCertidao"
                 v-model="fila.Certidao"
+                :mask="['SS-###/#### - ##/##/####']"
+                masked="masked"
                 name="Certidao"
                 rows="1"
                 @keyup="checkInput($event, 'Certidao', errors)"
@@ -228,7 +232,7 @@
           </tr>
           <tr>
             <td>Subsetor</td>
-            <ValidationProvider v-slot="{ errors }" rules="required|alpha_num" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="alpha_num" tag="td">
               <input
                 id="inputSubSetor"
                 v-model="fila.SubSetor"
@@ -257,9 +261,10 @@
             <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputAreaTerreno"
-                v-model="fila.AreaTerreno"
+                v-model.number="fila.AreaTerreno"
                 name="AreaTerreno"
-                type="text"
+                type="number"
+                step="0.01"
                 @keyup="checkInput($event, 'AreaTerreno')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -304,9 +309,10 @@
             <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCAProjeto"
-                v-model="fila.CAProjeto"
+                v-model.number="fila.CAProjeto"
                 name="CAProjeto"
-                type="text"
+                type="number"
+                step="0.01"
                 @keyup="checkInput($event, 'CAProjeto', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -319,7 +325,7 @@
             <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputAreaAdResidencial"
-                v-model="fila.AreaAdResidencial"
+                v-model.number="fila.AreaAdResidencial"
                 name="AreaAdResidencial"
                 type="number"
                 step="any"
@@ -336,7 +342,7 @@
             <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputAreaAdNaoResidencial"
-                v-model="fila.AreaAdNaoResidencial"
+                v-model.number="fila.AreaAdNaoResidencial"
                 name="AreaAdNaoResidencial"
                 type="number"
                 step="any"
@@ -353,7 +359,7 @@
             <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCepacAreaAdicional"
-                v-model="fila.CepacAreaAdicional"
+                v-model.number="fila.CepacAreaAdicional"
                 name="CepacAreaAdicional"
                 type="number"
                 step="any"
@@ -370,7 +376,7 @@
             <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
               <input
                 id="inputCepacModUso"
-                v-model="fila.CepacModUso"
+                v-model.number="fila.CepacModUso"
                 name="CepacModUso"
                 type="number"
                 step="1"
@@ -385,13 +391,15 @@
               <label for="inputCodigoProposta">Código da Proposta</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
-              <input
+              <the-mask
                 id="inputCodigoProposta"
                 v-model="fila.CodigoProposta"
+                :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
+                masked="masked"
                 name="CodigoProposta"
                 type="text"
                 @keyup="checkInput($event, 'CodigoProposta')"
-              >
+              />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
@@ -534,7 +542,14 @@ export default {
   mounted () {
     this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
     for (const key in this.fila) { // precisa do for aqui para evitar que a instância vue não entender valores de 'fila' como um valor imutável
+      if (key === 'CAProjeto' || key === 'AreaTerreno') {
+        this.fila[key] = parseFloat(this.fila[key])
+      }
       this.filaUntouched[key] = this.fila[key]
+      if (this.fila[key] === null) {
+        this.filaUntouched[key] = ''
+        this.fila[key] = ''
+      }
     }
     this.sqlsUntouched = this.sqls
   },
@@ -542,7 +557,12 @@ export default {
     purge (oldFila, newFila) {
       const changedFila = {}
       for (const key in oldFila) {
-        if (newFila[key] !== oldFila[key]) { changedFila[key] = newFila[key] }
+        if (newFila[key] !== oldFila[key]) {
+          if (key === 'CAProjeto' || key === 'AreaTerreno') {
+            newFila[key] = newFila[key].toString()
+          }
+          changedFila[key] = newFila[key]
+        }
       }
       const haveChanges = Object.keys(changedFila).length >= 1
       if (haveChanges) {
@@ -586,19 +606,21 @@ export default {
     checkInput (event, filaKey, errorsObj = []) {
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
-      // console.log(parseFloat(this.fila[filaKey].replace(',', '.')), this.filaUntouched[filaKey], parseFloat(this.fila[filaKey].replace(',', '.')) === this.filaUntouched[filaKey])
-      if (this.filaUntouched[filaKey]) {
-        if (isTouchedAndNew && !errorsObj[0]) { el.parentNode.classList.add('updated') }
-        else { el.parentNode.classList.remove('updated') }
+      // console.log(this.fila[filaKey], this.filaUntouched[filaKey], this.fila[filaKey] === this.filaUntouched[filaKey])
+      if (isTouchedAndNew) {
+        el.parentNode.classList.add('updated')
       }
-      else if (this.filaUntouched[filaKey] === null) {
-        if (this.fila[filaKey] && !errorsObj[0]) { el.parentNode.classList.add('updated') }
-        else { el.parentNode.classList.remove('updated') }
+      else {
+        el.parentNode.classList.remove('updated')
       }
-      else if (typeof (this.filaUntouched[filaKey]) === 'number') { // não está reconhecendo CepacModUso nem CepacAreaAdicional como 'number' AQUI, se descomentar o primeiro console.log desse metodo o typeof retorna 'number'.
-        if (parseFloat(this.fila[filaKey].replace(',', '.')) !== this.filaUntouched[filaKey]) { el.parentNode.classList.add('updated') }
-        else { el.parentNode.classList.remove('updated') }
-      }
+      // if (this.filaUntouched[filaKey]) {
+      //   if (isTouchedAndNew && !errorsObj[0]) { el.parentNode.classList.add('updated') }
+      //   else { el.parentNode.classList.remove('updated') }
+      // }
+      // else if (this.filaUntouched[filaKey] === null) {
+      //   if (this.fila[filaKey] && !errorsObj[0]) { el.parentNode.classList.add('updated') }
+      //   else { el.parentNode.classList.remove('updated') }
+      // }
     },
     checkUpdateById (event, key, id) {
       const el = event.target

@@ -6,7 +6,7 @@
         &#8624; Voltar
       </button>
     </header>
-    <form>
+    <form id="createForm">
       <table>
         <tbody>
           <tr>
@@ -436,7 +436,7 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button id="salvar" @click.prevent="novaFila(valid, errors)">
+      <button @click.prevent="novaFila(valid, errors)">
         Salvar
       </button>
     </footer>

@@ -1,12 +1,3 @@
-#salvar:disabled {
-  cursor: unset;
-  background-color:#7B6262;
-}
-
-tbody{
-  overflow: auto;
-}
-
 .cadastro, .criar {
   header {
     background-color: #005249;
@@ -67,6 +58,7 @@ tbody{
     table {
       width: 100%;
       border-collapse: collapse;
+      tbody { overflow: auto; }
       tbody tr {
         &:nth-child(2n) td {
           background-color: #F5F5F5;

@@ -149,6 +149,7 @@
               <input
                 id="inputCertidao"
                 v-model="fila.Certidao"
+                type="text"
                 :mask="['SS-###/#### - ##/##/####']"
                 masked="masked"
                 name="Certidao"
@@ -426,8 +427,7 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <!-- <button :disabled="{ 'true': errors[0] }" @click.prevent="purge(filaUntouched, fila)"> -->
-      <button @click.prevent="purge(filaUntouched, fila)">
+      <button :disabled="saveBtnDisableState" @click.prevent="purge(filaUntouched, fila)">
         Salvar
       </button>
     </footer>
@@ -443,13 +443,13 @@
                     <span>{{ filaNiceName[key] }}</span>
                   </td>
                   <td class="oldValue">
-                    <span>{{ toConfirm.old[key] }}</span>
+                    <span>{{ diffDisplay(toConfirm.old[key], key) }}</span>
                   </td>
                   <td class="arrow">
                     <span>&rarr;</span>
                   </td>
                   <td class="newValue">
-                    <span>{{ changedValue }}</span>
+                    <span>{{ diffDisplay(changedValue, key) }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -498,6 +498,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
+import { setores as setoresLabels } from '~/utils/setoresLabels'
 
 export default {
   name: 'Cadastro',
@@ -529,9 +530,16 @@ export default {
         pending: undefined,
         success: undefined,
         error: undefined,
-        data: undefined
+        data: undefined,
+        reset () { // para zerar a request
+          this.pending = undefined
+          this.success = undefined
+          this.error = undefined
+          this.data = undefined
+        }
       },
-      filaNiceName
+      filaNiceName,
+      saveBtnDisableState: true
     }
   },
   async asyncData ({ params }) {
@@ -579,6 +587,24 @@ export default {
         this.toConfirm.state = false
       }
     },
+    diffDisplay (attribute, key) {
+      let out = ''
+      if (key === 'IdStatus') {
+        switch (attribute) {
+          case 1: out = 'Checklist'; break
+          case 2: out = 'Em análise'; break
+          case 3: out = 'Indeferido'; break
+          case 4: out = 'Aprovado'; break
+        }
+      }
+      else if (key === 'IdSetor') {
+        out = setoresLabels[attribute]
+      }
+      else {
+        out = attribute
+      }
+      return out
+    },
     getStatus (statusObj, inputValue) {
       if (statusObj.Id === parseInt(inputValue)) {
         return true
@@ -609,9 +635,11 @@ export default {
       // console.log(this.fila[filaKey], this.filaUntouched[filaKey], this.fila[filaKey] === this.filaUntouched[filaKey])
       if (isTouchedAndNew) {
         el.parentNode.classList.add('updated')
+        this.saveBtnDisableState = false
       }
       else {
         el.parentNode.classList.remove('updated')
+        this.saveBtnDisableState = true
       }
       // if (this.filaUntouched[filaKey]) {
       //   if (isTouchedAndNew && !errorsObj[0]) { el.parentNode.classList.add('updated') }
@@ -627,10 +655,12 @@ export default {
       const isEqualtoOriginal = this.filaUntouched[key] === id
       if (!isEqualtoOriginal) {
         el.parentNode.classList.add('updated')
+        this.saveBtnDisableState = false
         this.fila[key] = id
       }
       else {
         el.parentNode.classList.remove('updated')
+        this.saveBtnDisableState = true
       }
     },
     checkOUUpdate (event) {
@@ -640,9 +670,11 @@ export default {
       const selected = document.querySelector(`input[name=${field}]:checked`) // input value
       if (parseInt(selected.value) !== ouId) {
         el.parentNode.classList.add('updated')
+        this.saveBtnDisableState = false
       }
       else if (parseInt(selected.value) === ouId) {
         el.parentNode.classList.remove('updated')
+        this.saveBtnDisableState = true
       }
       this.setSetores(selected.value)
     },
@@ -651,9 +683,11 @@ export default {
       const idSubSetor = parseInt(id)
       if (this.filaUntouched.idSubsetor !== idSubSetor) {
         el.parentNode.classList.add('updated')
+        this.saveBtnDisableState = false
         this.fila.IdSetor = idSubSetor
       }
       else {
+        el.parentNode.classList.remove('updated')
         el.parentNode.classList.remove('updated')
       }
     },
@@ -663,7 +697,7 @@ export default {
     },
     backToForm () {
       this.toConfirm.state = false
-      this.putResponse.forEach((obj) => { obj = undefined })
+      this.putResponse.reset()
       document.body.style.overflow = 'auto'
     },
     put () {
@@ -673,7 +707,6 @@ export default {
           this.putResponse.pending = false
           this.putResponse.success = true
           this.putResponse.data = res
-          // location.reload()
         })
         .catch((e) => {
           this.putResponse.pending = false
@@ -682,7 +715,7 @@ export default {
         })
     },
     reload () {
-      location.reload()
+      this.$router.push({ path: `/cadastro/${this.$route.params.id}` })
       window.scrollTo(0, 0)
     },
     dateDisplay (dateStr) {

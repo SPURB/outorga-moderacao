@@ -10,7 +10,7 @@
     "AreaAdNaoResidencial": "Área Adicional (não residencial)",
     "CepacAreaAdicional": "CEPAC - Área Adicional",
     "CepacModUso": "CEPAC - Parâmetros",
-    "Email": "e-mail",
+    "Email": "E-mail",
     "Telefone": "Telefone",
     "Procurador": "Procurador",
     "CepacObjeto": "CEPAC - Objeto",
@@ -23,8 +23,8 @@
     "CodigoProposta": "Código da proposta",
     "UsuarioAlteracao": "Usuário responsável pela última alteração",
     "DataAlteracao": "Última alteração",
-    "IdStatus": "Identificador numérico da situação. Checklist: 1, análise: 2, indeferido: 3, aprovado: 4",
-    "IdSetor": "Identificador numérico do setor",
+    "IdStatus": "Status",
+    "IdSetor": "Setor (OU)",
     "Id": "Identificador"
   }
 }

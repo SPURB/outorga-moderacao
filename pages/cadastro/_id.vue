@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ valid, errors }" :class="'cadastro'" tag="div">
+  <ValidationObserver :class="'cadastro'" tag="div">
     <header>
       <h2>Editando registro <span>{{ fila.Id }}</span></h2>
       <button @click.prevent="$router.push('/')">
@@ -145,16 +145,13 @@
               <label for="inputCertidao">Certidão</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="alpha_dash|min:9|max:17" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="min:9" tag="td">
               <input
                 id="inputCertidao"
                 v-model="fila.Certidao"
                 type="text"
-                :mask="['SS-###/#### - ##/##/####']"
-                masked="masked"
                 name="Certidao"
-                rows="1"
-                @keyup.native="checkInput($event, 'Certidao', errors)"
+                @keyup="checkInput($event, 'Certidao', errors)"
               >
             </ValidationProvider>
           </tr>

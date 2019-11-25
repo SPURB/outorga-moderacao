@@ -132,7 +132,7 @@
               <label for="inputCertidao">Certidão</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="alpha_dash|min:9|max:17" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="min:9" tag="td">
               <the-mask
                 id="inputCertidao"
                 v-model="Certidao"

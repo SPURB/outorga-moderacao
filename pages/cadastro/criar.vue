@@ -13,7 +13,7 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|alpha" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
               <input
                 id="inputInteressado"
                 v-model="Interessado"
@@ -90,6 +90,7 @@
                 masked="masked"
                 name="Telefone"
                 type="tel"
+                placeholder="(00) 0000-0000"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -113,7 +114,7 @@
             <td>
               <label for="inputSei">PA/SEI</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="numeric|required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <the-mask
                 id="inputSei"
                 v-model="Sei"
@@ -121,6 +122,7 @@
                 masked="masked"
                 name="Sei"
                 rows="1"
+                placeholder="0000.0000/0000000-0"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -130,7 +132,7 @@
               <label for="inputCertidao">Certidão</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="alpha_num|min:9|max:17" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="alpha_dash|min:9|max:17" tag="td">
               <the-mask
                 id="inputCertidao"
                 v-model="Certidao"
@@ -300,6 +302,7 @@
                     masked="masked"
                     name="sql"
                     type="text"
+                    placeholder="000.000.0000-0"
                   />
                   <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
                     Remover este
@@ -583,19 +586,19 @@ export default {
           Interessado: this.Interessado,
           Licenciamento: this.Licenciamento,
           Sei: this.Sei,
-          AreaAdResidencial: parseFloat(this.AreaAdResidencial.replace(',', '.')),
-          AreaAdNaoResidencial: parseFloat(this.AreaAdNaoResidencial.replace(',', '.')),
-          CepacAreaAdicional: parseFloat(this.CepacAreaAdicional.replace(',', '.')),
+          AreaAdResidencial: parseFloat(this.AreaAdResidencial.toString().replace(',', '.')),
+          AreaAdNaoResidencial: parseFloat(this.AreaAdNaoResidencial.toString().replace(',', '.')),
+          CepacAreaAdicional: parseFloat(this.CepacAreaAdicional.toString().replace(',', '.')),
           CepacModUso: parseInt(this.CepacModUso),
           Email: this.Email,
           Telefone: this.Telefone,
           Procurador: this.Procurador,
-          CepacObjeto: parseFloat(this.CepacObjeto.replace(',', '.')),
+          CepacObjeto: parseFloat(this.CepacObjeto.toString().replace(',', '.')),
           Endereco: this.Endereco,
-          AreaTerreno: parseFloat(this.AreaTerreno.replace(',', '.')),
+          AreaTerreno: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
           Zona: this.Zona,
           Uso: this.Uso,
-          CAProjeto: parseFloat(this.CAProjeto.replace(',', '.')),
+          CAProjeto: parseFloat(this.CAProjeto.toString().replace(',', '.')),
           Obs: this.Obs,
           CodigoProposta: this.CodigoProposta,
           IdStatus: parseInt(this.IdStatus),

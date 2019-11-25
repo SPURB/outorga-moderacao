@@ -145,7 +145,7 @@
               <label for="inputCertidao">Certidão</label>
               <span class="opt">Opcional</span>
             </td>
-            <td>
+            <ValidationProvider v-slot="{ errors }" rules="alpha_dash|min:9|max:17" tag="td">
               <input
                 id="inputCertidao"
                 v-model="fila.Certidao"
@@ -154,9 +154,9 @@
                 masked="masked"
                 name="Certidao"
                 rows="1"
-                @keyup="checkInput($event, 'Certidao', errors)"
+                @keyup.native="checkInput($event, 'Certidao', errors)"
               >
-            </td>
+            </ValidationProvider>
           </tr>
           <tr>
             <td>
@@ -169,7 +169,7 @@
                 v-model="fila.Licenciamento"
                 name="Licenciamento"
                 rows="1"
-                @blur="checkInput($event, 'Licenciamento')"
+                @keyup="checkInput($event, 'Licenciamento')"
               />
             </td>
           </tr>
@@ -397,9 +397,9 @@
                 v-model="fila.CodigoProposta"
                 :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
                 masked="masked"
-                name="CodigoProposta"
                 type="text"
-                @keyup="checkInput($event, 'CodigoProposta')"
+                name="CodigoProposta"
+                @keyup.native="checkInput($event, 'CodigoProposta', errors)"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -632,6 +632,9 @@ export default {
     checkInput (event, filaKey, errorsObj = []) {
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
+      if (filaKey === 'CodigoProposta') {
+        console.log('codigo proposta')
+      }
       // console.log(this.fila[filaKey], this.filaUntouched[filaKey], this.fila[filaKey] === this.filaUntouched[filaKey])
       if (isTouchedAndNew) {
         el.parentNode.classList.add('updated')
@@ -715,7 +718,7 @@ export default {
         })
     },
     reload () {
-      this.$router.push({ path: `/cadastro/${this.$route.params.id}` })
+      window.location.reload()
       window.scrollTo(0, 0)
     },
     dateDisplay (dateStr) {

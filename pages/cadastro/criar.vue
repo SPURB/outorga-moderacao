@@ -10,6 +10,39 @@
       <table>
         <tbody>
           <tr>
+            <td>Tipo do pedido</td>
+            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
+              <input
+                id="pedidoVinculacao"
+                v-model="TipoPedido"
+                name="TipoPedido"
+                type="radio"
+                checked="false"
+                value="Certidão de vinculação"
+              >
+              <label for="pedidoVinculacao">Certidão de vinculação</label>
+              <input
+                id="pedidoAlteracao"
+                v-model="TipoPedido"
+                name="TipoPedido"
+                type="radio"
+                checked="false"
+                value="Alteração de certidão"
+              >
+              <label for="pedidoAlteracao">Alteração de certidão</label>
+              <input
+                id="pedidoDesvinculacao"
+                v-model="TipoPedido"
+                name="TipoPedido"
+                type="radio"
+                checked="false"
+                value="Desvinculação de CEPACs"
+              >
+              <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </tr>
+          <tr>
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
@@ -62,13 +95,23 @@
                 value="4"
               >
               <label for="Aprovado">Aprovado</label>
+              <input
+                id="Aprovado"
+                v-model="IdStatus"
+                checked="false"
+                type="radio"
+                name="IdStatus"
+                value="5"
+              >
+              <label for="Aprovado">Cancelado</label>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputEmail">E-mail</label>
+              <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|email" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="email" tag="td">
               <input
                 id="inputEmail"
                 v-model="Email"
@@ -81,8 +124,9 @@
           <tr>
             <td>
               <label for="inputTelefone">Telefone</label>
+              <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="" tag="td">
               <the-mask
                 id="inputTelefone"
                 v-model="Telefone"
@@ -245,7 +289,7 @@
           </tr>
           <tr>
             <td>
-              <label for="inputAreaTerreno">Área do Terreno (m²)</label>
+              <label for="inputAreaTerreno">Área Real do Terreno (m²)</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required|min_value:0.01" tag="td">
               <input
@@ -260,9 +304,25 @@
           </tr>
           <tr>
             <td>
-              <label for="inputZona">Zona</label>
+              <label for="inputAreaTerreno">Área de Registro do Terreno (m²)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:2" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0.01" tag="td">
+              <input
+                id="inputAreaRegistro"
+                v-model="AreaRegistro"
+                name="AreaRegistro"
+                type="number"
+                step="0.01"
+              >
+              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </tr>
+          <tr>
+            <td>
+              <label for="inputZona">Zona</label>
+              <span class="opt">Opcional</span>
+            </td>
+            <ValidationProvider v-slot="{ errors }" rules="min:2" tag="td">
               <input
                 id="inputZona"
                 v-model="Zona"
@@ -275,8 +335,9 @@
           <tr>
             <td>
               <label for="inputUso">Uso</label>
+              <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="" tag="td">
               <input
                 id="inputUso"
                 v-model="Uso"
@@ -462,6 +523,7 @@ export default {
   },
   data () {
     return {
+      TipoPedido: '',
       SubSetor: '',
       Certidao: '',
       Interessado: '',
@@ -477,6 +539,7 @@ export default {
       CepacObjeto: 0,
       Endereco: '',
       AreaTerreno: '',
+      AreaRegistro: 0,
       Zona: '',
       Uso: '',
       CAProjeto: '',
@@ -582,6 +645,7 @@ export default {
         const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
 
         axios.post('fila', {
+          TipoPedido: this.TipoPedido,
           Certidao: this.Certidao,
           Interessado: this.Interessado,
           Licenciamento: this.Licenciamento,
@@ -596,6 +660,7 @@ export default {
           CepacObjeto: parseFloat(this.CepacObjeto.toString().replace(',', '.')),
           Endereco: this.Endereco,
           AreaTerreno: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
+          AreaRegistro: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
           Zona: this.Zona,
           Uso: this.Uso,
           CAProjeto: parseFloat(this.CAProjeto.toString().replace(',', '.')),

@@ -78,6 +78,11 @@ export default {
           type: 'string'
         },
         {
+          label: 'Tipo de pedido',
+          field: 'TipoPedido',
+          type: 'string'
+        },
+        {
           label: 'Situação',
           field: 'Status',
           type: 'string',
@@ -144,9 +149,14 @@ export default {
           type: 'string'
         },
         {
-          label: 'Área do Terreno',
+          label: 'Área Real do Terreno',
           field: 'AreaTerreno',
           type: 'string'
+        },
+        {
+          label: 'Área de Registro do Terreno',
+          field: 'AreaRegistro',
+          type: 'number'
         },
         {
           label: 'Zona',

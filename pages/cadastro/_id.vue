@@ -43,7 +43,6 @@
                 value="Desvinculação de CEPACs"
               >
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -627,6 +626,9 @@ export default {
     this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
     this.normFila(this.fila)
     this.sqlsUntouched = this.sqls
+  },
+  updated () {
+    console.log(this.fila.TipoPedido)
   },
   methods: {
     purge (oldFila, newFila) {

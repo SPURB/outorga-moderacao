@@ -1,5 +1,6 @@
 {
   "fila": {
+    "TipoPedido": "Tipo do pedido",
     "Data": "Data",
     "SubSetor": "Sub-setor",
     "Certidao": "Certidão",
@@ -15,7 +16,8 @@
     "Procurador": "Procurador",
     "CepacObjeto": "CEPAC - Objeto",
     "Endereco": "Endereço",
-    "AreaTerreno": "Área do terreno",
+    "AreaTerreno": "Área real do terreno",
+    "AreaRegistro": "Área de registro do terreno",
     "Zona": "Zona (Lei 16.402/16,)",
     "Uso": "Tipo de uso",
     "CAProjeto": "C.A. do Projeto",

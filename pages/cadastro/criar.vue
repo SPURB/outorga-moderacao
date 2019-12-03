@@ -96,14 +96,14 @@
               >
               <label for="Aprovado">Aprovado</label>
               <input
-                id="Aprovado"
+                id="Cancelado"
                 v-model="IdStatus"
                 checked="false"
                 type="radio"
                 name="IdStatus"
                 value="5"
               >
-              <label for="Aprovado">Cancelado</label>
+              <label for="Cancelado">Cancelado</label>
             </ValidationProvider>
           </tr>
           <tr>

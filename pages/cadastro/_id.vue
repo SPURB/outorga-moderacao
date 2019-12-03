@@ -18,9 +18,9 @@
                 type="radio"
                 name="TipoPedido"
                 value="Certidão de vinculação"
-                checked="checked"
-                v-model="TipoPedido"
-                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
+                :checked="getTipo(fila.TipoPedido, 'Certidão de vinculação')"
+                v-model="fila.TipoPedido"
+                @click="checkTipoUpdate($event, 'TipoPedido')"
               >
               <label for="pedidoVinculacao">Certidão de vinculação</label>
               <input
@@ -28,9 +28,9 @@
                 type="radio"
                 name="TipoPedido"
                 value="Alteração de certidão"
-                :checked="getTipo('Alteração de certidão')"
-                v-model="TipoPedido"
-                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
+                :checked="getTipo(fila.TipoPedido, 'Alteração de certidão')"
+                v-model="fila.TipoPedido"
+                @click="checkTipoUpdate($event, 'TipoPedido')"
               >
               <label for="pedidoAlteracao">Alteração de certidão</label>
               <input
@@ -38,9 +38,9 @@
                 type="radio"
                 name="TipoPedido"
                 value="Desvinculação de CEPACs"
-                :checked="getTipo('Desvinculação de CEPACs')"
-                v-model="TipoPedido"
-                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
+                :checked="getTipo(fila.TipoPedido, 'Desvinculação de CEPACs')"
+                v-model="fila.TipoPedido"
+                @click="checkTipoUpdate($event, 'TipoPedido')"
               >
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
             </ValidationProvider>
@@ -220,14 +220,14 @@
             <td>Operação Urbana</td>
             <td>
               <input
-                id="AguaBranca"
+                id="AguaEspraiada"
                 @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 1)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="1"
               >
-              <label for="AguaBranca">Água Branca</label>
+              <label for="AguaEspraiada">Água Espraiada</label>
               <input
                 id="FariaLima"
                 @click="checkOUUpdate($event)"
@@ -238,37 +238,37 @@
               >
               <label for="FariaLima">Faria Lima</label>
               <input
-                id="AguaEspraiada"
+                id="Centro"
                 @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 3)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="3"
               >
-              <label for="AguaEspraiada">Água Espraiada</label>
+              <label for="Centro">Centro</label>
               <input
-                id="Centro"
+                id="AguaBranca"
                 @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 4)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="4"
               >
-              <label for="Centro">Centro</label>
+              <label for="AguaBranca">Água Branca</label>
             </td>
           </tr>
           <tr>
             <td>
               <label>Setor</label>
             </td>
-            <td>
+            <td ref="setoresRow">
               <template v-for="(setor, index) in everySetor = Setores">
                 <input
                   :id="'setor_' + Object.keys(setor)[0]"
                   @click="checkSetorUpdate($event, Object.keys(setor)[0])"
                   :key="'input' + index.toString()"
                   :value="Object.keys(setor)[0]"
-                  :checked="getSetor(fila.SetorObj, Object.keys(setor)[0])"
+                  :checked="getSetor(filaUntouched.SetorObj, Object.keys(setor)[0])"
                   type="radio"
                   name="IdSetor"
                 >
@@ -590,10 +590,10 @@ export default {
       filaUntouched: {},
       sqlsUntouched: {},
       allSetores: [
-        [{ '11': 'A' }, { '12': 'B' }, { '13': 'C' }, { '14': 'D' }, { '15': 'E' }],
-        [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
         [{ '5': 'JABAQUARA' }, { '6': 'CHUCRI ZAIDAN' }, { '7': 'MARGINAL PINHEIROS' }, { '8': 'BERRINI' }, { '9': 'BROOKLIN' }],
-        [{ '10': 'CENTRO' }]
+        [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
+        [{ '10': 'CENTRO' }],
+        [{ '11': 'A' }, { '12': 'B' }, { '13': 'C' }, { '14': 'D' }, { '15': 'E' }]
       ],
       Setores: undefined,
       toConfirm: {
@@ -626,9 +626,6 @@ export default {
     this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
     this.normFila(this.fila)
     this.sqlsUntouched = this.sqls
-  },
-  updated () {
-    console.log(this.fila.TipoPedido)
   },
   methods: {
     purge (oldFila, newFila) {
@@ -674,9 +671,8 @@ export default {
       }
       return out
     },
-    getTipo (pedidoObj) {
-      console.log(pedidoObj === this.fila.TipoPedido)
-      if (this.fila.TipoPedido === pedidoObj) {
+    getTipo (pedidoObj, inputValue) {
+      if (pedidoObj === inputValue) {
         return 'checked'
       }
       else {
@@ -710,9 +706,6 @@ export default {
     checkInput (event, filaKey, errorsObj = []) {
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
-      if (filaKey === 'CodigoProposta') {
-        console.log('codigo proposta')
-      }
       // console.log(this.fila[filaKey], this.filaUntouched[filaKey], this.fila[filaKey] === this.filaUntouched[filaKey])
       if (isTouchedAndNew) {
         el.parentNode.classList.add('updated')
@@ -759,31 +752,34 @@ export default {
       }
       this.setSetores(selected.value)
     },
-    checkSetorUpdate (event, id) {
-      const el = event.target
-      const idSubSetor = parseInt(id)
-      if (this.filaUntouched.idSubsetor !== idSubSetor) {
-        el.parentNode.classList.add('updated')
+    checkSetorUpdate (event, idStr) {
+      const td = event.target.parentNode
+      const id = parseInt(idStr)
+      if (id !== this.filaUntouched.IdSetor) {
+        td.classList.add('updated')
         this.saveBtnDisableState = false
-        this.fila.IdSetor = idSubSetor
+        this.fila.IdSetor = id
       }
       else {
-        el.parentNode.classList.remove('updated')
+        td.classList.remove('updated')
+        this.saveBtnDisableState = true
       }
     },
-    checkTipoUpdate (newValue, originalValue, event) {
-      const el = event.target
-      if (newValue !== originalValue) {
-        el.parentNode.classList.add('updated')
+    checkTipoUpdate (event, filaKey) {
+      const td = event.target.parentNode
+      const val = event.target.value
+      if (val !== this.filaUntouched[filaKey]) {
+        td.classList.add('updated')
         this.saveBtnDisableState = false
       }
       else {
-        el.parentNode.classList.remove('updated')
+        td.classList.remove('updated')
         this.saveBtnDisableState = true
       }
     },
     setSetores (IdOu) {
       this.Setores = this.allSetores[IdOu - 1]
+      this.$refs.setoresRow.classList.remove('updated')
       return Object.entries(this.Setores)
     },
     normFila (filaObj) {

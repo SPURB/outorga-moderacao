@@ -661,6 +661,7 @@ export default {
           case 2: out = 'Em análise'; break
           case 3: out = 'Indeferido'; break
           case 4: out = 'Aprovado'; break
+          case 5: out = 'Cancelado'; break
         }
       }
       else if (key === 'IdSetor') {

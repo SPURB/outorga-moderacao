@@ -15,32 +15,32 @@
             <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
               <input
                 id="pedidoVinculacao"
-                v-model="TipoPedido"
-                name="TipoPedido"
                 type="radio"
-                :checked="getTipo(fila.TipoPedido, 'Certidão de vinculação')"
-                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
+                name="TipoPedido"
                 value="Certidão de vinculação"
+                checked="checked"
+                v-model="TipoPedido"
+                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
               >
               <label for="pedidoVinculacao">Certidão de vinculação</label>
               <input
                 id="pedidoAlteracao"
-                v-model="TipoPedido"
-                name="TipoPedido"
                 type="radio"
-                :checked="getTipo(fila.TipoPedido, 'Alteração de certidão')"
-                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
+                name="TipoPedido"
                 value="Alteração de certidão"
+                :checked="getTipo('Alteração de certidão')"
+                v-model="TipoPedido"
+                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
               >
               <label for="pedidoAlteracao">Alteração de certidão</label>
               <input
                 id="pedidoDesvinculacao"
-                v-model="TipoPedido"
-                name="TipoPedido"
                 type="radio"
-                :checked="getTipo(fila.TipoPedido, 'Desvinculação de CEPACs')"
-                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
+                name="TipoPedido"
                 value="Desvinculação de CEPACs"
+                :checked="getTipo('Desvinculação de CEPACs')"
+                v-model="TipoPedido"
+                @click="checkTipoUpdate(fila.TipoPedido, filaUntouched.TipoPedido, $event)"
               >
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
             </ValidationProvider>
@@ -674,12 +674,13 @@ export default {
       }
       return out
     },
-    getTipo (pedidoObj, inputValue) {
-      if (pedidoObj === inputValue) {
-        return true
+    getTipo (pedidoObj) {
+      console.log(pedidoObj === this.fila.TipoPedido)
+      if (this.fila.TipoPedido === pedidoObj) {
+        return 'checked'
       }
       else {
-        return false
+        return 'false'
       }
     },
     getStatus (statusObj, inputValue) {

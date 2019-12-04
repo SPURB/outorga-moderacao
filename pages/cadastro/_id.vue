@@ -15,31 +15,31 @@
             <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
               <input
                 id="pedidoVinculacao"
+                v-model="fila.TipoPedido"
                 type="radio"
                 name="TipoPedido"
                 value="Certidão de vinculação"
                 :checked="getTipo(fila.TipoPedido, 'Certidão de vinculação')"
-                v-model="fila.TipoPedido"
                 @click="checkTipoUpdate($event, 'TipoPedido')"
               >
               <label for="pedidoVinculacao">Certidão de vinculação</label>
               <input
                 id="pedidoAlteracao"
+                v-model="fila.TipoPedido"
                 type="radio"
                 name="TipoPedido"
                 value="Alteração de certidão"
                 :checked="getTipo(fila.TipoPedido, 'Alteração de certidão')"
-                v-model="fila.TipoPedido"
                 @click="checkTipoUpdate($event, 'TipoPedido')"
               >
               <label for="pedidoAlteracao">Alteração de certidão</label>
               <input
                 id="pedidoDesvinculacao"
+                v-model="fila.TipoPedido"
                 type="radio"
                 name="TipoPedido"
                 value="Desvinculação de CEPACs"
                 :checked="getTipo(fila.TipoPedido, 'Desvinculação de CEPACs')"
-                v-model="fila.TipoPedido"
                 @click="checkTipoUpdate($event, 'TipoPedido')"
               >
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
@@ -120,8 +120,8 @@
                 id="inputEmail"
                 v-model="fila.Email"
                 name="Email"
-                @keyup="checkInput($event, 'Email', errors)"
                 type="text"
+                @keyup="checkInput($event, 'Email', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -138,8 +138,8 @@
                 :mask="['(##) ####-####', '(##) #####-####']"
                 masked="masked"
                 name="Telefone"
-                @keyup.native="checkInput($event, 'Telefone', errors)"
                 type="tel"
+                @keyup.native="checkInput($event, 'Telefone', errors)"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -154,8 +154,8 @@
                 id="inputProcurador"
                 v-model="fila.Procurador"
                 name="Procurador"
-                @keyup="checkInput($event, 'Procurador', errors)"
                 type="text"
+                @keyup="checkInput($event, 'Procurador', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -178,10 +178,10 @@
               <the-mask
                 id="inputSei"
                 v-model="fila.Sei"
-                @keyup.native="checkInput($event, 'Sei', errors)"
                 :mask="['####.####/#######-#']"
                 masked="masked"
                 name="Sei"
+                @keyup.native="checkInput($event, 'Sei', errors)"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -195,9 +195,9 @@
               <input
                 id="inputCertidao"
                 v-model="fila.Certidao"
-                @keyup="checkInput($event, 'Certidao', errors)"
                 type="text"
                 name="Certidao"
+                @keyup="checkInput($event, 'Certidao', errors)"
               >
             </ValidationProvider>
           </tr>
@@ -210,9 +210,9 @@
               <textarea
                 id="inputLicenciamento"
                 v-model="fila.Licenciamento"
-                @keyup="checkInput($event, 'Licenciamento')"
                 name="Licenciamento"
                 rows="1"
+                @keyup="checkInput($event, 'Licenciamento')"
               />
             </td>
           </tr>
@@ -221,38 +221,38 @@
             <td>
               <input
                 id="AguaEspraiada"
-                @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 1)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="1"
+                @click="checkOUUpdate($event)"
               >
               <label for="AguaEspraiada">Água Espraiada</label>
               <input
                 id="FariaLima"
-                @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 2)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="2"
+                @click="checkOUUpdate($event)"
               >
               <label for="FariaLima">Faria Lima</label>
               <input
                 id="Centro"
-                @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 3)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="3"
+                @click="checkOUUpdate($event)"
               >
               <label for="Centro">Centro</label>
               <input
                 id="AguaBranca"
-                @click="checkOUUpdate($event)"
                 :checked="getOU(fila.SetorObj, 4)"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="4"
+                @click="checkOUUpdate($event)"
               >
               <label for="AguaBranca">Água Branca</label>
             </td>
@@ -265,12 +265,12 @@
               <template v-for="(setor, index) in everySetor = Setores">
                 <input
                   :id="'setor_' + Object.keys(setor)[0]"
-                  @click="checkSetorUpdate($event, Object.keys(setor)[0])"
                   :key="'input' + index.toString()"
                   :value="Object.keys(setor)[0]"
                   :checked="getSetor(filaUntouched.SetorObj, Object.keys(setor)[0])"
                   type="radio"
                   name="IdSetor"
+                  @click="checkSetorUpdate($event, Object.keys(setor)[0])"
                 >
                 <label :key="index" :for="'setor_' + Object.keys(setor)[0]">{{ Object.entries(setor)[0][1] }}</label>
               </template>
@@ -284,9 +284,9 @@
               <input
                 id="inputSubSetor"
                 v-model="fila.SubSetor"
-                @keyup="checkInput($event, 'SubSetor', errors)"
                 name="SubSetor"
                 type="text"
+                @keyup="checkInput($event, 'SubSetor', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -299,9 +299,9 @@
               <textarea
                 id="inputEndereco"
                 v-model="fila.Endereco"
-                @keyup="checkInput($event, 'Endereco')"
                 name="Endereco"
                 rows="1"
+                @keyup="checkInput($event, 'Endereco')"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -314,10 +314,10 @@
               <input
                 id="inputAreaTerreno"
                 v-model.number="fila.AreaTerreno"
-                @keyup="checkInput($event, 'AreaTerreno')"
                 name="AreaTerreno"
                 type="number"
                 step="0.01"
+                @keyup="checkInput($event, 'AreaTerreno')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -330,10 +330,10 @@
               <input
                 id="inputAreaRegistro"
                 v-model.number="fila.AreaRegistro"
-                @keyup="checkInput($event, 'AreaRegistro')"
                 name="AreaRegistro"
                 type="number"
                 step="0.01"
+                @keyup="checkInput($event, 'AreaRegistro')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -347,9 +347,9 @@
               <input
                 id="inputZona"
                 v-model="fila.Zona"
-                @keyup="checkInput($event, 'Zona')"
                 name="Zona"
                 type="text"
+                @keyup="checkInput($event, 'Zona')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -363,9 +363,9 @@
               <input
                 id="inputUso"
                 v-model="fila.Uso"
-                @keyup="checkInput($event, 'Uso')"
                 name="Uso"
                 type="text"
+                @keyup="checkInput($event, 'Uso')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -386,10 +386,10 @@
               <input
                 id="inputCAProjeto"
                 v-model.number="fila.CAProjeto"
-                @keyup="checkInput($event, 'CAProjeto', errors)"
                 name="CAProjeto"
                 type="number"
                 step="0.01"
+                @keyup="checkInput($event, 'CAProjeto', errors)"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -402,11 +402,11 @@
               <input
                 id="inputAreaAdResidencial"
                 v-model.number="fila.AreaAdResidencial"
-                @keyup="checkInput($event, 'AreaAdResidencial')"
                 name="AreaAdResidencial"
                 type="number"
                 step="any"
                 min="0"
+                @keyup="checkInput($event, 'AreaAdResidencial')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -419,11 +419,11 @@
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model.number="fila.AreaAdNaoResidencial"
-                @keyup="checkInput($event, 'AreaAdNaoResidencial')"
                 name="AreaAdNaoResidencial"
                 type="number"
                 step="any"
                 min="0"
+                @keyup="checkInput($event, 'AreaAdNaoResidencial')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -436,11 +436,11 @@
               <input
                 id="inputCepacAreaAdicional"
                 v-model.number="fila.CepacAreaAdicional"
-                @keyup="checkInput($event, 'CepacAreaAdicional')"
                 name="CepacAreaAdicional"
                 type="number"
                 step="any"
                 min="0"
+                @keyup="checkInput($event, 'CepacAreaAdicional')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -453,11 +453,11 @@
               <input
                 id="inputCepacModUso"
                 v-model.number="fila.CepacModUso"
-                @keyup="checkInput($event, 'CepacModUso')"
                 name="CepacModUso"
                 type="number"
                 step="1"
                 min="0"
+                @keyup="checkInput($event, 'CepacModUso')"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -470,11 +470,11 @@
               <the-mask
                 id="inputCodigoProposta"
                 v-model="fila.CodigoProposta"
-                @keyup.native="checkInput($event, 'CodigoProposta', errors)"
                 :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
                 masked="masked"
                 type="text"
                 name="CodigoProposta"
+                @keyup.native="checkInput($event, 'CodigoProposta', errors)"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -488,10 +488,10 @@
               <textarea
                 id="inputObs"
                 v-model="fila.Obs"
-                @keyup="checkInput($event, 'Obs')"
                 name="Obs"
                 type="text"
                 rows="5"
+                @keyup="checkInput($event, 'Obs')"
               />
             </td>
           </tr>
@@ -531,10 +531,10 @@
             </table>
           </div>
           <div class="action">
-            <button @click="backToForm" class="esc">
+            <button class="esc" @click="backToForm">
               Cancelar e voltar
             </button>
-            <button @click="put" class="confirm">
+            <button class="confirm" @click="put">
               Confirmar e registrar
             </button>
           </div>
@@ -707,7 +707,6 @@ export default {
     checkInput (event, filaKey, errorsObj = []) {
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
-      // console.log(this.fila[filaKey], this.filaUntouched[filaKey], this.fila[filaKey] === this.filaUntouched[filaKey])
       if (isTouchedAndNew) {
         el.parentNode.classList.add('updated')
         this.saveBtnDisableState = false
@@ -716,14 +715,6 @@ export default {
         el.parentNode.classList.remove('updated')
         this.saveBtnDisableState = true
       }
-      // if (this.filaUntouched[filaKey]) {
-      //   if (isTouchedAndNew && !errorsObj[0]) { el.parentNode.classList.add('updated') }
-      //   else { el.parentNode.classList.remove('updated') }
-      // }
-      // else if (this.filaUntouched[filaKey] === null) {
-      //   if (this.fila[filaKey] && !errorsObj[0]) { el.parentNode.classList.add('updated') }
-      //   else { el.parentNode.classList.remove('updated') }
-      // }
     },
     checkUpdateById (event, key, id) {
       const el = event.target
@@ -786,7 +777,9 @@ export default {
     normFila (filaObj) {
       for (const key in filaObj) { // precisa do for aqui para evitar que a instância vue não entender valores de 'fila' como um valor imutável
         if (key === 'CAProjeto' || key === 'AreaTerreno') {
-          filaObj[key] = parseFloat(filaObj[key])
+          if (parseFloat(filaObj[key])) {
+            filaObj[key] = parseFloat(filaObj[key])
+          }
         }
         this.filaUntouched[key] = filaObj[key]
         if (filaObj[key] === null) {
@@ -838,11 +831,6 @@ export default {
           input.value = ''
         }
       }
-      // inserir a seguinte logica no metodo put()
-      // 1. comparar sqls com sqlsUntouched
-      // 2. put nas alterações
-      // 3. post nas inserções
-      // observar issue #1 do repositorio
     }
   }
 }

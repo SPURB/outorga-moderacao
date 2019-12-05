@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <header>
-      <img src="~/assets/spurbanismo-logo_color.png" alt="">
+      <router-link to="/">
+        <logo-spurb :fill-type="'#1D1D1B'" :fill-brand="'#038375'" />
+      </router-link>
       <h1>Controle Outorgas</h1>
     </header>
     <nuxt id="main" />
@@ -9,7 +11,10 @@
 </template>
 
 <script>
+import LogoSpurb from '~/components/icons/LogoSpurb'
 export default {
+  name: 'OutorgaModeracao',
+  components: { LogoSpurb },
   head () {
     return {
       title: 'SP Urbanismo | Moderção de CEPAC',
@@ -18,3 +23,11 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+header {
+  .logo {
+    width: 151px;
+    margin-left: 22px
+  }
+}
+</style>

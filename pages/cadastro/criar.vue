@@ -244,7 +244,7 @@
           </tr>
           <tr v-if="ouc !== ''">
             <td>Setor</td>
-            <ValidationProvider v-slot="{ errors }" :rules="required" tag="td">
+            <ValidationProvider v-slot="{ errors }" tag="td">
               <template v-for="(setor, index) in Setores">
                 <input
                   :id="`setor_${setor.id}`"
@@ -263,7 +263,7 @@
             <td>
               <label for="inputSubSetor">SubSetor</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|alpha_num" tag="td">
+            <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
                 id="inputSubSetor"
                 v-model="SubSetor"
@@ -585,7 +585,12 @@ export default {
     }
   },
   computed: {
-    sqlsToSend () { return this.sqls.map(sql => sql.content) }
+    sqlsToSend () { return this.sqls.map(sql => sql.content) },
+    now () {
+      const d = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000)) // milsegundos agora menos milisegundos do fuso
+      const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
+      return now
+    }
   },
   watch: {
     ouc (key) {
@@ -634,16 +639,16 @@ export default {
       if (!isValid) {
         this.form.isFetching = false
         this.form.error = true
-        this.form.message = 'Erro no formulário'
+        this.form.message = `Erro no formulário: ${errors}`
       }
       else {
         this.form.isFetching = true
         this.form.error = false
         this.form.message = 'Criando cadastro no banco de dados'
 
-        const d = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000)) // milsegundos agora menos milisegundos do fuso
-        const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
-
+        // const d = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000)) // milsegundos agora menos milisegundos do fuso
+        // const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
+        // 2019-12-05T13:01:59
         axios.post('fila', {
           TipoPedido: this.TipoPedido,
           Certidao: this.Certidao,
@@ -669,7 +674,7 @@ export default {
           IdStatus: parseInt(this.IdStatus),
           IdSetor: parseInt(this.IdSetor),
           SubSetor: this.SubSetor,
-          Date: now
+          Date: this.now
         })
           .then((res) => {
             const IdFilaCepac = res.data.Id

@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ valid, errors }" :class="'criar'" tag="div">
+  <ValidationObserver ref="form" v-slot="{ valid, errors }" :class="'criar'" tag="div">
     <header>
       <h2>Criar novo registro</h2>
       <button @click="$router.push('/')">
@@ -11,7 +11,7 @@
         <tbody>
           <tr>
             <td>Tipo do pedido</td>
-            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
+            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td" :name="'Tipo de p edido'">
               <input
                 id="pedidoVinculacao"
                 v-model="TipoPedido"
@@ -156,6 +156,22 @@
           </tr>
           <tr>
             <td>
+              <label for="dataInclusao">Data</label>
+            </td>
+            <td>
+              <date-pick
+                id="dataInclusao"
+                v-model="Data"
+                :format="'YYYY-MM-DD'"
+                next-month-caption="Próximo mês"
+                prev-month-caption="Mês anterior"
+                :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
+                :months="['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']"
+              ></date-pick>
+            </td>
+          </tr>
+          <tr>
+            <td>
               <label for="inputSei">PA/SEI</label>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
@@ -164,7 +180,7 @@
                 v-model="Sei"
                 :mask="['####.####/#######-#']"
                 masked="masked"
-                name="Sei"
+                name="SEI"
                 rows="1"
                 placeholder="0000.0000/0000000-0"
               />
@@ -182,7 +198,7 @@
                 v-model="Certidao"
                 :mask="['SS-###/#### - ##/##/####']"
                 masked="masked"
-                name="Certidao"
+                name="Certidão"
                 rows="1"
                 placeholder="FL-000/2020 - dd/mm/aaaa"
               />
@@ -267,7 +283,7 @@
               <input
                 id="inputSubSetor"
                 v-model="SubSetor"
-                name="SubSetor"
+                name="Sub setor"
                 type="text"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
@@ -361,7 +377,7 @@
                     v-model="sql.content"
                     :mask="['###.###.####-#']"
                     masked="masked"
-                    name="sql"
+                    name="SQL"
                     type="text"
                     placeholder="000.000.0000-0"
                   />
@@ -509,6 +525,7 @@
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
+import DatePick from 'vue-date-pick'
 import Message from '~/components/Message'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
@@ -519,10 +536,12 @@ export default {
     ValidationProvider,
     ValidationObserver,
     TheMask,
-    Message
+    Message,
+    DatePick
   },
   data () {
     return {
+      Data: '',
       TipoPedido: '',
       SubSetor: '',
       Certidao: '',
@@ -585,12 +604,7 @@ export default {
     }
   },
   computed: {
-    sqlsToSend () { return this.sqls.map(sql => sql.content) },
-    now () {
-      const d = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000)) // milsegundos agora menos milisegundos do fuso
-      const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
-      return now
-    }
+    sqlsToSend () { return this.sqls.map(sql => sql.content) }
   },
   watch: {
     ouc (key) {
@@ -610,7 +624,12 @@ export default {
       }
     }
   },
+  created () {
+    const date = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000))
+    this.Data = date.toISOString().slice(0, 10)
+  },
   methods: {
+    onSubmit () { console.log('submited') },
     removeSql (sql) {
       const indexSql = this.sqls.indexOf(sql)
       this.sqls.splice(indexSql, 1)
@@ -639,16 +658,22 @@ export default {
       if (!isValid) {
         this.form.isFetching = false
         this.form.error = true
-        this.form.message = `Erro no formulário: ${errors}`
+
+        const errorsList = []
+
+        for (const errorKey in errors) {
+          if (errors[errorKey].length) {
+            errorsList.push(this.$refs.form._data.refs[errorKey].$el.firstElementChild.name)
+          }
+        }
+        this.form.message = `Corrija os seguintes campos: ${errorsList.join(', ')}`
       }
+
       else {
         this.form.isFetching = true
         this.form.error = false
         this.form.message = 'Criando cadastro no banco de dados'
 
-        // const d = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000)) // milsegundos agora menos milisegundos do fuso
-        // const now = d.toISOString().substring(0, d.toISOString().lastIndexOf('.')) // modelo ####-##-##T##:##:##
-        // 2019-12-05T13:01:59
         axios.post('fila', {
           TipoPedido: this.TipoPedido,
           Certidao: this.Certidao,
@@ -674,7 +699,7 @@ export default {
           IdStatus: parseInt(this.IdStatus),
           IdSetor: parseInt(this.IdSetor),
           SubSetor: this.SubSetor,
-          Data: this.now
+          Data: `${this.Data}T00:00:00`
         })
           .then((res) => {
             const IdFilaCepac = res.data.Id
@@ -703,7 +728,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-@import '~/assets/formCadastro.scss';
-
-</style>

@@ -40,7 +40,8 @@ export default {
   ** Global CSS
   */
   css: [
-    '@/assets/main.scss'
+    '@/assets/main.scss',
+    '@/assets/formCadastro.scss'
   ],
   /*
   ** Plugins to load before mounting the App

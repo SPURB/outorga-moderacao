@@ -154,6 +154,59 @@
               }
               resize: none;
             }
+            .vdpComponent {// calendário
+              max-width: 600px;
+              header {
+                position: unset;
+                padding: 1rem;
+                display: flex;
+                justify-content: space-between;
+                .vdpPeriodControls {
+                  display: flex;
+                  justify-content: space-between;
+                  button {
+                    font-size: 0;
+                  }
+                }
+              }
+              thead > tr {
+                th {
+                  text-align: left;
+                  padding-left: 1rem;
+                }
+              }
+              .vdpRow {
+                td {
+                  &:first-child {
+                    width: unset;
+                    font-size: unset;
+                    color: unset;
+                    padding: 1rem;
+                  }
+                  &:nth-child(2) {
+                    padding: 1rem;
+                  }
+                }
+              }
+              .vdpCell {
+                cursor: pointer;
+                transition: background-color ease 0.15s;
+                &.today {
+                  background-color: #BDBDBD;
+                }
+                &.selected {
+                  color: #FFF;
+                  background-color: #008375
+                }
+                &:hover {
+                  color: black;
+                  background-color: rgb(230, 230, 230);
+                }
+              }
+              .vdpClearInput {
+                display: none;
+              }
+            }
             ul.sqls {
               margin: 0;
               padding: 0;

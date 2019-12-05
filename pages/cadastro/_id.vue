@@ -160,7 +160,7 @@
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
-          <tr>
+          <!-- <tr>
             <td>
               <label for="inputData">Data de criação</label>
             </td>
@@ -168,6 +168,22 @@
               <span class="noEdit">
                 {{ fila.Data.substring(0, 10) }}, {{ fila.Data.substring(11, 19) }}
               </span>
+            </td>
+          </tr> -->
+          <tr>
+            <td>
+              <label for="dataInclusao">Data</label>
+            </td>
+            <td ref="dataInclusao">
+              <date-pick
+                id="dataInclusao"
+                v-model="dataNow"
+                :format="'YYYY-MM-DD'"
+                next-month-caption="Próximo mês"
+                prev-month-caption="Mês anterior"
+                :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
+                :months="['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']"
+              />
             </td>
           </tr>
           <tr>
@@ -571,6 +587,7 @@
 <script>
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
+import DatePick from 'vue-date-pick'
 import axios from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
@@ -580,7 +597,8 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
-    TheMask
+    TheMask,
+    DatePick
   },
   data () {
     return {
@@ -615,6 +633,22 @@ export default {
       },
       filaNiceName,
       saveBtnDisableState: true
+    }
+  },
+  computed: {
+    dataNow: {
+      get () {
+        return this.fila.Data.slice(0, 10)
+      },
+      set (val) {
+        if (this.filaUntouched.Data.slice(0, 10) === val) {
+          this.$refs.dataInclusao.classList.remove('updated')
+        }
+        else {
+          this.$refs.dataInclusao.classList.add('updated')
+        }
+        this.fila.Data = `${val}T00:00:00`
+      }
     }
   },
   async asyncData ({ params }) {
@@ -705,6 +739,7 @@ export default {
       }
     },
     checkInput (event, filaKey, errorsObj = []) {
+      console.log(event)
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
       if (isTouchedAndNew) {
@@ -835,6 +870,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-@import '~/assets/formCadastro.scss';
-</style>

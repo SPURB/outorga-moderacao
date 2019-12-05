@@ -674,7 +674,7 @@ export default {
           IdStatus: parseInt(this.IdStatus),
           IdSetor: parseInt(this.IdSetor),
           SubSetor: this.SubSetor,
-          Date: this.now
+          Data: this.now
         })
           .then((res) => {
             const IdFilaCepac = res.data.Id

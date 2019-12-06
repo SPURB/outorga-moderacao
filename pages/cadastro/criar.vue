@@ -11,7 +11,7 @@
         <tbody>
           <tr>
             <td>Tipo do pedido</td>
-            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td" :name="'Tipo de p edido'">
+            <ValidationProvider :rules="{ required: { allowFalse: false } }" :name="'Tipo de p edido'" tag="td">
               <input
                 id="pedidoVinculacao"
                 v-model="TipoPedido"
@@ -156,18 +156,18 @@
           </tr>
           <tr>
             <td>
-              <label for="dataInclusao">Data</label>
+              <label for="dataInclusao">Data de registro</label>
             </td>
             <td>
               <date-pick
                 id="dataInclusao"
                 v-model="Data"
                 :format="'YYYY-MM-DD'"
-                next-month-caption="Próximo mês"
-                prev-month-caption="Mês anterior"
                 :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
                 :months="['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']"
-              ></date-pick>
+                next-month-caption="Próximo mês"
+                prev-month-caption="Mês anterior"
+              />
             </td>
           </tr>
           <tr>
@@ -381,12 +381,12 @@
                     type="text"
                     placeholder="000.000.0000-0"
                   />
-                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
+                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
                     Remover este
                   </button>
                 </ValidationProvider>
               </ul>
-              <button class="add" @click.prevent="addSql">
+              <button @click.prevent="addSql" class="add">
                 Adicionar SQL
               </button>
             </td>

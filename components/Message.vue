@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="message__actions">
-        <button class="actions__item" @click="$emit('close')">
+        <button @click="$emit('close')" class="actions__item">
           Fechar
         </button>
       </div>

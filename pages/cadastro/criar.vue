@@ -11,7 +11,8 @@
         <tbody>
           <tr>
             <td>Tipo do pedido</td>
-            <ValidationProvider :rules="{ required: { allowFalse: false } }" :name="'Tipo de p edido'" tag="td">
+            <!-- <ValidationProvider :rules="{ required: { allowFalse: false } }" :name="'tipo-de-pedido'" tag="td"> -->
+            <td>
               <input
                 id="pedidoVinculacao"
                 v-model="TipoPedido"
@@ -39,8 +40,9 @@
                 value="Desvinculação de CEPACs"
               >
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
-            </ValidationProvider>
+              <!-- <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span> -->
+            </td>
+            <!-- </ValidationProvider> -->
           </tr>
           <tr>
             <td>
@@ -381,12 +383,12 @@
                     type="text"
                     placeholder="000.000.0000-0"
                   />
-                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
+                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
                     Remover este
                   </button>
                 </ValidationProvider>
               </ul>
-              <button @click.prevent="addSql" class="add">
+              <button class="add" @click.prevent="addSql">
                 Adicionar SQL
               </button>
             </td>
@@ -564,7 +566,6 @@ export default {
       CAProjeto: '',
       Obs: '',
       CodigoProposta: '',
-      UsuarioAlteracao: '',
       IdStatus: 0,
       IdSetor: 0,
       mapSetores: {
@@ -604,7 +605,8 @@ export default {
     }
   },
   computed: {
-    sqlsToSend () { return this.sqls.map(sql => sql.content) }
+    sqlsToSend () { return this.sqls.map(sql => sql.content) },
+    UsuarioAlteracao () { return this.$route.query.user ? this.$route.query.user : '' }
   },
   watch: {
     ouc (key) {
@@ -655,75 +657,65 @@ export default {
     reloadApp () { window.location.reload(true) },
     novaFila (isValid, errors) {
       this.showModal = true
+
       if (!isValid) {
-        this.form.isFetching = false
-        this.form.error = true
-
-        const errorsList = []
-
-        for (const errorKey in errors) {
-          if (errors[errorKey].length) {
-            errorsList.push(this.$refs.form._data.refs[errorKey].$el.firstElementChild.name)
-          }
-        }
-        this.form.message = `Corrija os seguintes campos: ${errorsList.join(', ')}`
+        console.error(errors)
       }
 
-      else {
-        this.form.isFetching = true
-        this.form.error = false
-        this.form.message = 'Criando cadastro no banco de dados'
+      this.form.isFetching = true
+      this.form.error = false
+      this.form.message = 'Criando cadastro no banco de dados'
 
-        axios.post('fila', {
-          TipoPedido: this.TipoPedido,
-          Certidao: this.Certidao,
-          Interessado: this.Interessado,
-          Licenciamento: this.Licenciamento,
-          Sei: this.Sei,
-          AreaAdResidencial: parseFloat(this.AreaAdResidencial.toString().replace(',', '.')),
-          AreaAdNaoResidencial: parseFloat(this.AreaAdNaoResidencial.toString().replace(',', '.')),
-          CepacAreaAdicional: parseFloat(this.CepacAreaAdicional.toString().replace(',', '.')),
-          CepacModUso: parseInt(this.CepacModUso),
-          Email: this.Email,
-          Telefone: this.Telefone,
-          Procurador: this.Procurador,
-          CepacObjeto: parseFloat(this.CepacObjeto.toString().replace(',', '.')),
-          Endereco: this.Endereco,
-          AreaTerreno: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
-          AreaRegistro: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
-          Zona: this.Zona,
-          Uso: this.Uso,
-          CAProjeto: parseFloat(this.CAProjeto.toString().replace(',', '.')),
-          Obs: this.Obs,
-          CodigoProposta: this.CodigoProposta,
-          IdStatus: parseInt(this.IdStatus),
-          IdSetor: parseInt(this.IdSetor),
-          SubSetor: this.SubSetor,
-          Data: `${this.Data}T00:00:00`
-        })
-          .then((res) => {
-            const IdFilaCepac = res.data.Id
-            this.sqlsToSend.forEach((sql) => {
-              axios.post('sqls', {
-                NumeroSql: sql,
-                IdFilaCepac
-              })
+      axios.post('fila', {
+        TipoPedido: this.TipoPedido,
+        Certidao: this.Certidao,
+        Interessado: this.Interessado,
+        Licenciamento: this.Licenciamento,
+        Sei: this.Sei,
+        AreaAdResidencial: parseFloat(this.AreaAdResidencial.toString().replace(',', '.')),
+        AreaAdNaoResidencial: parseFloat(this.AreaAdNaoResidencial.toString().replace(',', '.')),
+        CepacAreaAdicional: parseFloat(this.CepacAreaAdicional.toString().replace(',', '.')),
+        CepacModUso: parseInt(this.CepacModUso),
+        Email: this.Email,
+        Telefone: this.Telefone,
+        Procurador: this.Procurador,
+        CepacObjeto: parseFloat(this.CepacObjeto.toString().replace(',', '.')),
+        Endereco: this.Endereco,
+        AreaTerreno: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
+        AreaRegistro: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
+        Zona: this.Zona,
+        Uso: this.Uso,
+        CAProjeto: parseFloat(this.CAProjeto.toString().replace(',', '.')),
+        Obs: this.Obs,
+        CodigoProposta: this.CodigoProposta,
+        IdStatus: parseInt(this.IdStatus),
+        IdSetor: parseInt(this.IdSetor),
+        SubSetor: this.SubSetor,
+        Data: `${this.Data}T00:00:00`,
+        UsuarioAlteracao: this.UsuarioAlteracao
+      })
+        .then((res) => {
+          const IdFilaCepac = res.data.Id
+          this.sqlsToSend.forEach((sql) => {
+            axios.post('sqls', {
+              NumeroSql: sql,
+              IdFilaCepac
             })
-            return IdFilaCepac
           })
-          .then((id) => {
-            this.form.isFetching = false
-            this.form.error = false
-            this.form.message = 'Registro gerado com sucesso'
-            this.form.idCadastro = id
-          })
-          .catch((err) => {
-            console.error(err)
-            this.form.isFetching = false
-            this.form.error = true
-            this.form.message = err.message
-          })
-      }
+          return IdFilaCepac
+        })
+        .then((id) => {
+          this.form.isFetching = false
+          this.form.error = false
+          this.form.message = 'Registro gerado com sucesso'
+          this.form.idCadastro = id
+        })
+        .catch((err) => {
+          console.error(err)
+          this.form.isFetching = false
+          this.form.error = true
+          this.form.message = err.message
+        })
     }
   }
 }

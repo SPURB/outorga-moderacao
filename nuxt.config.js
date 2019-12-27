@@ -12,7 +12,11 @@ export default {
     base: '/outorga-moderacao/'
   },
   env: {
-    apiBaseUrl: apiBaseUrl(process.env.NODE_ENV)
+    apiBaseUrl: apiBaseUrl(process.env.NODE_ENV),
+    user: {
+      id: 'http://spurbsp198/estagiario/apiestagio.php/user', // valor retornado é o N_PRODAM
+      info: 'http://spurbsp04/usuario/ws/localizacao' // incluir parâmetro ?NM_PRODAM=e059145(exemplo) para pegar dados de usuário
+    }
   },
   // mode: 'spa',
   /*
@@ -47,7 +51,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/vee-validate'
+    '~/plugins/vee-validate',
+    '~/plugins/axios',
+    { src: '~/plugins/v-scroll-lock', mode: 'client' }
   ],
   /*
   ** Nuxt.js dev-modules

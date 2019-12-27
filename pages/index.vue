@@ -57,7 +57,7 @@
 <script>
 import { VueGoodTable } from 'vue-good-table'
 import FileSaver from 'file-saver'
-import axios from '~/plugins/axios'
+import { formApi } from '~/plugins/axios'
 
 export default {
   name: 'Index',
@@ -254,7 +254,7 @@ export default {
     },
     fetchData (path) {
       this.isFetching = true
-      axios.get(path)
+      formApi.get(path)
         .then((res) => {
           const resIsArray = Object.prototype.toString.call(res.data) === '[object Array]'
           if (resIsArray) { this.rows = res.data }

@@ -6,12 +6,12 @@
         &#8624; Voltar
       </button>
     </header>
+    <user-auth-form v-if="!logged" />
     <form id="createForm">
       <table>
         <tbody>
           <tr>
             <td>Tipo do pedido</td>
-            <!-- <ValidationProvider :rules="{ required: { allowFalse: false } }" :name="'tipo-de-pedido'" tag="td"> -->
             <td>
               <input
                 id="pedidoVinculacao"
@@ -40,9 +40,7 @@
                 value="Desvinculação de CEPACs"
               >
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
-              <!-- <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span> -->
             </td>
-            <!-- </ValidationProvider> -->
           </tr>
           <tr>
             <td>
@@ -514,11 +512,11 @@
       :id-cadastro="form.idCadastro"
       @close="showModal = false"
     />
-    <footer>
+    <footer v-if="logged">
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button @click.prevent="novaFila(valid, errors)">
+      <button v-if="logged" @click.prevent="novaFila(valid, errors)">
         Salvar
       </button>
     </footer>
@@ -529,7 +527,8 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
 import Message from '~/components/Message'
-import axios from '~/plugins/axios'
+import UserAuthForm from '~/components/UserAuthForm'
+import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 
 export default {
@@ -539,6 +538,7 @@ export default {
     ValidationObserver,
     TheMask,
     Message,
+    UserAuthForm,
     DatePick
   },
   data () {
@@ -606,8 +606,10 @@ export default {
   },
   computed: {
     sqlsToSend () { return this.sqls.map(sql => sql.content) },
-    UsuarioAlteracao () { return this.$route.query.user ? this.$route.query.user : '' }
+    UsuarioAlteracao () { return this.$route.query.user ? this.$route.query.user : '' },
+    logged () { return this.$store.state.logged }
   },
+
   watch: {
     ouc (key) {
       this.Setores = this.mapOucSetores[key].map((id) => {
@@ -629,6 +631,11 @@ export default {
   created () {
     const date = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000))
     this.Data = date.toISOString().slice(0, 10)
+  },
+  beforeRouteEnter (to, from, next) {
+    next((vm) => {
+      if (vm.logged) { vm.$router.push({ query: { user: vm.$store.state.userInfo.NM_PRODAM, isAdmin: true } }) }
+    })
   },
   methods: {
     onSubmit () { console.log('submited') },
@@ -666,7 +673,7 @@ export default {
       this.form.error = false
       this.form.message = 'Criando cadastro no banco de dados'
 
-      axios.post('fila', {
+      formApi.post('fila', {
         TipoPedido: this.TipoPedido,
         Certidao: this.Certidao,
         Interessado: this.Interessado,
@@ -697,7 +704,7 @@ export default {
         .then((res) => {
           const IdFilaCepac = res.data.Id
           this.sqlsToSend.forEach((sql) => {
-            axios.post('sqls', {
+            formApi.post('sqls', {
               NumeroSql: sql,
               IdFilaCepac
             })

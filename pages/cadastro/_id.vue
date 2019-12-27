@@ -7,6 +7,7 @@
       </button>
       <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
+    <user-auth-form v-if="!isReady" />
     <form>
       <table>
         <tbody>
@@ -508,7 +509,7 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button :disabled="saveBtnDisableState" @click.prevent="purge(filaUntouched, fila)">
+      <button v-if="isReady" :disabled="saveBtnDisableState" @click.prevent="purge(filaUntouched, fila)">
         Salvar
       </button>
     </footer>
@@ -578,9 +579,10 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
-import axios from '~/plugins/axios'
+import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
+import UserAuthForm from '~/components/UserAuthForm'
 
 export default {
   name: 'Cadastro',
@@ -588,7 +590,8 @@ export default {
     ValidationProvider,
     ValidationObserver,
     TheMask,
-    DatePick
+    DatePick,
+    UserAuthForm
   },
   data () {
     return {
@@ -622,10 +625,13 @@ export default {
         }
       },
       filaNiceName,
-      saveBtnDisableState: true
+      saveBtnDisableState: true,
+      isMounted: false
     }
   },
   computed: {
+    UsuarioAlteracao () { return this.$route.query.user ? this.$route.query.user : '' },
+    logged () { return this.$store.state.logged },
     dataNow: {
       get () {
         return this.fila.Data.slice(0, 10)
@@ -641,18 +647,33 @@ export default {
         }
         this.fila.Data = `${val}T00:00:00`
       }
+    },
+    isReady () {
+      return this.isMounted && this.logged
     }
   },
+  watch: {
+    isReady (state) {
+      if (state) {
+        this.$nextTick(() => {
+          this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
+          this.normFila(this.fila)
+          this.sqlsUntouched = this.sqls
+        })
+      }
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    next((vm) => {
+      if (vm.logged) { vm.$router.push({ query: { user: vm.$store.state.userInfo.NM_PRODAM, isAdmin: true } }) }
+    })
+  },
   async asyncData ({ params }) {
-    const fila = await axios.get(`fila/${params.id}`)
-    const sqls = await axios.get(`sqls?IdFilaCepac=${params.id}`)
+    const fila = await formApi.get(`fila/${params.id}`)
+    const sqls = await formApi.get(`sqls?IdFilaCepac=${params.id}`)
     return { fila: fila.data, sqls: sqls.data }
   },
-  mounted () {
-    this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
-    this.normFila(this.fila)
-    this.sqlsUntouched = this.sqls
-  },
+  mounted () { this.isMounted = true },
   methods: {
     purge (oldFila, newFila) {
       const changedFila = {}
@@ -731,7 +752,6 @@ export default {
       }
     },
     checkInput (event, filaKey, errorsObj = []) {
-      console.log(event)
       const el = event.target
       const isTouchedAndNew = this.fila[filaKey] !== this.filaUntouched[filaKey]
       if (isTouchedAndNew) {
@@ -822,7 +842,8 @@ export default {
     },
     put () {
       this.putResponse.pending = true
-      axios.put(`fila/${this.$route.params.id}`, this.toConfirm.changed)
+      this.toConfirm.changed.UsuarioAlteracao = this.UsuarioAlteracao // inclui o usuário que está realizando as alterações na requisição
+      formApi.put(`fila/${this.$route.params.id}`, this.toConfirm.changed)
         .then((res) => {
           this.putResponse.pending = false
           this.putResponse.success = true

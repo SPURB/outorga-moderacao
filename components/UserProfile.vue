@@ -37,7 +37,7 @@ export default {
         this.name = this.userInfo.NM_NOME
         this.imgPathIsKnown = true
         this.imgLoading = true
-        this.profileImageUrl = `http://emurbsp12410/sp_urbanismo/rh/pessoal/${this.userInfo.NR_PRONT}.jpg`
+        this.profileImageUrl = `http://emurbsp12410/sp_urbanismo/rh/pessoal/${this.userInfo.NR_PRONTUARIO.replace(/\s/g, '')}.jpg`
       }
     }
   },

@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+axios.defaults.headers.common.Authorization = 'NTLM ' + process.env.ntlmToken
+
 const formApi = axios.create({
   baseURL: process.env.apiBaseUrl
 })

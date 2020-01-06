@@ -1,22 +1,30 @@
-const apiBaseUrl = (env) => {
-  switch (env) {
-    case 'dev': return 'http://spurbsp163/cepacs/api/'
-    default: return 'http://spurbsp198/cepacs/api/'
-  }
+import path from 'path'
+import fs from 'fs'
+import dotenv from 'dotenv'
+
+const setEnvs = (env) => {
+  const envPath = path.resolve(process.cwd(), `.env.${env}`)
+  const defaultEnvPath = path.resolve(process.cwd(), '.env')
+
+  dotenv.config({
+    path: fs.existsSync(envPath) ? envPath : defaultEnvPath
+  })
 }
+
+setEnvs(process.env.NODE_ENV)
 
 export default {
   router: {
     base: '/outorga-moderacao/'
   },
   env: {
-    apiBaseUrl: apiBaseUrl(process.env.NODE_ENV),
+    apiBaseUrl: process.env.API_BASE_URL,
+    ntlmToken: process.env.NTLM_TOKEN,
     user: {
       id: 'http://spurbsp198/estagiario/apiestagio.php/user', // valor retornado é o N_PRODAM
       info: 'http://spurbsp04/usuario/ws/localizacao' // incluir parâmetro ?NM_PRODAM=e059145(exemplo) para pegar dados de usuário
     }
   },
-  // mode: 'spa',
   /*
   ** Headers of the page
   */
@@ -69,22 +77,11 @@ export default {
     '@nuxtjs/pwa'
   ],
   /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {
-  },
-  /*
   ** Build configuration
   */
   build: {
     transpile: [
       'vee-validate/dist/rules'
-    ],
-    /*
-    ** You can extend webpack config here
-    */
-    extend (config, ctx) {
-    }
+    ]
   }
 }

@@ -6,7 +6,7 @@
         &#8624; Voltar
       </button>
     </header>
-    <user-auth-form v-if="!logged" />
+    <user-auth v-if="!logged" />
     <form id="createForm">
       <table>
         <tbody>
@@ -527,7 +527,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
 import Message from '~/components/Message'
-import UserAuthForm from '~/components/UserAuthForm'
+import UserAuth from '~/components/UserAuth'
 import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 
@@ -538,7 +538,7 @@ export default {
     ValidationObserver,
     TheMask,
     Message,
-    UserAuthForm,
+    UserAuth,
     DatePick
   },
   data () {

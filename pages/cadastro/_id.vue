@@ -7,7 +7,7 @@
       </button>
       <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
-    <user-auth-form v-if="!isReady" />
+    <user-auth v-if="!isReady" />
     <form>
       <table>
         <tbody>
@@ -582,7 +582,7 @@ import DatePick from 'vue-date-pick'
 import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
-import UserAuthForm from '~/components/UserAuthForm'
+import UserAuth from '~/components/UserAuth'
 
 export default {
   name: 'Cadastro',
@@ -591,7 +591,7 @@ export default {
     ValidationObserver,
     TheMask,
     DatePick,
-    UserAuthForm
+    UserAuth
   },
   data () {
     return {

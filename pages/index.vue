@@ -37,6 +37,7 @@
         }"
         @on-cell-click="onCellClick"
       />
+
       <footer class="actions">
         <button @click.prevent="$router.push('cadastro/criar')">
           <span>+</span> Criar novo registro
@@ -50,6 +51,7 @@
           Salvar como .csv
         </button>
       </footer>
+      <user-auth v-if="!logged" />
     </div>
   </div>
 </template>
@@ -57,12 +59,14 @@
 <script>
 import { VueGoodTable } from 'vue-good-table'
 import FileSaver from 'file-saver'
+import UserAuth from '~/components/UserAuth'
 import { formApi } from '~/plugins/axios'
 
 export default {
   name: 'Index',
   components: {
-    VueGoodTable
+    VueGoodTable,
+    UserAuth
   },
   data () {
     return {
@@ -211,7 +215,8 @@ export default {
     }
   },
   computed: {
-    displayError () { return this.error !== '' }
+    displayError () { return this.error !== '' },
+    logged () { return this.$store.state.logged }
   },
   created () {
     const filters = this.fetchFilterString(this.$route.query, this.columns)

@@ -1,22 +1,29 @@
-const apiBaseUrl = (env) => {
-  switch (env) {
-    case 'dev': return 'http://spurbsp163/cepacs/api/'
-    default: return 'http://spurbsp198/cepacs/api/'
-  }
+import path from 'path'
+import fs from 'fs'
+import dotenv from 'dotenv'
+
+const setEnvsFromDotEnvs = (env) => {
+  const envPath = path.resolve(process.cwd(), `.env.${env}`)
+  const defaultEnvPath = path.resolve(process.cwd(), '.env')
+
+  dotenv.config({
+    path: fs.existsSync(envPath) ? envPath : defaultEnvPath
+  })
 }
+
+setEnvsFromDotEnvs(process.env.NODE_ENV)
 
 export default {
   router: {
     base: '/outorga-moderacao/'
   },
   env: {
-    apiBaseUrl: apiBaseUrl(process.env.NODE_ENV),
+    apiBaseUrl: process.env.API_BASE_URL,
     user: {
-      id: 'http://spurbsp198/estagiario/apiestagio.php/user', // valor retornado é o N_PRODAM
-      info: 'http://spurbsp04/usuario/ws/localizacao' // incluir parâmetro ?NM_PRODAM=e059145(exemplo) para pegar dados de usuário
+      id: process.env.API_USER_ID,
+      info: process.env.API_USER_INFO
     }
   },
-  // mode: 'spa',
   /*
   ** Headers of the page
   */

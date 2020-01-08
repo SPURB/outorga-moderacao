@@ -3,6 +3,14 @@
     <p v-if="fetching" class="user-auth--fetching">
       Carregando
     </p>
+    <transition name="fade">
+      <div v-if="error.status" class="user-auth--error">
+        <p class="error__message">
+          {{ error.response }}<br>
+        </p>
+        <p>Não autorizado. Solicite acesso com NTI e DGO/SPURB</p>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -71,7 +79,7 @@ export default {
     setError (error) {
       this.SET_FETCHING_STATE(false)
       this.reset()
-      this.SET_ERROR(error)
+      this.SET_ERROR({ response: error, status: true })
     },
     checkUser (userData) {
       if (userData.length === 0) { return false }
@@ -85,6 +93,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
 .user-auth {
   position: absolute;
   z-index: 2000;
@@ -95,5 +104,34 @@ export default {
   justify-content: center;
   background: rgba(0,0,0,0.5);
   align-items: center;
+}
+
+.user-auth--error {
+    background: #fff;
+    padding: 1rem;
+}
+
+.user-auth--error {
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: 10px;
+  line-height: 1.62;
+}
+
+.error__message {
+  font-weight: 700;
+  border: 1px solid #EB5757;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  background-color: #EB5757;
+  color: #fff;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
 </style>

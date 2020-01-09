@@ -1,10 +1,14 @@
 <template>
   <div v-scroll-lock="!success" class="user-auth">
-    <p v-if="fetching" class="user-auth--fetching">
-      Carregando
-    </p>
     <transition name="fade">
-      <div v-if="error.status" class="user-auth--error">
+      <div class="user-auth__load">
+        <p class="user-auth--fetching">
+          Verificando usuário
+        </p>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div v-if="error.status" class="user-auth__load">
         <p class="error__message">
           {{ error.response }}<br>
         </p>
@@ -106,12 +110,9 @@ export default {
   align-items: center;
 }
 
-.user-auth--error {
-    background: #fff;
-    padding: 1rem;
-}
-
-.user-auth--error {
+.user-auth__load {
+  background: #fff;
+  padding: 1rem;
   padding: 1.5rem;
   text-align: center;
   border-radius: 10px;

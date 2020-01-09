@@ -381,12 +381,12 @@
                     type="text"
                     placeholder="000.000.0000-0"
                   />
-                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
+                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
                     Remover este
                   </button>
                 </ValidationProvider>
               </ul>
-              <button class="add" @click.prevent="addSql">
+              <button @click.prevent="addSql" class="add">
                 Adicionar SQL
               </button>
             </td>
@@ -606,7 +606,7 @@ export default {
   },
   computed: {
     sqlsToSend () { return this.sqls.map(sql => sql.content) },
-    UsuarioAlteracao () { return this.$route.query.user ? this.$route.query.user : '' },
+    UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged }
   },
 
@@ -672,6 +672,8 @@ export default {
       this.form.isFetching = true
       this.form.error = false
       this.form.message = 'Criando cadastro no banco de dados'
+
+      formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
 
       formApi.post('fila', {
         TipoPedido: this.TipoPedido,

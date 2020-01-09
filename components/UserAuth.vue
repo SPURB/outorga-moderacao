@@ -1,13 +1,6 @@
 <template>
   <div v-scroll-lock="!success" class="user-auth">
     <transition name="fade">
-      <div v-if="fetching" class="user-auth__load">
-        <p class="user-auth--fetching">
-          Verificando usuário
-        </p>
-      </div>
-    </transition>
-    <transition name="fade">
       <div v-if="error.status" class="user-auth__load">
         <h3 class="error__title">
           Erro!
@@ -16,9 +9,14 @@
           {{ error.response }}<br>
         </p>
         <p>Não autorizado. Solicite acesso com NTI e DGO/SPURB</p>
-        <button class="error__contact" @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')">
+        <button @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')" class="error__contact">
           desenvolvimento@spurbanismo.sp.gov.br
         </button>
+      </div>
+      <div v-else class="user-auth__load">
+        <p class="user-auth--fetching">
+          Verificando usuário
+        </p>
       </div>
     </transition>
   </div>

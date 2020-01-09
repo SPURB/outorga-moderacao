@@ -1,7 +1,7 @@
 <template>
   <a class="user-profile__profile">
     <p>{{ name }}</p>
-    <img v-if="imgPathIsKnown" :src="profileImageUrl" @load="isLoaded" class="profile__image">
+    <img v-if="imgPathIsKnown" :src="profileImageUrl" class="profile__image" @load="isLoaded">
     <user-profile-placeholder v-else />
   </a>
 </template>

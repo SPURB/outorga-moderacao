@@ -38,7 +38,7 @@ export default {
       { property: 'og:site_name', content: 'Cadastro OUCs' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: process.env.NODE_ENV === 'dev' ? '/outorga-moderacao/favicon.ico' : 'favicon.ico' }
     ]
   },
   /*

@@ -1,7 +1,7 @@
 <template>
   <div v-scroll-lock="!success" class="user-auth">
     <transition name="fade">
-      <div class="user-auth__load">
+      <div v-if="fetching" class="user-auth__load">
         <p class="user-auth--fetching">
           Verificando usuário
         </p>
@@ -9,10 +9,16 @@
     </transition>
     <transition name="fade">
       <div v-if="error.status" class="user-auth__load">
+        <h3 class="error__title">
+          Erro!
+        </h3>
         <p class="error__message">
           {{ error.response }}<br>
         </p>
         <p>Não autorizado. Solicite acesso com NTI e DGO/SPURB</p>
+        <button class="error__contact" @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')">
+          desenvolvimento@spurbanismo.sp.gov.br
+        </button>
       </div>
     </transition>
   </div>
@@ -63,6 +69,17 @@ export default {
         .then((res) => { this.setUser(res.data) })
         .catch((error) => { this.setError(error) })
     },
+    copy (event, text) {
+      try {
+        navigator.clipboard.writeText(text)
+        event.target.innerHTML = 'Email copiado'
+        event.target.classList.add('disabled')
+        event.target.setAttribute('disabled', 'disabled')
+      }
+      catch (err) {
+        console.error('Failha ao copiar', err)
+      }
+    },
     setUser (userData) {
       this.SET_FETCHING_STATE(false)
       const isValidUser = this.checkUser(userData)
@@ -110,6 +127,35 @@ export default {
   align-items: center;
 }
 
+.error__title {
+  margin-bottom: 1rem;
+  color: #EB5757;
+}
+
+.error__contact {
+  text-decoration: none;
+  color: grey;
+  padding: 1rem;
+  background: lightgrey;
+  border-radius: 5px;
+  border: 0;
+  margin-top: 1rem;
+  transition: all 0.35s;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  &:hover {
+    cursor: pointer;
+    background: darkgrey;
+    color: #000;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
+  }
+  &:disabled {
+    cursor: unset;
+    background: lightgrey;
+    color: #000;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
 .user-auth__load {
   background: #fff;
   padding: 1rem;
@@ -117,6 +163,7 @@ export default {
   text-align: center;
   border-radius: 10px;
   line-height: 1.62;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
 }
 
 .error__message {

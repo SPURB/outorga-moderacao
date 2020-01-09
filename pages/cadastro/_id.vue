@@ -8,6 +8,7 @@
       <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
     <user-auth v-if="!isReady" />
+    <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="showSqlsEditor = false" />
     <form>
       <table>
         <tbody>
@@ -383,6 +384,9 @@
               <span v-for="sql in sqls" :key="sqls.indexOf(sql)" class="noEdit sql">
                 {{ sql.NumeroSql }}
               </span>
+              <button v-if="showSqlsEditorButton" @click.prevent="showSqlsEditor = true">
+                Alterar
+              </button>
             </td>
           </tr>
           <tr>
@@ -583,6 +587,7 @@ import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
+import CadastroIdSqls from '~/components/CadastroIdSqls'
 
 export default {
   name: 'Cadastro',
@@ -591,10 +596,12 @@ export default {
     ValidationObserver,
     TheMask,
     DatePick,
-    UserAuth
+    UserAuth,
+    CadastroIdSqls
   },
   data () {
     return {
+      showSqlsEditor: false,
       isFetching: false,
       fila: [],
       sqls: [],
@@ -630,6 +637,9 @@ export default {
     }
   },
   computed: {
+    showSqlsEditorButton () {
+      return this.fila.IdStatus === 4
+    },
     UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged },
     dataNow: {
@@ -857,30 +867,8 @@ export default {
           this.putResponse.data = e
         })
     },
-    reload () {
-      window.location.reload()
-      window.scrollTo(0, 0)
-    },
     dateDisplay (dateStr) {
       return dateStr.replace('T', ', às ').substring(0, 20) + 'h'
-    },
-    pushSql (event) {
-      const input = event.target.parentNode.firstElementChild
-      let isRepeated
-      if (input.value) {
-        this.sqls.filter((sqlObj) => {
-          if (sqlObj.NumeroSql === input.value) {
-            isRepeated = true
-          }
-          else {
-            isRepeated = false
-          }
-        })
-        if (!isRepeated) {
-          this.sqls.push({ 'NumeroSql': input.value })
-          input.value = ''
-        }
-      }
     }
   }
 }

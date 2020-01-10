@@ -381,6 +381,15 @@
           <tr>
             <td>Contribuintes (SQL)</td>
             <td>
+              <!-- <ul>
+                <li v-for="sql in sqls" :key="sqls.indexOf(sql)">
+                  <the-mask
+                    :value="sql.NumeroSql"
+                    :mask="['###.###.####-#']"
+                    type="span"
+                  />
+                </li>
+              </ul> -->
               <span v-for="sql in sqls" :key="sqls.indexOf(sql)" class="noEdit sql">
                 {{ sql.NumeroSql }}
               </span>
@@ -849,7 +858,7 @@ export default {
       }
     },
     normSqls (sqls) {
-      return Object.freeze({ sqlsUntouched: sqls })
+      this.sqlsUntouched = this.sqls.map(sql => Object.freeze(sql))
     },
     sqlsReset () {
       this.sqls = this.sqlsUntouched

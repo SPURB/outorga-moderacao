@@ -1,4 +1,8 @@
-.cadastro, .criar {
+.sqls--no-edit {
+  display: flex;
+}
+
+.cadastro, .criar, {
   header {
     background-color: #005249;
     padding: 1rem 3.25rem;
@@ -80,6 +84,7 @@
               color: #BDBDBD;
             }
           }
+
           &:nth-child(2) {
             padding-right: 3.25rem;
             &::before {

@@ -2,7 +2,7 @@
   <div class="cadastro-id-sqls modal">
     <div class="cadastro-id-sqls-container">
       <form id="cadastro-sqls" @submit.prevent="update">
-        <ul>
+        <ul class="sqls">
           <li
             v-for="(sql, index) in sqls"
             :key="index"
@@ -18,25 +18,27 @@
               type="input"
               placeholder="000.000.0000-0"
             />
-            <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
+            <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="btn remove">
               Remover
             </button>
           </li>
         </ul>
+        <button @click.prevent="addSql" class="btn add">
+          Adicionar item
+        </button>
         <ul v-if="responses.length" class="responses">
           <li v-for="(response, index) in responses" :key="index" :class="{ error: response.error }">
             {{ response.response }}
           </li>
         </ul>
-        <button @click.prevent="addSql">
-          Adicionar item
-        </button>
-        <button @click.prevent="cancel">
-          Cancelar
-        </button>
-        <button type="submit" value="Submit">
-          Atualizar
-        </button>
+        <div class="sqls__nav-group">
+          <button @click.prevent="cancel" class="btn cancel">
+            Cancelar
+          </button>
+          <button type="submit" value="Submit" class="btn cancel">
+            Atualizar
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -90,6 +92,12 @@ export default {
             NumeroSql: sql.NumeroSql,
             IdFilaCepac: this.$route.params.id
           })
+            .then((response) => {
+              this.responses.push({
+                error: false,
+                response: `O SQL nº ${sql.NumeroSql} foi criado`
+              })
+            })
             .catch((error) => {
               this.responses.push({ error: true, response: error })
             })
@@ -103,6 +111,9 @@ export default {
           formApi.put(`/sqls/${sql.Id}`, {
             NumeroSql: sql.NumeroSql
           })
+            .then((response) => {
+              this.responses.push({ error: false, response: `${sql.Id} foi alterado` })
+            })
             .catch((error) => {
               this.responses.push({ error: true, response: error })
             })
@@ -110,6 +121,9 @@ export default {
 
       const toDeleteItems = this.toRemove.map((id) => {
         formApi.delete(`/sqls/${id}`)
+          .then((response) => {
+            this.responses.push({ error: false, response: `Item de id ${id} foi criado` })
+          })
           .catch((error) => {
             this.responses.push({ error: true, response: error })
           })
@@ -124,8 +138,53 @@ export default {
 }
 </script>
 <style scss scoped>
+#cadastro-sqls > ul:nth-child(1) {
+  padding: 0;
+}
+
 .cadastro-id-sqls-container {
   background-color: #fff;
   max-width: 90vw
 }
+
+#cadastro-sqls {
+  padding: 1rem;
+}
+
+.cadastro-id-sqls-container {
+  border-radius: 20px;
+}
+
+#cadastro-sqls {
+  border-radius: 10px;
+  border-radius: 15px;
+}
+
+.sqls__item {
+  display: flex;
+  margin: auto;
+  list-style: none;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.btn.add {
+  width: 100%;
+}
+
+.sqls__nav-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.btn.remove {
+  margin: 0.auto;
+}
+
+.item__input {
+  width: -moz-available;
+  margin-right: 0.5rem;
+  margin-bottom: 0.auto;
+}
+
 </style>

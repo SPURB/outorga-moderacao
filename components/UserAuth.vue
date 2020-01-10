@@ -9,7 +9,7 @@
           {{ error.response }}<br>
         </p>
         <p>Não autorizado. Solicite acesso com NTI e DGO/SPURB</p>
-        <button class="error__contact" @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')">
+        <button @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')" class="error__contact">
           desenvolvimento@spurbanismo.sp.gov.br
         </button>
       </div>
@@ -86,7 +86,7 @@ export default {
         this.success = true
         this.SET_LOGIN_STATE(true)
         this.SET_USER_INFO(userData[0])
-        this.$router.push({ query: { user: this.nProdam, isAdmin: true } })
+        // this.$router.push({ query: { user: this.nProdam, isAdmin: true } })
         localStorage.setItem('nr_prodam', this.nProdam)
       }
       else {

@@ -640,7 +640,7 @@ export default {
   },
   computed: {
     showSqlsEditorButton () {
-      return this.fila.IdStatus === 4
+      return this.fila.IdStatus !== 4
     },
     UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged },
@@ -887,5 +887,6 @@ export default {
 <style lang="scss" scoped>
 .sqls--no-edit {
   display: flex;
+  justify-content: space-between;
 }
 </style>

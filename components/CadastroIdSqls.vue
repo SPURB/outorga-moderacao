@@ -95,7 +95,7 @@ export default {
             .then((response) => {
               this.responses.push({
                 error: false,
-                response: `O SQL nº ${sql.NumeroSql} foi criado`
+                response: `${sql.NumeroSql} foi criado`
               })
             })
             .catch((error) => {
@@ -122,7 +122,7 @@ export default {
       const toDeleteItems = this.toRemove.map((id) => {
         formApi.delete(`/sqls/${id}`)
           .then((response) => {
-            this.responses.push({ error: false, response: `Item de id ${id} foi criado` })
+            this.responses.push({ error: false, response: `${id} foi deletado` })
           })
           .catch((error) => {
             this.responses.push({ error: true, response: error })

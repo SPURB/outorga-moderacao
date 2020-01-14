@@ -1,5 +1,5 @@
 <template>
-  <div v-scroll-lock="!success" class="user-auth">
+  <div v-scroll-lock="!success" class="user-auth modal">
     <transition name="fade">
       <div v-if="error.status" class="user-auth__load">
         <h3 class="error__title">
@@ -86,7 +86,7 @@ export default {
         this.success = true
         this.SET_LOGIN_STATE(true)
         this.SET_USER_INFO(userData[0])
-        this.$router.push({ query: { user: this.nProdam, isAdmin: true } })
+        // this.$router.push({ query: { user: this.nProdam, isAdmin: true } })
         localStorage.setItem('nr_prodam', this.nProdam)
       }
       else {
@@ -112,18 +112,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
-.user-auth {
-  position: absolute;
-  z-index: 2000;
-  top: 0;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  background: rgba(0,0,0,0.5);
-  align-items: center;
-}
 
 .error__title {
   margin-bottom: 1rem;

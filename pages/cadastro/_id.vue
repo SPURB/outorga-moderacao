@@ -8,6 +8,7 @@
       <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
     <user-auth v-if="!isReady" />
+    <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="sqlsReset" />
     <form>
       <table>
         <tbody>
@@ -379,10 +380,15 @@
           </tr>
           <tr>
             <td>Contribuintes (SQL)</td>
-            <td>
-              <span v-for="sql in sqls" :key="sqls.indexOf(sql)" class="noEdit sql">
-                {{ sql.NumeroSql }}
-              </span>
+            <td class="sqls--no-edit">
+              <div>
+                <span v-for="sql in sqls" :key="sqls.indexOf(sql)" class="noEdit sql">
+                  {{ sql.NumeroSql }}
+                </span>
+              </div>
+              <button v-if="showSqlsEditorButton" @click.prevent="showSqlsEditor = true">
+                Alterar
+              </button>
             </td>
           </tr>
           <tr>
@@ -396,7 +402,7 @@
                 @keyup="checkInput($event, 'CAProjeto', errors)"
                 name="CAProjeto"
                 type="number"
-                step="0.01"
+                step="0.0001"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -479,9 +485,9 @@
                 v-model="fila.CodigoProposta"
                 :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
                 @keyup.native="checkInput($event, 'CodigoProposta', errors)"
+                name="CodigoProposta"
                 masked="masked"
                 type="text"
-                name="CodigoProposta"
               />
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -583,6 +589,7 @@ import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
+import CadastroIdSqls from '~/components/CadastroIdSqls'
 
 export default {
   name: 'Cadastro',
@@ -591,15 +598,17 @@ export default {
     ValidationObserver,
     TheMask,
     DatePick,
-    UserAuth
+    UserAuth,
+    CadastroIdSqls
   },
   data () {
     return {
+      showSqlsEditor: false,
       isFetching: false,
       fila: [],
       sqls: [],
       filaUntouched: {},
-      sqlsUntouched: {},
+      sqlsUntouched: [],
       allSetores: [
         [{ '5': 'JABAQUARA' }, { '6': 'CHUCRI ZAIDAN' }, { '7': 'MARGINAL PINHEIROS' }, { '8': 'BERRINI' }, { '9': 'BROOKLIN' }],
         [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
@@ -630,6 +639,9 @@ export default {
     }
   },
   computed: {
+    showSqlsEditorButton () {
+      return this.fila.IdStatus === 4
+    },
     UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged },
     dataNow: {
@@ -658,7 +670,6 @@ export default {
         this.$nextTick(() => {
           this.setSetores(this.fila.SetorObj.IdOperacaoUrbana)
           this.normFila(this.fila)
-          this.sqlsUntouched = this.sqls
         })
       }
     }
@@ -673,7 +684,10 @@ export default {
     const sqls = await formApi.get(`sqls?IdFilaCepac=${params.id}`)
     return { fila: fila.data, sqls: sqls.data }
   },
-  mounted () { this.isMounted = true },
+  mounted () {
+    this.isMounted = true
+    this.normSqls(this.sqls)
+  },
   methods: {
     purge (oldFila, newFila) {
       const changedFila = {}
@@ -835,6 +849,13 @@ export default {
         }
       }
     },
+    normSqls (sqls) {
+      this.sqlsUntouched = this.sqls.map(sql => Object.freeze(sql))
+    },
+    sqlsReset () {
+      this.sqls = this.sqlsUntouched
+      this.showSqlsEditor = false
+    },
     backToForm () {
       this.toConfirm.state = false
       this.putResponse.reset()
@@ -857,31 +878,14 @@ export default {
           this.putResponse.data = e
         })
     },
-    reload () {
-      window.location.reload()
-      window.scrollTo(0, 0)
-    },
     dateDisplay (dateStr) {
       return dateStr.replace('T', ', às ').substring(0, 20) + 'h'
-    },
-    pushSql (event) {
-      const input = event.target.parentNode.firstElementChild
-      let isRepeated
-      if (input.value) {
-        this.sqls.filter((sqlObj) => {
-          if (sqlObj.NumeroSql === input.value) {
-            isRepeated = true
-          }
-          else {
-            isRepeated = false
-          }
-        })
-        if (!isRepeated) {
-          this.sqls.push({ 'NumeroSql': input.value })
-          input.value = ''
-        }
-      }
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.sqls--no-edit {
+  display: flex;
+}
+</style>

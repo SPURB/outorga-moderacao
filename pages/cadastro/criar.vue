@@ -399,7 +399,7 @@
                 v-model="CAProjeto"
                 name="CAProjeto"
                 type="number"
-                step="any"
+                step="0.0001"
                 min="0"
               >
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>

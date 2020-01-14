@@ -133,6 +133,8 @@ export default {
       const postPutDeletes = postPuts.concat(toDeleteItems)
 
       await Promise.all(postPutDeletes)
+        .then(res => this.cancel())
+        .catch(err => console.log(err, 'error'))
     }
   }
 }

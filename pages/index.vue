@@ -17,7 +17,8 @@
         :rows="rows"
         :search-options="{
           enabled: true,
-          placeholder: 'Procure por qualquer valor ou clique no rótulo para ordenar',
+          placeholder: 'Digite e aperte Enter. Para reiniciar deixe em branco e aperte enter',
+          trigger: 'enter'
         }"
         :sort-options="{
           enabled: true,
@@ -84,20 +85,23 @@ export default {
         {
           label: 'Tipo de pedido',
           field: 'TipoPedido',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Situação',
           field: 'Status',
           type: 'string',
           formatFn: this.formatStatus,
-          sortable: false
+          sortable: false,
+          globalSearchDisabled: true
         },
         {
           label: 'Id Status',
           field: 'IdStatus',
           type: 'number',
-          hidden: true
+          hidden: true,
+          globalSearchDisabled: true
         },
         {
           label: 'E-mail',
@@ -107,13 +111,15 @@ export default {
         {
           label: 'Telefone',
           field: 'Telefone',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Data de criação',
           field: 'Data',
           type: 'string',
-          formatFn: this.formatFmData
+          formatFn: this.formatFmData,
+          globalSearchDisabled: true
         },
         {
           label: 'PA/SEI',
@@ -134,78 +140,93 @@ export default {
           label: 'Operacão Urbana',
           field: 'SetorObj',
           type: 'string',
-          formatFn: this.formatOperacaoUrbana
+          formatFn: this.formatOperacaoUrbana,
+          globalSearchDisabled: true
         },
         {
           label: 'Setor',
           field: 'SetorObj',
           type: 'string',
-          formatFn: this.formatSetor
+          formatFn: this.formatSetor,
+          globalSearchDisabled: true
         },
         {
           label: 'Subsetor',
           field: 'SubSetor',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Endereço',
           field: 'Endereco',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Área Real do Terreno',
           field: 'AreaTerreno',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Área de Registro do Terreno',
           field: 'AreaRegistro',
-          type: 'number'
+          type: 'number',
+          globalSearchDisabled: true
         },
         {
           label: 'Zona',
           field: 'Zona',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Uso',
           field: 'Uso',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'C.A. do Projeto',
           field: 'CAProjeto',
-          type: 'string'
+          type: 'string',
+          globalSearchDisabled: true
         },
         {
           label: 'Área adicional (residencial)',
           field: 'AreaAdResidencial',
-          type: 'number'
+          type: 'number',
+          globalSearchDisabled: true
         },
         {
           label: 'Área adicional (não residencial)',
           field: 'AreaAdNaoResidencial',
-          type: 'number'
+          type: 'number',
+          globalSearchDisabled: true
         },
         {
           label: 'CEPAC - Área adicional',
           field: 'CepacAreaAdicional',
-          type: 'number'
+          type: 'number',
+          globalSearchDisabled: true
         },
         {
           label: 'CEPAC - Parâmetros',
           field: 'CepacModUso',
-          type: 'number'
+          type: 'number',
+          globalSearchDisabled: true
         },
         {
           label: 'Código da Proposta',
           field: 'CodigoProposta',
-          type: 'String'
+          type: 'String',
+          globalSearchDisabled: true
         },
         {
           label: 'Observações',
           field: 'Obs',
-          type: 'String'
+          type: 'String',
+          globalSearchDisabled: true
         }
       ],
       isFetching: false,

@@ -18,12 +18,12 @@
               type="input"
               placeholder="000.000.0000-0"
             />
-            <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="btn remove">
+            <button v-if="sql.id !== 1" class="btn remove" @click.prevent="removeSql(sql)">
               Remover
             </button>
           </li>
         </ul>
-        <button @click.prevent="addSql" class="btn add">
+        <button class="btn add" @click.prevent="addSql">
           Adicionar item
         </button>
         <ul v-if="responses.length" class="responses">
@@ -32,7 +32,7 @@
           </li>
         </ul>
         <div class="sqls__nav-group">
-          <button @click.prevent="cancel" class="btn cancel">
+          <button class="btn cancel" @click.prevent="cancel">
             Cancelar
           </button>
           <button type="submit" value="Submit" class="btn cancel">

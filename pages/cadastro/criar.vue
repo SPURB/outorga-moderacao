@@ -6,7 +6,7 @@
         &#8624; Voltar
       </button>
     </header>
-    <user-auth v-if="!logged" />
+    <user-auth v-if="requestAuth" />
     <form id="createForm">
       <table>
         <tbody>
@@ -526,6 +526,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
+import { mapGetters } from 'vuex'
 import Message from '~/components/Message'
 import UserAuth from '~/components/UserAuth'
 import { formApi } from '~/plugins/axios'
@@ -605,6 +606,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['requestAuth']),
     sqlsToSend () { return this.sqls.map(sql => sql.content) },
     UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged }

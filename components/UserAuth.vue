@@ -86,7 +86,6 @@ export default {
         this.success = true
         this.SET_LOGIN_STATE(true)
         this.SET_USER_INFO(userData[0])
-        // this.$router.push({ query: { user: this.nProdam, isAdmin: true } })
         localStorage.setItem('nr_prodam', this.nProdam)
       }
       else {

@@ -22,11 +22,9 @@ export default {
     user: {
       id: process.env.API_USER_ID,
       info: process.env.API_USER_INFO
-    }
+    },
+    mode: process.env.NODE_ENV
   },
-  /*
-  ** Headers of the page
-  */
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -41,57 +39,26 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: process.env.NODE_ENV === 'dev' ? '/outorga-moderacao/favicon.ico' : 'favicon.ico' }
     ]
   },
-  /*
-  ** Customize the progress-bar color
-  */
   loading: { color: '#fff' },
-  /*
-  ** Global CSS
-  */
   css: [
     '@/assets/main.scss',
     '@/assets/formCadastro.scss'
   ],
-  /*
-  ** Plugins to load before mounting the App
-  */
   plugins: [
     '~/plugins/vee-validate',
     '~/plugins/axios',
     { src: '~/plugins/v-scroll-lock', mode: 'client' }
   ],
-  /*
-  ** Nuxt.js dev-modules
-  */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module'
   ],
-  /*
-  ** Nuxt.js modules
-  */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {
-  },
-  /*
-  ** Build configuration
-  */
   build: {
     transpile: [
       'vee-validate/dist/rules'
-    ],
-    /*
-    ** You can extend webpack config here
-    */
-    extend (config, ctx) {
-    }
+    ]
   }
 }

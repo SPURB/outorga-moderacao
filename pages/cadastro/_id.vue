@@ -7,7 +7,7 @@
       </button>
       <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
     </header>
-    <user-auth v-if="!isReady" />
+    <user-auth v-if="requestAuth" />
     <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="sqlsReset" />
     <form>
       <table>
@@ -585,6 +585,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
+import { mapGetters } from 'vuex'
 import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
@@ -639,6 +640,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['requestAuth']),
     UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged },
     dataNow: {

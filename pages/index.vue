@@ -52,7 +52,7 @@
           Salvar como .csv
         </button>
       </footer>
-      <user-auth v-if="!logged" />
+      <user-auth v-if="requestAuth" />
     </div>
   </div>
 </template>
@@ -60,6 +60,7 @@
 <script>
 import { VueGoodTable } from 'vue-good-table'
 import FileSaver from 'file-saver'
+import { mapGetters } from 'vuex'
 import UserAuth from '~/components/UserAuth'
 import { formApi } from '~/plugins/axios'
 
@@ -236,8 +237,8 @@ export default {
     }
   },
   computed: {
-    displayError () { return this.error !== '' },
-    logged () { return this.$store.state.logged }
+    ...mapGetters(['requestAuth']),
+    displayError () { return this.error !== '' }
   },
   created () {
     const filters = this.fetchFilterString(this.$route.query, this.columns)

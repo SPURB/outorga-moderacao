@@ -381,12 +381,12 @@
                     type="text"
                     placeholder="000.000.0000-0"
                   />
-                  <button v-if="sql.id !== 1" class="remove" @click.prevent="removeSql(sql)">
+                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
                     Remover este
                   </button>
                 </ValidationProvider>
               </ul>
-              <button class="add" @click.prevent="addSql">
+              <button @click.prevent="addSql" class="add">
                 Adicionar SQL
               </button>
             </td>

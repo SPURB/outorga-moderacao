@@ -9,7 +9,7 @@
           {{ error.response }}<br>
         </p>
         <p>Não autorizado. Solicite acesso com NTI e DGO/SPURB</p>
-        <button class="error__contact" @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')">
+        <button @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')" class="error__contact">
           desenvolvimento@spurbanismo.sp.gov.br
         </button>
       </div>

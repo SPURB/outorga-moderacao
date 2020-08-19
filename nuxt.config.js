@@ -47,6 +47,7 @@ export default {
   plugins: [
     '~/plugins/vee-validate',
     '~/plugins/axios',
+    { src: '~/plugins/vuelayers.js', ssr: false },
     { src: '~/plugins/v-scroll-lock', mode: 'client' }
   ],
   buildModules: [

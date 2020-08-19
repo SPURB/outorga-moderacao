@@ -487,6 +487,22 @@
             </ValidationProvider>
           </tr>
           <tr>
+            <td>Perímetro</td>
+            <td>
+              <template v-if="Object.keys(geojson).length > 0">
+                <transition-group name="fade" mode="out-in">
+                  <input-geojson key="t-2" :is-edit="true" @geojson="setGeojson" />
+                  <mapa key="t-1" :data="geojson" />
+                </transition-group>
+              </template>
+              <template v-else>
+                <transition>
+                  <input-geojson @geojson="setGeojson" />
+                </transition>
+              </template>
+            </td>
+          </tr>
+          <tr>
             <td>
               <label for="inputObs">Observações</label>
               <span class="opt">Opcional</span>
@@ -529,6 +545,8 @@ import DatePick from 'vue-date-pick'
 import { mapGetters } from 'vuex'
 import Message from '~/components/Message'
 import UserAuth from '~/components/UserAuth'
+import InputGeojson from '~/components/InputGeojson'
+import Mapa from '~/components/Mapa'
 import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 
@@ -540,10 +558,13 @@ export default {
     TheMask,
     Message,
     UserAuth,
+    InputGeojson,
+    Mapa,
     DatePick
   },
   data () {
     return {
+      geojson: [],
       Data: '',
       TipoPedido: '',
       SubSetor: '',
@@ -662,6 +683,9 @@ export default {
           content: ''
         })
       }
+    },
+    setGeojson (geojson) {
+      this.geojson = geojson
     },
     reloadApp () { window.location.reload(true) },
     novaFila (isValid, errors) {

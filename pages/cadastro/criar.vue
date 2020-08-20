@@ -492,7 +492,6 @@
               <template v-if="Object.keys(geojson).length > 0">
                 <transition-group name="fade" mode="out-in">
                   <input-geojson key="t-2" :is-edit="true" @geojson="setGeojson" />
-                  <mapa key="t-1" :data="geojson" />
                 </transition-group>
               </template>
               <template v-else>
@@ -500,6 +499,11 @@
                   <input-geojson @geojson="setGeojson" />
                 </transition>
               </template>
+            </td>
+          </tr>
+          <tr v-if="Object.keys(geojson).length > 0" class="mapa">
+            <td colspan="2">
+              <mapa key="t-1" :data="geojson" />
             </td>
           </tr>
           <tr>

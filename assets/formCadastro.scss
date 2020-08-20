@@ -67,6 +67,15 @@
         &:nth-child(2n) td {
           background-color: #F5F5F5;
         }
+        &.mapa {
+          td { 
+            padding: 0;
+            &:first-child {
+              width: 100%;
+              padding-left: 0;
+            }
+          }
+        }
         td {
           padding: 1rem;
           position: relative;

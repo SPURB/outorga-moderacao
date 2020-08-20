@@ -55,7 +55,7 @@ export default {
 
       reader.addEventListener('load', function (e) {
         const geojson = JSON.parse(e.target.result)
-        window.convertedGeojson = geojson.features
+        window.convertedGeojson = geojson
       })
 
       reader.readAsBinaryString(file)

@@ -493,6 +493,29 @@
             </ValidationProvider>
           </tr>
           <tr>
+            <td>Perímetro</td>
+            <td>
+              <template v-if="Object.keys(geojson).length > 0">
+                <transition-group name="fade" mode="out-in">
+                  <input-geojson key="t-2" :is-edit="true" @geojson="setGeojson" />
+                </transition-group>
+              </template>
+              <template v-else>
+                <transition>
+                  <input-geojson @geojson="setGeojson" />
+                </transition>
+              </template>
+            </td>
+          </tr>
+          <tr v-if="Object.keys(geojson).length > 0" class="mapa">
+            <td v-if="fila.IdGeo" colspan="2">
+              <mapa :data="geojson" :is-create="false" :id="fila.IdGeo" @IdGeo="getIdgeo" />
+            </td>
+            <td v-else colspan="2">
+              <mapa :data="geojson" :is-create="true" @IdGeo="getIdgeo" />
+            </td>
+          </tr>
+          <tr>
             <td>
               <label for="inputObs">Observações</label>
               <span class="opt">Opcional</span>
@@ -586,11 +609,13 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
 import { mapGetters } from 'vuex'
-import { formApi } from '~/plugins/axios'
+import { formApi, axiosGeojson } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
+import InputGeojson from '~/components/InputGeojson'
+import Mapa from '~/components/Mapa'
 
 export default {
   name: 'Cadastro',
@@ -600,7 +625,9 @@ export default {
     TheMask,
     DatePick,
     UserAuth,
-    CadastroIdSqls
+    CadastroIdSqls,
+    InputGeojson,
+    Mapa
   },
   data () {
     return {
@@ -608,6 +635,7 @@ export default {
       isFetching: false,
       fila: [],
       sqls: [],
+      geojson: [],
       filaUntouched: {},
       sqlsUntouched: [],
       allSetores: [
@@ -681,7 +709,20 @@ export default {
   async asyncData ({ params }) {
     const fila = await formApi.get(`fila/${params.id}`)
     const sqls = await formApi.get(`sqls?IdFilaCepac=${params.id}`)
-    return { fila: fila.data, sqls: sqls.data }
+    let geojson
+    if (fila.data.IdGeo) {
+      await axiosGeojson.get(`geo/${fila.data.IdGeo}`)
+        .then((res) => { geojson = res.data })
+    }
+    else {
+      geojson = []
+    }
+
+    return {
+      fila: fila.data,
+      sqls: sqls.data,
+      geojson
+    }
   },
   mounted () {
     this.isMounted = true
@@ -763,6 +804,12 @@ export default {
       else {
         return false
       }
+    },
+    setGeojson (geojson) {
+      this.geojson = geojson
+    },
+    getIdgeo (IdGeo) {
+      this.fila.IdGeo = IdGeo
     },
     checkInput (event, filaKey, errorsObj = []) {
       const el = event.target

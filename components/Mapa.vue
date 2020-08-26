@@ -1,6 +1,7 @@
 <template>
   <div class="mapa">
     <vl-map
+      ref="map"
       v-if="!loading"
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true"
@@ -21,7 +22,7 @@
       </vl-layer-tile>
 
       <vl-layer-vector>
-        <vl-source-vector :features.sync="features" />
+        <vl-source-vector :features.sync="features" @created="onSourceCreated" />
         <vl-style-box>
           <vl-style-stroke :width="1" color="#319FD3" />
           <vl-style-fill color="#EAF5FA" />
@@ -29,11 +30,11 @@
       </vl-layer-vector>
     </vl-map>
 
-    <div class="mapa__form">
+    <div v-if="create" class="mapa__form">
       <p>Está correto?</p>
 
       <div class="mapa__btn-group">
-        <button type="button" class="salvar">
+        <button @click.prevent="salvar" type="button" class="salvar">
           Sim
         </button>
         <button type="button">
@@ -41,37 +42,81 @@
         </button>
       </div>
     </div>
+
+    <div v-if="response.pending" class="mapa__form">
+      <h3>Enviando arquivo GEOJSON...</h3>
+    </div>
+    <div v-if="response.success" class="mapa__form">
+      <h3>Arquivo GEOJSON enviado com sucesso.</h3>
+    </div>
+    <div v-if="response.error" class="mapa__form">
+      <h3>Ocorreu algum erro.</h3>
+      <h4>Erro: {{ response.erro }}</h4>
+      <h4>Entre em contato com a equipe de desenvolvimento.</h4>
+    </div>
   </div>
 </template>
 
 <script>
+import { axiosGeojson } from '~/plugins/axios'
 export default {
   name: 'Mapa',
   props: {
+    id: {
+      type: Number,
+      required: false,
+      default: 0
+    },
     data: {
       type: Object,
       required: true
+    },
+    isCreate: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   data: () => {
     return {
-      features: [],
+      features: undefined,
       center: [],
-      zoom: 13,
-      minZoom: 13,
+      create: false,
+      zoom: 10.9,
+      minZoom: 10.9,
       maxZoom: 19,
       rotation: 0,
-      loading: false
+      loading: false,
+      showModal: false,
+      response: {
+        pending: false,
+        success: false,
+        error: false,
+        erro: '',
+        reset () { // para zerar a request
+          this.pending = false
+          this.success = false
+          this.error = false
+          this.erro = ''
+        }
+      }
     }
   },
   watch: {
     data () {
-      this.features = this.data.features
+      this.isCreate ? this.create = this.isCreate : this.create = false
+      this.data.features ? this.features = this.data.features : this.features = [this.data]
+
+      if (this.id > 0) {
+        this.create = true
+      }
       this.getCenter()
     }
   },
   created () {
-    this.features = this.data.features
+    this.isCreate ? this.create = this.isCreate : this.create = false
+    this.data.features ? this.features = this.data.features : this.features = [this.data]
+    this.create = this.isCreate
   },
   mounted () {
     this.getCenter()
@@ -94,11 +139,50 @@ export default {
       this.center = window.turf.center(this.data).geometry.coordinates
       this.loading = false
     },
+    onSourceCreated (sourceVm) {
+      const map = this.$refs.map
+      setTimeout(() => {
+        map.$view.fit(sourceVm.$source.getExtent(),
+          {
+            size: map.$map.getSize(),
+            duration: 1000
+          })
+      }, 500)
+    },
     salvar () {
-      console.log('salvar')
+      this.response.pending = true
+      if (this.create && this.id === 0) {
+        axiosGeojson.post('/geo', this.data)
+          .then((res) => {
+            this.response.pending = false
+            this.response.success = true
+            this.$emit('IdGeo', res.data)
+          }).catch((err) => {
+            this.response.pending = false
+            this.response.error = true
+            this.response.erro = err
+          }).finally(() => {
+            this.response.reset()
+          })
+        this.create = false
+      }
+      else {
+        axiosGeojson.put(`/geo/${this.id}`, this.data)
+          .then((res) => {
+            this.response.pending = false
+            this.response.success = true
+          }).catch((err) => {
+            this.response.pending = false
+            this.response.error = true
+            this.response.erro = err
+          }).finally(() => {
+            this.response.reset()
+          })
+        this.create = false
+      }
     },
     cancelar () {
-      console.log('cancelar')
+      this.$emit('cancel', true)
     }
   }
 }

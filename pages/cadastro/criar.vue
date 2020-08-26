@@ -503,7 +503,7 @@
           </tr>
           <tr v-if="Object.keys(geojson).length > 0" class="mapa">
             <td colspan="2">
-              <mapa key="t-1" :data="geojson" />
+              <mapa key="t-1" :data="geojson" :is-create="true" :id="IdGeo" @IdGeo="getIdgeo" />
             </td>
           </tr>
           <tr>
@@ -594,6 +594,7 @@ export default {
       CodigoProposta: '',
       IdStatus: 0,
       IdSetor: 0,
+      IdGeo: 0,
       mapSetores: {
         '1': 'HÉLIO PELLEGRINO',
         '2': 'FARIA LIMA',
@@ -691,6 +692,9 @@ export default {
     setGeojson (geojson) {
       this.geojson = geojson
     },
+    getIdgeo (IdGeo) {
+      this.IdGeo = IdGeo
+    },
     reloadApp () { window.location.reload(true) },
     novaFila (isValid, errors) {
       this.showModal = true
@@ -729,6 +733,7 @@ export default {
         CodigoProposta: this.CodigoProposta,
         IdStatus: parseInt(this.IdStatus),
         IdSetor: parseInt(this.IdSetor),
+        IdGeo: this.IdGeo,
         SubSetor: this.SubSetor,
         Data: `${this.Data}T00:00:00`,
         UsuarioAlteracao: this.UsuarioAlteracao

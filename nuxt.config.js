@@ -19,6 +19,8 @@ export default {
   },
   env: {
     apiBaseUrl: process.env.API_BASE_URL,
+    apiGeojson: process.env.API_GEOJSON_URL,
+    apiToken: process.env.API_TOKEN,
     user: {
       id: process.env.API_USER_ID,
       info: process.env.API_USER_INFO

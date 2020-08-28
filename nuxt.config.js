@@ -1,14 +1,16 @@
 import path from 'path'
 import fs from 'fs'
-import dotenv from 'dotenv'
+import { config } from 'dotenv'
 
 const setEnvsFromDotEnvs = (env) => {
   const envPath = path.resolve(process.cwd(), `.env.${env}`)
-  const defaultEnvPath = path.resolve(process.cwd(), '.env')
 
-  dotenv.config({
-    path: fs.existsSync(envPath) ? envPath : defaultEnvPath
-  })
+  if (fs.existsSync(envPath)) {
+    config({ path: envPath })
+  }
+  else {
+    config()
+  }
 }
 
 setEnvsFromDotEnvs(process.env.NODE_ENV)
@@ -19,11 +21,13 @@ export default {
   },
   env: {
     apiBaseUrl: process.env.API_BASE_URL,
-    apiGeojson: process.env.API_GEOJSON_URL,
-    apiToken: process.env.API_TOKEN,
     user: {
       id: process.env.API_USER_ID,
       info: process.env.API_USER_INFO
+    },
+    geo: {
+      url: process.env.API_GEOJSON_URL,
+      token: process.env.API_GEOJSON_TOKEN
     },
     mode: process.env.NODE_ENV
   },

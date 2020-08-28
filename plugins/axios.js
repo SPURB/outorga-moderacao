@@ -13,8 +13,10 @@ const axiosUserInfo = axios.create({
 })
 
 const axiosGeojson = axios.create({
-  baseURL: process.env.apiGeojson
+  baseURL: process.env.geo.url,
+  headers: {
+    Authorization: process.env.geo.token
+  }
 })
-axiosGeojson.defaults.headers.common.Authorization = process.env.apiToken
 
 export { formApi, axiosUserId, axiosUserInfo, axiosGeojson }

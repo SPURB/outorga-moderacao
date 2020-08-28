@@ -10,7 +10,7 @@ import { mapState } from 'vuex'
 import UserProfilePlaceholder from '~/components/icons/UserProfilePlaceholder'
 
 export default {
-  name: 'UserAuth',
+  name: 'UserProfile',
   components: {
     UserProfilePlaceholder
   },

@@ -550,6 +550,7 @@ import { mapGetters } from 'vuex'
 import Message from '~/components/Message'
 import UserAuth from '~/components/UserAuth'
 import InputGeojson from '~/components/InputGeojson'
+// import MapaSeletor from '~/components/MapaSeletor'
 import Mapa from '~/components/Mapa'
 import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
@@ -662,7 +663,15 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next((vm) => {
-      if (vm.logged) { vm.$router.push({ query: { user: vm.$store.state.userInfo.NM_PRODAM, isAdmin: true } }) }
+      if (vm.logged) {
+        vm.$router.push({
+          query: {
+            user: vm.$store.state.userInfo.NM_PRODAM,
+            isAdmin: true,
+            idopurbanasrc: vm.$route.query.idopurbanasrc
+          }
+        })
+      }
     })
   },
   methods: {

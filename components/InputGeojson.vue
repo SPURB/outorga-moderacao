@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: 'Filekml',
+  name: 'InputGeojson',
   props: {
     isEdit: {
       type: Boolean,

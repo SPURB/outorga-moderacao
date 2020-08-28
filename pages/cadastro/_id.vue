@@ -516,6 +516,20 @@
             </td>
           </tr>
           <tr>
+            <td>Selecionar de mapa</td>
+            <td>
+              <button @click.prevent="loadMapOuc=!loadMapOuc">
+                <span>Abrir mapa da {{ ouc.Nome }}</span>
+              </button>
+            </td>
+          </tr>
+          <tr v-if="loadMapOuc">
+            <td>
+              <!-- MapaSeletor -->
+              <mapa-seletor :mapId="ouc.IdOperacaoUrbana"></mapa-seletor>
+            </td>
+          </tr>
+          <tr>
             <td>
               <label for="inputObs">Observações</label>
               <span class="opt">Opcional</span>
@@ -608,12 +622,13 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 import { formApi, axiosGeojson } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
+import MapaSeletor from '~/components/MapaSeletor'
 import InputGeojson from '~/components/InputGeojson'
 import Mapa from '~/components/Mapa'
 
@@ -626,11 +641,13 @@ export default {
     DatePick,
     UserAuth,
     CadastroIdSqls,
+    MapaSeletor,
     InputGeojson,
     Mapa
   },
   data () {
     return {
+      loadMapOuc: false,
       showSqlsEditor: false,
       isFetching: false,
       fila: [],
@@ -669,6 +686,7 @@ export default {
   },
   computed: {
     ...mapGetters(['requestAuth']),
+    ...mapState('setores', ['ouc']),
     UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
     logged () { return this.$store.state.logged },
     dataNow: {
@@ -703,7 +721,15 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next((vm) => {
-      if (vm.logged) { vm.$router.push({ query: { user: vm.$store.state.userInfo.NM_PRODAM, isAdmin: true } }) }
+      if (vm.logged) {
+        vm.$router.push({
+          query: {
+            user: vm.$store.state.userInfo.NM_PRODAM,
+            isAdmin: true,
+            idopurbanasrc: vm.$route.query.idopurbanasrc
+          }
+        })
+      }
     })
   },
   async asyncData ({ params }) {
@@ -724,11 +750,19 @@ export default {
       geojson
     }
   },
+  async created () {
+    const { idopurbanasrc } = this.$route.query
+    if (idopurbanasrc && !this.ouc.IdOperacaoUrbana) {
+      await this.getSetores()
+      this.setOuc(parseInt(idopurbanasrc))
+    }
+  },
   mounted () {
     this.isMounted = true
     this.normSqls(this.sqls)
   },
   methods: {
+    ...mapActions('setores', ['getSetores', 'setOuc']),
     purge (oldFila, newFila) {
       const changedFila = {}
       for (const key in oldFila) {

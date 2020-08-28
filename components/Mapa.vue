@@ -65,7 +65,6 @@ export default {
   props: {
     id: {
       type: Number,
-      required: false,
       default: 0
     },
     data: {
@@ -74,7 +73,6 @@ export default {
     },
     isCreate: {
       type: Boolean,
-      required: true,
       default: false
     }
   },

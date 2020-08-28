@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import LogoSpurb from '~/components/icons/LogoSpurb'
 import UserProfile from '~/components/UserProfile'
 
@@ -30,10 +30,22 @@ export default {
   computed: {
     ...mapGetters('setores', ['oucs']),
     ouc () {
-      if (!this.oucs.length) { return {} }
       const { idopurbanasrc } = this.$route.query
-      return this.oucs.find(({ IdOperacaoUrbana }) => parseInt(IdOperacaoUrbana) === parseInt(idopurbanasrc))
+      if (!this.oucs.length || !idopurbanasrc) { return {} }
+      else {
+        return this.oucs.find(({ IdOperacaoUrbana }) => parseInt(IdOperacaoUrbana) === parseInt(idopurbanasrc))
+      }
     }
+  },
+  watch: {
+    ouc (ou) {
+      if (ou.IdOperacaoUrbana) {
+        this.setOuc(ou.IdOperacaoUrbana)
+      }
+    }
+  },
+  methods: {
+    ...mapActions('setores', [ 'setOuc' ])
   },
   head () {
     return {

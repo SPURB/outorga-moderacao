@@ -1,8 +1,10 @@
 import { formApi } from '~/plugins/axios'
 
-export const state = () => ({ // Não repetir states que aparecem no store/index (fetching, error etc)
+export const state = () => ({
   setores: [],
-  error: false
+  error: false,
+  fetching: false,
+  ouc: {}
 })
 
 export const getters = {
@@ -34,6 +36,7 @@ export const mutations = {
 
 export const actions = {
   getSetores: async ({ commit }) => {
+    commit('SET', { data: true, key: 'fetching' })
     try {
       const { data } = await formApi.get('/setores')
       commit('SET', { data, key: 'setores' })
@@ -41,5 +44,15 @@ export const actions = {
     catch {
       commit('SET', { data: true, key: 'error' })
     }
+    finally {
+      commit('SET', { data: false, key: 'fetching' })
+    }
+  },
+  setOuc: ({ commit, state }, oucId) => {
+    const setor = state.setores.find(({ IdOperacaoUrbana }) => oucId === IdOperacaoUrbana)
+
+    if (!setor) { throw new Error('Ouc não encontrado') }
+
+    commit('SET', { data: setor.OperacaoUrbana, key: 'ouc' })
   }
 }

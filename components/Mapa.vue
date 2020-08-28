@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import turfCenter from '@turf/center'
 import { axiosGeojson } from '~/plugins/axios'
 export default {
   name: 'Mapa',
@@ -133,10 +134,8 @@ export default {
         document.head.appendChild(script)
       })
     },
-    async getCenter () {
-      this.loading = true
-      await this.loadExternalLib('https://unpkg.com/@turf/turf/turf.min.js')
-      this.center = window.turf.center(this.data).geometry.coordinates
+    getCenter () {
+      this.center = turfCenter(this.data).geometry.coordinates
       this.loading = false
     },
     onSourceCreated (sourceVm) {

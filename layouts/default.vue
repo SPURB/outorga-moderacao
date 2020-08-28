@@ -5,6 +5,9 @@
         <router-link to="/">
           <logo-spurb :fill-type="'#1D1D1B'" :fill-brand="'#038375'" />
         </router-link>
+        <p v-if="ouc">
+          {{ ouc.Nome }}
+        </p>
         <user-profile />
       </section>
       <h1>Controle Outorgas</h1>
@@ -14,14 +17,23 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import LogoSpurb from '~/components/icons/LogoSpurb'
 import UserProfile from '~/components/UserProfile'
 
 export default {
-  name: 'OutorgaModeracao',
+  name: 'Default',
   components: {
     LogoSpurb,
     UserProfile
+  },
+  computed: {
+    ...mapGetters('setores', ['oucs']),
+    ouc () {
+      if (!this.oucs.length) { return {} }
+      const { idopurbanasrc } = this.$route.query
+      return this.oucs.find(({ IdOperacaoUrbana }) => parseInt(IdOperacaoUrbana) === parseInt(idopurbanasrc))
+    }
   },
   head () {
     return {

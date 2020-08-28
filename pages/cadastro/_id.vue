@@ -2,7 +2,7 @@
   <ValidationObserver :class="'cadastro'" tag="div">
     <header>
       <h2>Editando registro <span>{{ fila.Id }}</span></h2>
-      <button @click.prevent="$router.push('/')">
+      <button @click.prevent="$router.go(-1)">
         &#8624; Voltar
       </button>
       <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>

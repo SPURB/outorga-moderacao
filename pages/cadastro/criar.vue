@@ -2,7 +2,7 @@
   <ValidationObserver ref="form" v-slot="{ valid, errors }" :class="'criar'" tag="div">
     <header>
       <h2>Criar novo registro</h2>
-      <button @click="$router.push('/')">
+      <button @click="$router.go(-1)">
         &#8624; Voltar
       </button>
     </header>

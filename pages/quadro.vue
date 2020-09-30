@@ -325,7 +325,14 @@ export default {
     onCellClick (params) {
       if (params.column.field === 'Id') {
         const id = params.row.Id
-        this.$router.push({ path: `/cadastro/${id}` })
+        const idopurbanasrc = this.$route.query.idopurbanasrc
+
+        this.$router.push({
+          path: `/cadastro/${id}`,
+          query: {
+            idopurbanasrc
+          }
+        })
       }
       else if (!window.getSelection().toString() && params.event.target.nodeName === 'SPAN') {
         const tip = document.createElement('span')

@@ -8,7 +8,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  oucs: (state, getters) => {
+  oucs: (state) => {
     if (!state.setores.length) { return [] }
 
     const oucsObjs = state.setores.map(({ OperacaoUrbana }) => OperacaoUrbana)

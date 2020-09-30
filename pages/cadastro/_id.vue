@@ -492,7 +492,7 @@
               <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
             </ValidationProvider>
           </tr>
-          <tr>
+          <!-- <tr>
             <td>Perímetro</td>
             <td>
               <template v-if="Object.keys(geojson).length > 0">
@@ -514,19 +514,18 @@
             <td v-else colspan="2">
               <mapa :data="geojson" :is-create="true" @IdGeo="getIdgeo" />
             </td>
-          </tr>
+          </tr> -->
           <tr>
             <td>Selecionar de mapa</td>
             <td>
               <button @click.prevent="loadMapOuc=!loadMapOuc">
-                <span>Abrir mapa da {{ ouc.Nome }}</span>
+                <span v-if="loadMapOuc">Fechar</span><span v-else>Abrir</span> mapa da {{ ouc.Nome }}
               </button>
             </td>
           </tr>
           <tr v-if="loadMapOuc">
-            <td>
-              <!-- MapaSeletor -->
-              <mapa-seletor :mapId="ouc.IdOperacaoUrbana"></mapa-seletor>
+            <td colspan="2">
+              <mapa-seletor :IdGeo="fila.IdGeo" @closeMapSelect="loadMapOuc = false" @changeSelected="changeFila" />
             </td>
           </tr>
           <tr>
@@ -629,8 +628,8 @@ import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
 import MapaSeletor from '~/components/MapaSeletor'
-import InputGeojson from '~/components/InputGeojson'
-import Mapa from '~/components/Mapa'
+// import InputGeojson from '~/components/InputGeojson'
+// import Mapa from '~/components/Mapa'
 
 export default {
   name: 'Cadastro',
@@ -641,9 +640,9 @@ export default {
     DatePick,
     UserAuth,
     CadastroIdSqls,
-    MapaSeletor,
-    InputGeojson,
-    Mapa
+    MapaSeletor
+    // InputGeojson
+    // Mapa
   },
   data () {
     return {
@@ -960,6 +959,9 @@ export default {
     },
     dateDisplay (dateStr) {
       return dateStr.replace('T', ', às ').substring(0, 20) + 'h'
+    },
+    changeFila (key, value) {
+      this.fila[key] = value
     }
   }
 }

@@ -10,7 +10,7 @@ export const state = () => ({
 
 export const getters = {
   requestAuth: (state) => {
-    if (process.env.mode !== 'dev' && !state.logged) {
+    if (!state.logged) {
       return true
     }
     else {

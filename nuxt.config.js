@@ -56,9 +56,6 @@ export default {
     { src: '~/plugins/vuelayers.js', ssr: false },
     { src: '~/plugins/v-scroll-lock', mode: 'client' }
   ],
-  buildModules: [
-    '@nuxtjs/eslint-module'
-  ],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa'

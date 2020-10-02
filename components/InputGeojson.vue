@@ -8,8 +8,8 @@
         name="file"
         class="inputfile inputfile--perimetro"
         accept=".geojson"
-      >
-      <label for="filePerimetro">
+      />
+      <label class="button" for="filePerimetro">
         Incluir geojson
       </label>
     </template>
@@ -21,8 +21,8 @@
         name="file"
         class="inputfile inputfile--perimetro"
         accept=".geojson"
-      >
-      <label for="filePerimetro">
+      />
+      <label class="button" for="filePerimetro">
         Atualizar geojson
       </label>
     </template>
@@ -76,25 +76,5 @@ export default {
   overflow: hidden;
   position: absolute;
   z-index: -1;
-
-  &--perimetro {
-    & + label {
-      border: 1px solid rgba(255, 255, 255, .48);
-      border-radius: 20rem;
-      padding: 0.5rem 0.75rem;
-      color: #FFF;
-      font-family: inherit;
-      font-size: inherit;
-      background-color: #BDBDBD;
-      cursor: pointer;
-      transition: all ease-out .2s;
-      margin-bottom: 1rem;
-
-      &:hover {
-        background-color: #777;
-      }
-      display: inline-block;
-    }
-  }
 }
 </style>

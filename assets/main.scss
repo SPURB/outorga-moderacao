@@ -63,6 +63,47 @@ html {
   align-items: center;
 }
 
+.button {
+  border: 1px solid rgba(255, 255, 255, .48);
+  border-radius: 20rem;
+  padding: 0.5rem 0.75rem;
+  color: #FFF;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #BDBDBD;
+  cursor: pointer;
+  transition: all ease-out .2s;
+  &:hover {
+    background-color: #777;
+  }
+  display: inline-block;
+}
+
+.button-color {
+  border: 0;
+  padding: 1rem;
+  margin-right: 2rem;
+  border-radius: 30px;
+  padding: 10px 35px;
+  color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  border: 2px solid rgba(255, 255, 255, 0.24);
+  transition: ease-in-out 0.25s all;
+  font-size: 1rem;
+  cursor: pointer;
+  &.salvar {
+    background-color: #038375;
+    &:disabled {
+      cursor: not-allowed;
+      background-color: #ddd;
+      opacity: 0.45;
+    }
+  }
+  &.cancelar {
+    background-color: #EB5757;
+  }
+}
+
 /*
   4. State
 */

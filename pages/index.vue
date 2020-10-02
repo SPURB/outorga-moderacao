@@ -3,20 +3,20 @@
     <template v-if="isReady">
       <h2>Selecione uma Operação Urbana</h2>
       <ul class="indice__list">
-        <li v-for="({ IdOperacaoUrbana, Nome }, index) in oucs" :key="index">
-          <nuxt-link
-            :to="{
-              path: '/quadro',
-              query: {
-                idopurbanasrc: IdOperacaoUrbana
-              }
-            }"
-            tag="a"
-            class="indice__item"
-          >
-            {{ Nome }}
-          </nuxt-link>
-        </li>
+        <nuxt-link
+          v-for="({ IdOperacaoUrbana, Nome }, index) in oucs"
+          :key="index"
+          :to="{
+            path: '/quadro',
+            query: {
+              idopurbanasrc: IdOperacaoUrbana
+            }
+          }"
+          class="indice__item"
+          tag="li"
+        >
+          {{ Nome }}
+        </nuxt-link>
       </ul>
     </template>
     <div v-else class="indice__preloader">
@@ -37,8 +37,8 @@ export default {
     PreloaderVerticalizacao
   },
   computed: {
-    ...mapGetters('setores', [ 'oucs' ]),
-    ...mapState('setores', [ 'fetching', 'error' ]),
+    ...mapGetters('setores', ['oucs']),
+    ...mapState('setores', ['fetching', 'error']),
     isReady () {
       return !this.fetching && !this.error
     }
@@ -47,17 +47,30 @@ export default {
     this.getSetores()
   },
   methods: {
-    ...mapActions('setores', [ 'getSetores' ])
+    ...mapActions('setores', ['getSetores'])
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .indice {
   padding: 1.75rem 3.25rem;
   line-height: 1.52;
   &__list {
     list-style: none;
-    padding: 0
+    padding: 0;
+  }
+  &__item {
+    background-color: grey;
+    opacity: 0.9;
+    padding: 1rem 0.5rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
   }
   &__preloader {
     display: flex;

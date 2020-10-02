@@ -5,11 +5,12 @@
         <h3 class="error__title">
           Erro!
         </h3>
-        <p class="error__message">
-          {{ error.response }}<br>
-        </p>
+        <p class="error__message">{{ error.response }}<br /></p>
         <p>Não autorizado. Solicite acesso com NTI e DGO/SPURB</p>
-        <button @click.prevent="copy($event,'desenvolvimento@spurbanismo.sp.gov.br')" class="error__contact">
+        <button
+          @click.prevent="copy($event, 'desenvolvimento@spurbanismo.sp.gov.br')"
+          class="error__contact"
+        >
           desenvolvimento@spurbanismo.sp.gov.br
         </button>
       </div>
@@ -49,10 +50,9 @@ export default {
     if (nProdam !== null) {
       this.nProdam = nProdam
       this.getUser(nProdam)
-    }
-    else {
+    } else {
       axiosUserId('/')
-        .then((res) => {
+        .then(res => {
           this.nProdam = res.data
           this.getUser(res.data)
         })
@@ -60,12 +60,21 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_LOGIN_STATE', 'SET_ERROR', 'SET_FETCHING_STATE', 'SET_USER_INFO']),
+    ...mapMutations([
+      'SET_LOGIN_STATE',
+      'SET_ERROR',
+      'SET_FETCHING_STATE',
+      'SET_USER_INFO'
+    ]),
     getUser (nProdam) {
       this.SET_FETCHING_STATE(true)
       axiosUserInfo(`?NM_PRODAM=${nProdam}`)
-        .then((res) => { this.setUser(res.data) })
-        .catch((error) => { this.setError(error) })
+        .then(res => {
+          this.setUser(res.data)
+        })
+        .catch(error => {
+          this.setError(error)
+        })
     },
     copy (event, text) {
       try {
@@ -73,8 +82,7 @@ export default {
         event.target.innerHTML = 'Email copiado'
         event.target.classList.add('disabled')
         event.target.setAttribute('disabled', 'disabled')
-      }
-      catch (err) {
+      } catch (err) {
         console.error('Failha ao copiar', err)
       }
     },
@@ -87,8 +95,7 @@ export default {
         this.SET_LOGIN_STATE(true)
         this.SET_USER_INFO(userData[0])
         localStorage.setItem('nr_prodam', this.nProdam)
-      }
-      else {
+      } else {
         this.SET_LOGIN_STATE(false)
         this.success = false
         this.btnText = 'Tentar novamente'
@@ -100,8 +107,11 @@ export default {
       this.SET_ERROR({ response: error, status: true })
     },
     checkUser (userData) {
-      if (userData.length === 0) { return false }
-      else { return true } // incluir aqui a validação
+      if (userData.length === 0) {
+        return false
+      } else {
+        return true
+      } // incluir aqui a validação
     },
     reset () {
       Object.assign(this.$data, formModel())
@@ -111,10 +121,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 .error__title {
   margin-bottom: 1rem;
-  color: #EB5757;
+  color: #eb5757;
 }
 
 .error__contact {
@@ -153,18 +162,20 @@ export default {
 
 .error__message {
   font-weight: 700;
-  border: 1px solid #EB5757;
+  border: 1px solid #eb5757;
   padding: 0.5rem;
   border-radius: 5px;
   margin-bottom: 1rem;
-  background-color: #EB5757;
+  background-color: #eb5757;
   color: #fff;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to{
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

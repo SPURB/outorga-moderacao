@@ -1,11 +1,16 @@
 <template>
   <ValidationObserver :class="'cadastro'" tag="div">
     <header>
-      <h2>Editando registro <span>{{ fila.Id }}</span></h2>
+      <h2>
+        Editando registro <span>{{ fila.Id }}</span>
+      </h2>
       <button @click.prevent="$router.go(-1)">
         &#8624; Voltar
       </button>
-      <span class="lastEdit">&middot; Editado pela última vez em {{ dateDisplay(fila.DataAlteracao) }}</span>
+      <span class="lastEdit"
+        >&middot; Editado pela última vez em
+        {{ dateDisplay(fila.DataAlteracao) }}</span
+      >
     </header>
     <user-auth v-if="requestAuth" />
     <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="sqlsReset" />
@@ -14,7 +19,10 @@
         <tbody>
           <tr>
             <td>Tipo do pedido</td>
-            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
+            <ValidationProvider
+              :rules="{ required: { allowFalse: false } }"
+              tag="td"
+            >
               <input
                 id="pedidoVinculacao"
                 v-model="fila.TipoPedido"
@@ -23,7 +31,7 @@
                 type="radio"
                 name="TipoPedido"
                 value="Certidão de vinculação"
-              >
+              />
               <label for="pedidoVinculacao">Certidão de vinculação</label>
               <input
                 id="pedidoAlteracao"
@@ -33,7 +41,7 @@
                 type="radio"
                 name="TipoPedido"
                 value="Alteração de certidão"
-              >
+              />
               <label for="pedidoAlteracao">Alteração de certidão</label>
               <input
                 id="pedidoDesvinculacao"
@@ -43,7 +51,7 @@
                 type="radio"
                 name="TipoPedido"
                 value="Desvinculação de CEPACs"
-              >
+              />
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
             </ValidationProvider>
           </tr>
@@ -51,20 +59,29 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min:1|max:1500"
+              tag="td"
+            >
               <input
                 id="inputInteressado"
                 v-model="fila.Interessado"
                 @keyup="checkInput($event, 'Interessado', errors)"
                 name="Interessado"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>Situação</td>
-            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
+            <ValidationProvider
+              :rules="{ required: { allowFalse: false } }"
+              tag="td"
+            >
               <input
                 id="Checklist"
                 :checked="getStatus(fila.Status, 1)"
@@ -72,7 +89,7 @@
                 type="radio"
                 name="IdStatus"
                 value="1"
-              >
+              />
               <label for="Checklist">Checklist</label>
               <input
                 id="EmAnalise"
@@ -81,7 +98,7 @@
                 type="radio"
                 name="IdStatus"
                 value="2"
-              >
+              />
               <label for="EmAnalise">Em análise</label>
               <input
                 id="Indeferido"
@@ -90,7 +107,7 @@
                 type="radio"
                 name="IdStatus"
                 value="3"
-              >
+              />
               <label for="Indeferido">Indeferido</label>
               <input
                 id="Aprovado"
@@ -99,7 +116,7 @@
                 type="radio"
                 name="IdStatus"
                 value="4"
-              >
+              />
               <label for="Aprovado">Aprovado</label>
               <input
                 id="Cancelado"
@@ -108,7 +125,7 @@
                 type="radio"
                 name="IdStatus"
                 value="5"
-              >
+              />
               <label for="Cancelado">Cancelado</label>
             </ValidationProvider>
           </tr>
@@ -124,8 +141,10 @@
                 @keyup="checkInput($event, 'Email', errors)"
                 name="Email"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -143,7 +162,9 @@
                 name="Telefone"
                 type="tel"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -151,15 +172,21 @@
               <label for="inputProcurador">Procurador</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="alpha_spaces" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="alpha_spaces"
+              tag="td"
+            >
               <input
                 id="inputProcurador"
                 v-model="fila.Procurador"
                 @keyup="checkInput($event, 'Procurador', errors)"
                 name="Procurador"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -172,7 +199,20 @@
                 v-model="dataNow"
                 :format="'YYYY-MM-DD'"
                 :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
-                :months="['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']"
+                :months="[
+                  'Janeiro',
+                  'Fevereiro',
+                  'Março',
+                  'Abril',
+                  'Maio',
+                  'Junho',
+                  'Julho',
+                  'Agosto',
+                  'Setembro',
+                  'Outubro',
+                  'Novembro',
+                  'Dezembro'
+                ]"
                 next-month-caption="Próximo mês"
                 prev-month-caption="Mês anterior"
               />
@@ -191,7 +231,9 @@
                 masked="masked"
                 name="Sei"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -206,7 +248,7 @@
                 @keyup="checkInput($event, 'Certidao', errors)"
                 type="text"
                 name="Certidao"
-              >
+              />
             </ValidationProvider>
           </tr>
           <tr>
@@ -234,7 +276,7 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="1"
-              >
+              />
               <label for="AguaEspraiada">Água Espraiada</label>
               <input
                 id="FariaLima"
@@ -243,7 +285,7 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="2"
-              >
+              />
               <label for="FariaLima">Faria Lima</label>
               <input
                 id="Centro"
@@ -252,7 +294,7 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="3"
-              >
+              />
               <label for="Centro">Centro</label>
               <input
                 id="AguaBranca"
@@ -261,7 +303,7 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="4"
-              >
+              />
               <label for="AguaBranca">Água Branca</label>
             </td>
           </tr>
@@ -270,17 +312,21 @@
               <label>Setor</label>
             </td>
             <td ref="setoresRow">
-              <template v-for="(setor, index) in everySetor = Setores">
+              <template v-for="(setor, index) in (everySetor = Setores)">
                 <input
                   :id="'setor_' + Object.keys(setor)[0]"
                   :key="'input' + index.toString()"
                   :value="Object.keys(setor)[0]"
-                  :checked="getSetor(filaUntouched.SetorObj, Object.keys(setor)[0])"
+                  :checked="
+                    getSetor(filaUntouched.SetorObj, Object.keys(setor)[0])
+                  "
                   @click="checkSetorUpdate($event, Object.keys(setor)[0])"
                   type="radio"
                   name="IdSetor"
-                >
-                <label :key="index" :for="'setor_' + Object.keys(setor)[0]">{{ Object.entries(setor)[0][1] }}</label>
+                />
+                <label :key="index" :for="'setor_' + Object.keys(setor)[0]">{{
+                  Object.entries(setor)[0][1]
+                }}</label>
               </template>
             </td>
           </tr>
@@ -295,8 +341,10 @@
                 @keyup="checkInput($event, 'SubSetor', errors)"
                 name="SubSetor"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -311,7 +359,9 @@
                 name="Endereco"
                 rows="1"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -326,13 +376,17 @@
                 name="AreaTerreno"
                 type="number"
                 step="0.01"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputAreaTerreno">Área de Registro do Terreno (m²)</label>
+              <label for="inputAreaTerreno"
+                >Área de Registro do Terreno (m²)</label
+              >
             </td>
             <ValidationProvider v-slot="{ errors }" rules="required" tag="td">
               <input
@@ -342,8 +396,10 @@
                 name="AreaRegistro"
                 type="number"
                 step="0.01"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -358,8 +414,10 @@
                 @keyup="checkInput($event, 'Zona')"
                 name="Zona"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -374,19 +432,25 @@
                 @keyup="checkInput($event, 'Uso')"
                 name="Uso"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>Contribuintes (SQL)</td>
             <td class="sqls--no-edit">
               <div>
-                <span v-for="sql in sqls" :key="sqls.indexOf(sql)" class="noEdit sql">
+                <span
+                  v-for="sql in sqls"
+                  :key="sqls.indexOf(sql)"
+                  class="noEdit sql"
+                >
                   {{ sql.NumeroSql }}
                 </span>
               </div>
-              <button @click.prevent="showSqlsEditor = true">
+              <button @click.prevent="showSqlsEditor = true" class="button">
                 Alterar
               </button>
             </td>
@@ -395,7 +459,11 @@
             <td>
               <label for="inputCAProjeto">C.A. do Projeto</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputCAProjeto"
                 v-model.number="fila.CAProjeto"
@@ -403,15 +471,23 @@
                 name="CAProjeto"
                 type="number"
                 step="0.0001"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
+              <label for="inputAreaAdResidencial"
+                >Área Adicional (residencial)</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputAreaAdResidencial"
                 v-model.number="fila.AreaAdResidencial"
@@ -420,15 +496,23 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
+              <label for="inputAreaAdNaoResidencial"
+                >Área Adicional (não residencial)</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model.number="fila.AreaAdNaoResidencial"
@@ -437,15 +521,23 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
+              <label for="inputCepacAreaAdicional"
+                >CEPAC - Área Adicional</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputCepacAreaAdicional"
                 v-model.number="fila.CepacAreaAdicional"
@@ -454,15 +546,21 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputCepacModUso"
                 v-model.number="fila.CepacModUso"
@@ -471,8 +569,10 @@
                 type="number"
                 step="1"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -483,21 +583,32 @@
               <the-mask
                 id="inputCodigoProposta"
                 v-model="fila.CodigoProposta"
-                :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
+                :mask="[
+                  'XX-XXX/XX',
+                  'XX-XXXX/XX',
+                  'XXX-XXX/XX',
+                  'XXX-XXXX/XXX'
+                ]"
                 @keyup.native="checkInput($event, 'CodigoProposta', errors)"
                 name="CodigoProposta"
                 masked="masked"
                 type="text"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
-          <!-- <tr>
+          <tr>
             <td>Perímetro</td>
             <td>
               <template v-if="Object.keys(geojson).length > 0">
                 <transition-group name="fade" mode="out-in">
-                  <input-geojson key="t-2" :is-edit="true" @geojson="setGeojson" />
+                  <input-geojson
+                    key="t-2"
+                    :is-edit="true"
+                    @geojson="setGeojson"
+                  />
                 </transition-group>
               </template>
               <template v-else>
@@ -509,23 +620,33 @@
           </tr>
           <tr v-if="Object.keys(geojson).length > 0" class="mapa">
             <td v-if="fila.IdGeo" colspan="2">
-              <mapa :data="geojson" :is-create="false" :id="fila.IdGeo" @IdGeo="getIdgeo" />
+              <mapa
+                :data="geojson"
+                :is-create="false"
+                :id="fila.IdGeo"
+                @IdGeo="getIdgeo"
+              />
             </td>
             <td v-else colspan="2">
               <mapa :data="geojson" :is-create="true" @IdGeo="getIdgeo" />
             </td>
-          </tr> -->
+          </tr>
           <tr>
-            <td>Selecionar de mapa</td>
+            <td>Selecionar outra feição de mapa</td>
             <td>
-              <button @click.prevent="loadMapOuc=!loadMapOuc">
-                <span v-if="loadMapOuc">Fechar</span><span v-else>Abrir</span> mapa da {{ ouc.Nome }}
+              <button @click.prevent="loadMapOuc = !loadMapOuc" class="button">
+                <span v-if="loadMapOuc">Fechar</span
+                ><span v-else>Abrir</span> mapa
               </button>
             </td>
           </tr>
           <tr v-if="loadMapOuc">
             <td colspan="2">
-              <mapa-seletor :IdGeo="fila.IdGeo" @closeMapSelect="loadMapOuc = false" @changeSelected="changeFila" />
+              <mapa-seletor
+                :IdGeo="fila.IdGeo"
+                @closeMapSelect="loadMapOuc = false"
+                @changeSelected="changeFila"
+              />
             </td>
           </tr>
           <tr>
@@ -551,12 +672,25 @@
       <button @click.prevent="$router.push('/')">
         Cancelar
       </button>
-      <button v-if="isReady" :disabled="saveBtnDisableState" @click.prevent="purge(filaUntouched, fila)">
+      <button
+        v-if="isReady"
+        :disabled="saveBtnDisableState"
+        @click.prevent="purge(filaUntouched, fila)"
+      >
         Salvar
       </button>
     </footer>
-    <div id="confirmModal" :class="{ hasChanged: toConfirm.state, hasntChanged: !toConfirm.state }">
-      <main :class="{ review: putResponse.pending === undefined, fetching: putResponse.pending === true, response: putResponse.data }">
+    <div
+      id="confirmModal"
+      :class="{ hasChanged: toConfirm.state, hasntChanged: !toConfirm.state }"
+    >
+      <main
+        :class="{
+          review: putResponse.pending === undefined,
+          fetching: putResponse.pending === true,
+          response: putResponse.data
+        }"
+      >
         <template v-if="toConfirm.state">
           <h3>Revise as alterações que você fez</h3>
           <div class="tableWrap">
@@ -591,7 +725,10 @@
         <div :class="{ active: putResponse.pending }" class="fetcher">
           Registrando
         </div>
-        <div :class="{ success: putResponse.success, error: putResponse.error }" class="response">
+        <div
+          :class="{ success: putResponse.success, error: putResponse.error }"
+          class="response"
+        >
           <template v-if="putResponse.success">
             <h4>Sucesso</h4>
             <p>Suas alterações foram gravadas</p>
@@ -628,8 +765,8 @@ import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
 import MapaSeletor from '~/components/MapaSeletor'
-// import InputGeojson from '~/components/InputGeojson'
-// import Mapa from '~/components/Mapa'
+import InputGeojson from '~/components/InputGeojson'
+import Mapa from '~/components/Mapa'
 
 export default {
   name: 'Cadastro',
@@ -640,9 +777,9 @@ export default {
     DatePick,
     UserAuth,
     CadastroIdSqls,
-    MapaSeletor
-    // InputGeojson
-    // Mapa
+    MapaSeletor,
+    InputGeojson,
+    Mapa
   },
   data () {
     return {
@@ -655,10 +792,27 @@ export default {
       filaUntouched: {},
       sqlsUntouched: [],
       allSetores: [
-        [{ '5': 'JABAQUARA' }, { '6': 'CHUCRI ZAIDAN' }, { '7': 'MARGINAL PINHEIROS' }, { '8': 'BERRINI' }, { '9': 'BROOKLIN' }],
-        [{ '1': 'HÉLIO PELLEGRINO' }, { '2': 'FARIA LIMA' }, { '3': 'PINHEIROS' }, { '4': 'OLIMPÍADAS' }],
+        [
+          { '5': 'JABAQUARA' },
+          { '6': 'CHUCRI ZAIDAN' },
+          { '7': 'MARGINAL PINHEIROS' },
+          { '8': 'BERRINI' },
+          { '9': 'BROOKLIN' }
+        ],
+        [
+          { '1': 'HÉLIO PELLEGRINO' },
+          { '2': 'FARIA LIMA' },
+          { '3': 'PINHEIROS' },
+          { '4': 'OLIMPÍADAS' }
+        ],
         [{ '10': 'CENTRO' }],
-        [{ '11': 'A' }, { '12': 'B' }, { '13': 'C' }, { '14': 'D' }, { '15': 'E' }]
+        [
+          { '11': 'A' },
+          { '12': 'B' },
+          { '13': 'C' },
+          { '14': 'D' },
+          { '15': 'E' }
+        ]
       ],
       Setores: undefined,
       toConfirm: {
@@ -671,7 +825,8 @@ export default {
         success: undefined,
         error: undefined,
         data: undefined,
-        reset () { // para zerar a request
+        reset () {
+          // para zerar a request
           this.pending = undefined
           this.success = undefined
           this.error = undefined
@@ -686,8 +841,12 @@ export default {
   computed: {
     ...mapGetters(['requestAuth']),
     ...mapState('setores', ['ouc']),
-    UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
-    logged () { return this.$store.state.logged },
+    UsuarioAlteracao () {
+      return this.$store.state.userInfo.NM_PRODAM
+    },
+    logged () {
+      return this.$store.state.logged
+    },
     dataNow: {
       get () {
         return this.fila.Data.slice(0, 10)
@@ -696,8 +855,7 @@ export default {
         if (this.filaUntouched.Data.slice(0, 10) === val) {
           this.saveBtnDisableState = true
           this.$refs.dataInclusao.classList.remove('updated')
-        }
-        else {
+        } else {
           this.saveBtnDisableState = false
           this.$refs.dataInclusao.classList.add('updated')
         }
@@ -719,7 +877,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next((vm) => {
+    next(vm => {
       if (vm.logged) {
         vm.$router.push({
           query: {
@@ -736,10 +894,9 @@ export default {
     const sqls = await formApi.get(`sqls?IdFilaCepac=${params.id}`)
     let geojson
     if (fila.data.IdGeo) {
-      await axiosGeojson.get(`geo/${fila.data.IdGeo}`)
-        .then((res) => { geojson = res.data })
-    }
-    else {
+      const { data } = await axiosGeojson.get(`geo/${fila.data.IdGeo}`)
+      geojson = data
+    } else {
       geojson = []
     }
 
@@ -779,10 +936,14 @@ export default {
           this.toConfirm.old[key] = this.filaUntouched[key]
         }
         document.body.style.overflow = 'hidden'
-        document.getElementById('confirmModal').setAttribute('style', `top: ${Math.abs(document.body.getBoundingClientRect().top)}px`)
+        document
+          .getElementById('confirmModal')
+          .setAttribute(
+            'style',
+            `top: ${Math.abs(document.body.getBoundingClientRect().top)}px`
+          )
         this.toConfirm.state = true
-      }
-      else {
+      } else {
         this.toConfirm.changed = null
         this.toConfirm.state = false
       }
@@ -791,17 +952,25 @@ export default {
       let out = ''
       if (key === 'IdStatus') {
         switch (attribute) {
-          case 1: out = 'Checklist'; break
-          case 2: out = 'Em análise'; break
-          case 3: out = 'Indeferido'; break
-          case 4: out = 'Aprovado'; break
-          case 5: out = 'Cancelado'; break
+          case 1:
+            out = 'Checklist'
+            break
+          case 2:
+            out = 'Em análise'
+            break
+          case 3:
+            out = 'Indeferido'
+            break
+          case 4:
+            out = 'Aprovado'
+            break
+          case 5:
+            out = 'Cancelado'
+            break
         }
-      }
-      else if (key === 'IdSetor') {
+      } else if (key === 'IdSetor') {
         out = setoresLabels[attribute]
-      }
-      else {
+      } else {
         out = attribute
       }
       return out
@@ -809,32 +978,28 @@ export default {
     getTipo (pedidoObj, inputValue) {
       if (pedidoObj === inputValue) {
         return 'checked'
-      }
-      else {
+      } else {
         return 'false'
       }
     },
     getStatus (statusObj, inputValue) {
       if (statusObj.Id === parseInt(inputValue)) {
         return true
-      }
-      else {
+      } else {
         return false
       }
     },
     getOU (setorObj, inputValue) {
       if (setorObj.IdOperacaoUrbana === inputValue) {
         return true
-      }
-      else {
+      } else {
         return false
       }
     },
     getSetor (setorObj, inputValue) {
       if (setorObj.Id === parseInt(inputValue)) {
         return true
-      }
-      else {
+      } else {
         return false
       }
     },
@@ -850,8 +1015,7 @@ export default {
       if (isTouchedAndNew) {
         el.parentNode.classList.add('updated')
         this.saveBtnDisableState = false
-      }
-      else {
+      } else {
         el.parentNode.classList.remove('updated')
         this.saveBtnDisableState = true
       }
@@ -863,8 +1027,7 @@ export default {
         el.parentNode.classList.add('updated')
         this.saveBtnDisableState = false
         this.fila[key] = id
-      }
-      else {
+      } else {
         el.parentNode.classList.remove('updated')
         this.saveBtnDisableState = true
       }
@@ -877,8 +1040,7 @@ export default {
       if (parseInt(selected.value) !== ouId) {
         el.parentNode.classList.add('updated')
         this.saveBtnDisableState = false
-      }
-      else if (parseInt(selected.value) === ouId) {
+      } else if (parseInt(selected.value) === ouId) {
         el.parentNode.classList.remove('updated')
         this.saveBtnDisableState = true
       }
@@ -891,8 +1053,7 @@ export default {
         td.classList.add('updated')
         this.saveBtnDisableState = false
         this.fila.IdSetor = id
-      }
-      else {
+      } else {
         td.classList.remove('updated')
         this.saveBtnDisableState = true
       }
@@ -903,8 +1064,7 @@ export default {
       if (val !== this.filaUntouched[filaKey]) {
         td.classList.add('updated')
         this.saveBtnDisableState = false
-      }
-      else {
+      } else {
         td.classList.remove('updated')
         this.saveBtnDisableState = true
       }
@@ -915,7 +1075,8 @@ export default {
       return Object.entries(this.Setores)
     },
     normFila (filaObj) {
-      for (const key in filaObj) { // precisa do for aqui para evitar que a instância vue não entender valores de 'fila' como um valor imutável
+      for (const key in filaObj) {
+        // precisa do for aqui para evitar que a instância vue não entender valores de 'fila' como um valor imutável
         if (key === 'CAProjeto' || key === 'AreaTerreno') {
           if (parseFloat(filaObj[key])) {
             filaObj[key] = parseFloat(filaObj[key])
@@ -945,13 +1106,14 @@ export default {
       this.toConfirm.changed.UsuarioAlteracao = this.UsuarioAlteracao // inclui o usuário que está realizando as alterações na requisição
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
 
-      formApi.put(`fila/${this.$route.params.id}`, this.toConfirm.changed)
-        .then((res) => {
+      formApi
+        .put(`fila/${this.$route.params.id}`, this.toConfirm.changed)
+        .then(res => {
           this.putResponse.pending = false
           this.putResponse.success = true
           this.putResponse.data = res
         })
-        .catch((e) => {
+        .catch(e => {
           this.putResponse.pending = false
           this.putResponse.error = true
           this.putResponse.data = e
@@ -962,6 +1124,7 @@ export default {
     },
     changeFila (key, value) {
       this.fila[key] = value
+      console.log(value)
     }
   }
 }

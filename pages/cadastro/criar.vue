@@ -1,5 +1,10 @@
 <template>
-  <ValidationObserver ref="form" v-slot="{ valid, errors }" :class="'criar'" tag="div">
+  <ValidationObserver
+    ref="form"
+    v-slot="{ valid, errors }"
+    :class="'criar'"
+    tag="div"
+  >
     <header>
       <h2>Criar novo registro</h2>
       <button @click="$router.go(-1)">
@@ -20,7 +25,7 @@
                 type="radio"
                 checked="false"
                 value="Certidão de vinculação"
-              >
+              />
               <label for="pedidoVinculacao">Certidão de vinculação</label>
               <input
                 id="pedidoAlteracao"
@@ -29,7 +34,7 @@
                 type="radio"
                 checked="false"
                 value="Alteração de certidão"
-              >
+              />
               <label for="pedidoAlteracao">Alteração de certidão</label>
               <input
                 id="pedidoDesvinculacao"
@@ -38,7 +43,7 @@
                 type="radio"
                 checked="false"
                 value="Desvinculação de CEPACs"
-              >
+              />
               <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
             </td>
           </tr>
@@ -46,19 +51,28 @@
             <td>
               <label for="inputInteressado">Interessado</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:1500" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min:1|max:1500"
+              tag="td"
+            >
               <input
                 id="inputInteressado"
                 v-model="Interessado"
                 name="Interessado"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>Situação</td>
-            <ValidationProvider :rules="{ required: { allowFalse: false } }" tag="td">
+            <ValidationProvider
+              :rules="{ required: { allowFalse: false } }"
+              tag="td"
+            >
               <input
                 id="Checklist"
                 v-model="IdStatus"
@@ -66,7 +80,7 @@
                 type="radio"
                 name="IdStatus"
                 value="1"
-              >
+              />
               <label for="Checklist">Checklist</label>
               <input
                 id="EmAnalise"
@@ -75,7 +89,7 @@
                 type="radio"
                 name="IdStatus"
                 value="2"
-              >
+              />
               <label for="EmAnalise">Em análise</label>
               <input
                 id="Indeferido"
@@ -84,7 +98,7 @@
                 type="radio"
                 name="IdStatus"
                 value="3"
-              >
+              />
               <label for="Indeferido">Indeferido</label>
               <input
                 id="Aprovado"
@@ -93,7 +107,7 @@
                 type="radio"
                 name="IdStatus"
                 value="4"
-              >
+              />
               <label for="Aprovado">Aprovado</label>
               <input
                 id="Cancelado"
@@ -102,7 +116,7 @@
                 type="radio"
                 name="IdStatus"
                 value="5"
-              >
+              />
               <label for="Cancelado">Cancelado</label>
             </ValidationProvider>
           </tr>
@@ -117,8 +131,10 @@
                 v-model="Email"
                 name="Email"
                 type="email"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -136,7 +152,9 @@
                 type="tel"
                 placeholder="(00) 0000-0000"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -144,14 +162,20 @@
               <label for="inputProcurador">Procurador</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="alpha_spaces" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="alpha_spaces"
+              tag="td"
+            >
               <input
                 id="inputProcurador"
                 v-model="Procurador"
                 name="Procurador"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -164,7 +188,20 @@
                 v-model="Data"
                 :format="'YYYY-MM-DD'"
                 :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
-                :months="['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']"
+                :months="[
+                  'Janeiro',
+                  'Fevereiro',
+                  'Março',
+                  'Abril',
+                  'Maio',
+                  'Junho',
+                  'Julho',
+                  'Agosto',
+                  'Setembro',
+                  'Outubro',
+                  'Novembro',
+                  'Dezembro'
+                ]"
                 next-month-caption="Próximo mês"
                 prev-month-caption="Mês anterior"
               />
@@ -184,7 +221,9 @@
                 rows="1"
                 placeholder="0000.0000/0000000-0"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -202,7 +241,9 @@
                 rows="1"
                 placeholder="FL-000/2020 - dd/mm/aaaa"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -210,26 +251,36 @@
               <label for="inputLicenciamento">Licenciamento</label>
               <span class="opt">Opcional</span>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="min:2|max:300" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="min:2|max:300"
+              tag="td"
+            >
               <textarea
                 id="inputLicenciamento"
                 v-model="Licenciamento"
                 name="Licenciamento"
                 rows="1"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>Operação Urbana</td>
-            <ValidationProvider v-slot="{ errors }" :rules="{ required: { allowFalse: false } }" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              :rules="{ required: { allowFalse: false } }"
+              tag="td"
+            >
               <input
                 id="AguaBranca"
                 v-model="ouc"
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="oucab"
-              >
+              />
               <label for="AguaBranca">Água Branca</label>
               <input
                 id="FariaLima"
@@ -237,7 +288,7 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="oucfl"
-              >
+              />
               <label for="FariaLima">Faria Lima</label>
               <input
                 id="AguaEspraiada"
@@ -245,7 +296,7 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="oucae"
-              >
+              />
               <label for="AguaEspraiada">Água Espraiada</label>
               <input
                 id="Centro"
@@ -253,9 +304,11 @@
                 type="radio"
                 name="IdOperacaoUrbana"
                 value="oucc"
-              >
+              />
               <label for="Centro">Centro</label>
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr v-if="ouc !== ''">
@@ -269,10 +322,14 @@
                   :value="setor.id"
                   :name="setor.nome"
                   type="radio"
-                >
-                <label :key="index + 100" :for="`setor_${setor.id}`">{{ setor.nome }}</label>
+                />
+                <label :key="index + 100" :for="`setor_${setor.id}`">{{
+                  setor.nome
+                }}</label>
               </template>
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -285,52 +342,74 @@
                 v-model="SubSetor"
                 name="Sub setor"
                 type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputEndereco">Endereço</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:2" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min:2"
+              tag="td"
+            >
               <textarea
                 id="inputEndereco"
                 v-model="Endereco"
                 name="Endereco"
                 rows="1"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputAreaTerreno">Área Real do Terreno (m²)</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0.01" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0.01"
+              tag="td"
+            >
               <input
                 id="inputAreaTerreno"
                 v-model="AreaTerreno"
                 name="AreaTerreno"
                 type="number"
                 step="0.01"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputAreaTerreno">Área de Registro do Terreno (m²)</label>
+              <label for="inputAreaTerreno"
+                >Área de Registro do Terreno (m²)</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0.01" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0.01"
+              tag="td"
+            >
               <input
                 id="inputAreaRegistro"
                 v-model="AreaRegistro"
                 name="AreaRegistro"
                 type="number"
                 step="0.01"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -339,13 +418,10 @@
               <span class="opt">Opcional</span>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="min:2" tag="td">
-              <input
-                id="inputZona"
-                v-model="Zona"
-                name="Zona"
-                type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <input id="inputZona" v-model="Zona" name="Zona" type="text" />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -354,13 +430,10 @@
               <span class="opt">Opcional</span>
             </td>
             <ValidationProvider v-slot="{ errors }" rules="" tag="td">
-              <input
-                id="inputUso"
-                v-model="Uso"
-                name="Uso"
-                type="text"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <input id="inputUso" v-model="Uso" name="Uso" type="text" />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -381,7 +454,11 @@
                     type="text"
                     placeholder="000.000.0000-0"
                   />
-                  <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="remove">
+                  <button
+                    v-if="sql.id !== 1"
+                    @click.prevent="removeSql(sql)"
+                    class="remove"
+                  >
                     Remover este
                   </button>
                 </ValidationProvider>
@@ -393,7 +470,11 @@
           </tr>
           <tr>
             <td>C.A. do Projeto</td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputCAProjeto"
                 v-model="CAProjeto"
@@ -401,15 +482,23 @@
                 type="number"
                 step="0.0001"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputAreaAdResidencial">Área Adicional (residencial)</label>
+              <label for="inputAreaAdResidencial"
+                >Área Adicional (residencial)</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputAreaAdResidencial"
                 v-model="AreaAdResidencial"
@@ -417,15 +506,23 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputAreaAdNaoResidencial">Área Adicional (não residencial)</label>
+              <label for="inputAreaAdNaoResidencial"
+                >Área Adicional (não residencial)</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputAreaAdNaoResidencial"
                 v-model="AreaAdNaoResidencial"
@@ -433,15 +530,23 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
-              <label for="inputCepacAreaAdicional">CEPAC - Área Adicional</label>
+              <label for="inputCepacAreaAdicional"
+                >CEPAC - Área Adicional</label
+              >
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputCepacAreaAdicional"
                 v-model="CepacAreaAdicional"
@@ -449,15 +554,21 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCepacModUso">CEPAC - Parâmetros</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min_value:0" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min_value:0"
+              tag="td"
+            >
               <input
                 id="inputCepacModUso"
                 v-model="CepacModUso"
@@ -465,25 +576,38 @@
                 type="number"
                 step="any"
                 min="0"
-              >
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              />
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
             <td>
               <label for="inputCodigoProposta">Código da Proposta</label>
             </td>
-            <ValidationProvider v-slot="{ errors }" rules="required|min:1|max:10" tag="td">
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|min:1|max:10"
+              tag="td"
+            >
               <the-mask
                 id="inputCodigoProposta"
                 v-model="CodigoProposta"
-                :mask="['XX-XXX/XX','XX-XXXX/XX', 'XXX-XXX/XX', 'XXX-XXXX/XXX']"
+                :mask="[
+                  'XX-XXX/XX',
+                  'XX-XXXX/XX',
+                  'XXX-XXX/XX',
+                  'XXX-XXXX/XXX'
+                ]"
                 masked="masked"
                 placeholder="FL-000/00"
                 name="CodigoProposta"
                 type="text"
               />
-              <span :class="{ active: errors[0] }" class="error">{{ errors[0] }}</span>
+              <span :class="{ active: errors[0] }" class="error">{{
+                errors[0]
+              }}</span>
             </ValidationProvider>
           </tr>
           <tr>
@@ -491,7 +615,11 @@
             <td>
               <template v-if="Object.keys(geojson).length > 0">
                 <transition-group name="fade" mode="out-in">
-                  <input-geojson key="t-2" :is-edit="true" @geojson="setGeojson" />
+                  <input-geojson
+                    key="t-2"
+                    :is-edit="true"
+                    @geojson="setGeojson"
+                  />
                 </transition-group>
               </template>
               <template v-else>
@@ -503,7 +631,13 @@
           </tr>
           <tr v-if="Object.keys(geojson).length > 0" class="mapa">
             <td colspan="2">
-              <mapa key="t-1" :data="geojson" :is-create="true" :id="IdGeo" @IdGeo="getIdgeo" />
+              <mapa
+                key="t-1"
+                :data="geojson"
+                :is-create="true"
+                :id="IdGeo"
+                @IdGeo="getIdgeo"
+              />
             </td>
           </tr>
           <tr>
@@ -614,10 +748,10 @@ export default {
         '15': 'E'
       },
       mapOucSetores: {
-        oucfl: [ '1', '2', '3', '4' ],
-        oucae: [ '11', '12', '13', '14', '15' ],
-        oucc: [ '10' ],
-        oucab: [ '5', '6', '7', '8', '9' ]
+        oucfl: ['1', '2', '3', '4'],
+        oucae: ['11', '12', '13', '14', '15'],
+        oucc: ['10'],
+        oucab: ['5', '6', '7', '8', '9']
       },
       filaNiceName,
       ouc: '',
@@ -634,14 +768,20 @@ export default {
   },
   computed: {
     ...mapGetters(['requestAuth']),
-    sqlsToSend () { return this.sqls.map(sql => sql.content) },
-    UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM },
-    logged () { return this.$store.state.logged }
+    sqlsToSend () {
+      return this.sqls.map(sql => sql.content)
+    },
+    UsuarioAlteracao () {
+      return this.$store.state.userInfo.NM_PRODAM
+    },
+    logged () {
+      return this.$store.state.logged
+    }
   },
 
   watch: {
     ouc (key) {
-      this.Setores = this.mapOucSetores[key].map((id) => {
+      this.Setores = this.mapOucSetores[key].map(id => {
         return {
           id,
           nome: this.mapSetores[id]
@@ -651,18 +791,17 @@ export default {
     showModal (state) {
       if (state) {
         document.body.style.overflow = 'hidden'
-      }
-      else {
+      } else {
         document.body.style.overflow = 'auto'
       }
     }
   },
   created () {
-    const date = new Date((Date.now() - (new Date()).getTimezoneOffset() * 60000))
+    const date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
     this.Data = date.toISOString().slice(0, 10)
   },
   beforeRouteEnter (to, from, next) {
-    next((vm) => {
+    next(vm => {
       if (vm.logged) {
         vm.$router.push({
           query: {
@@ -675,7 +814,9 @@ export default {
     })
   },
   methods: {
-    onSubmit () { console.log('submited') },
+    onSubmit () {
+      console.log('submited')
+    },
     removeSql (sql) {
       const indexSql = this.sqls.indexOf(sql)
       this.sqls.splice(indexSql, 1)
@@ -684,14 +825,13 @@ export default {
       if (this.sqls.length) {
         const biggerId = this.sqls
           .map(sql => sql.id)
-          .reduce((a, b) => a > b ? a : b)
+          .reduce((a, b) => (a > b ? a : b))
 
         this.sqls.push({
           id: biggerId + 1,
           content: ''
         })
-      }
-      else {
+      } else {
         this.sqls.push({
           id: 1,
           content: ''
@@ -704,7 +844,9 @@ export default {
     getIdgeo (IdGeo) {
       this.IdGeo = IdGeo
     },
-    reloadApp () { window.location.reload(true) },
+    reloadApp () {
+      window.location.reload(true)
+    },
     novaFila (isValid, errors) {
       this.showModal = true
 
@@ -718,38 +860,51 @@ export default {
 
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
 
-      formApi.post('fila', {
-        TipoPedido: this.TipoPedido,
-        Certidao: this.Certidao,
-        Interessado: this.Interessado,
-        Licenciamento: this.Licenciamento,
-        Sei: this.Sei,
-        AreaAdResidencial: parseFloat(this.AreaAdResidencial.toString().replace(',', '.')),
-        AreaAdNaoResidencial: parseFloat(this.AreaAdNaoResidencial.toString().replace(',', '.')),
-        CepacAreaAdicional: parseFloat(this.CepacAreaAdicional.toString().replace(',', '.')),
-        CepacModUso: parseInt(this.CepacModUso),
-        Email: this.Email,
-        Telefone: this.Telefone,
-        Procurador: this.Procurador,
-        CepacObjeto: parseFloat(this.CepacObjeto.toString().replace(',', '.')),
-        Endereco: this.Endereco,
-        AreaTerreno: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
-        AreaRegistro: parseFloat(this.AreaTerreno.toString().replace(',', '.')),
-        Zona: this.Zona,
-        Uso: this.Uso,
-        CAProjeto: parseFloat(this.CAProjeto.toString().replace(',', '.')),
-        Obs: this.Obs,
-        CodigoProposta: this.CodigoProposta,
-        IdStatus: parseInt(this.IdStatus),
-        IdSetor: parseInt(this.IdSetor),
-        IdGeo: this.IdGeo,
-        SubSetor: this.SubSetor,
-        Data: `${this.Data}T00:00:00`,
-        UsuarioAlteracao: this.UsuarioAlteracao
-      })
-        .then((res) => {
+      formApi
+        .post('fila', {
+          TipoPedido: this.TipoPedido,
+          Certidao: this.Certidao,
+          Interessado: this.Interessado,
+          Licenciamento: this.Licenciamento,
+          Sei: this.Sei,
+          AreaAdResidencial: parseFloat(
+            this.AreaAdResidencial.toString().replace(',', '.')
+          ),
+          AreaAdNaoResidencial: parseFloat(
+            this.AreaAdNaoResidencial.toString().replace(',', '.')
+          ),
+          CepacAreaAdicional: parseFloat(
+            this.CepacAreaAdicional.toString().replace(',', '.')
+          ),
+          CepacModUso: parseInt(this.CepacModUso),
+          Email: this.Email,
+          Telefone: this.Telefone,
+          Procurador: this.Procurador,
+          CepacObjeto: parseFloat(
+            this.CepacObjeto.toString().replace(',', '.')
+          ),
+          Endereco: this.Endereco,
+          AreaTerreno: parseFloat(
+            this.AreaTerreno.toString().replace(',', '.')
+          ),
+          AreaRegistro: parseFloat(
+            this.AreaTerreno.toString().replace(',', '.')
+          ),
+          Zona: this.Zona,
+          Uso: this.Uso,
+          CAProjeto: parseFloat(this.CAProjeto.toString().replace(',', '.')),
+          Obs: this.Obs,
+          CodigoProposta: this.CodigoProposta,
+          IdStatus: parseInt(this.IdStatus),
+          IdSetor: parseInt(this.IdSetor),
+          IdGeo: this.IdGeo,
+          SubSetor: this.SubSetor,
+          Data: `${this.Data}T00:00:00`,
+          UsuarioAlteracao: this.UsuarioAlteracao
+        })
+        .then(res => {
           const IdFilaCepac = res.data.Id
-          this.sqlsToSend.forEach((sql) => {
+          this.sqlsToSend.forEach(sql => {
             formApi.post('sqls', {
               NumeroSql: sql,
               IdFilaCepac
@@ -757,13 +912,13 @@ export default {
           })
           return IdFilaCepac
         })
-        .then((id) => {
+        .then(id => {
           this.form.isFetching = false
           this.form.error = false
           this.form.message = 'Registro gerado com sucesso'
           this.form.idCadastro = id
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err)
           this.form.isFetching = false
           this.form.error = true

@@ -22,7 +22,10 @@
       </vl-layer-tile>
 
       <vl-layer-vector>
-        <vl-source-vector :features.sync="features" @created="onSourceCreated" />
+        <vl-source-vector
+          :features.sync="features"
+          @created="onSourceCreated"
+        />
         <vl-style-box>
           <vl-style-stroke :width="1" color="#319FD3" />
           <vl-style-fill color="#EAF5FA" />
@@ -34,10 +37,14 @@
       <p>Está correto?</p>
 
       <div class="mapa__btn-group">
-        <button @click.prevent="salvar" type="button" class="salvar">
+        <button
+          @click.prevent="salvar"
+          type="button"
+          class="button-color salvar"
+        >
           Sim
         </button>
-        <button type="button">
+        <button type="button" class="button-color cancelar">
           Cancelar
         </button>
       </div>
@@ -92,7 +99,8 @@ export default {
         success: false,
         error: false,
         erro: '',
-        reset () { // para zerar a request
+        reset () {
+          // para zerar a request
           this.pending = false
           this.success = false
           this.error = false
@@ -103,8 +111,10 @@ export default {
   },
   watch: {
     data () {
-      this.isCreate ? this.create = this.isCreate : this.create = false
-      this.data.features ? this.features = this.data.features : this.features = [this.data]
+      this.isCreate ? (this.create = this.isCreate) : (this.create = false)
+      this.data.features
+        ? (this.features = this.data.features)
+        : (this.features = [this.data])
 
       if (this.id > 0) {
         this.create = true
@@ -113,8 +123,10 @@ export default {
     }
   },
   created () {
-    this.isCreate ? this.create = this.isCreate : this.create = false
-    this.data.features ? this.features = this.data.features : this.features = [this.data]
+    this.isCreate ? (this.create = this.isCreate) : (this.create = false)
+    this.data.features
+      ? (this.features = this.data.features)
+      : (this.features = [this.data])
     this.create = this.isCreate
   },
   mounted () {
@@ -139,40 +151,44 @@ export default {
     onSourceCreated (sourceVm) {
       const map = this.$refs.map
       setTimeout(() => {
-        map.$view.fit(sourceVm.$source.getExtent(),
-          {
-            size: map.$map.getSize(),
-            duration: 1000
-          })
+        map.$view.fit(sourceVm.$source.getExtent(), {
+          size: map.$map.getSize(),
+          duration: 1000
+        })
       }, 500)
     },
     salvar () {
       this.response.pending = true
       if (this.create && this.id === 0) {
-        axiosGeojson.post('/geo', this.data)
-          .then((res) => {
+        axiosGeojson
+          .post('/geo', this.data)
+          .then(res => {
             this.response.pending = false
             this.response.success = true
             this.$emit('IdGeo', res.data)
-          }).catch((err) => {
+          })
+          .catch(err => {
             this.response.pending = false
             this.response.error = true
             this.response.erro = err
-          }).finally(() => {
+          })
+          .finally(() => {
             this.response.reset()
           })
         this.create = false
-      }
-      else {
-        axiosGeojson.put(`/geo/${this.id}`, this.data)
-          .then((res) => {
+      } else {
+        axiosGeojson
+          .put(`/geo/${this.id}`, this.data)
+          .then(res => {
             this.response.pending = false
             this.response.success = true
-          }).catch((err) => {
+          })
+          .catch(err => {
             this.response.pending = false
             this.response.error = true
             this.response.erro = err
-          }).finally(() => {
+          })
+          .finally(() => {
             this.response.reset()
           })
         this.create = false
@@ -189,7 +205,7 @@ export default {
 .mapa {
   display: flex;
   flex-direction: column;
-
+  max-width: 80vw;
   &__form {
     margin: 2rem 0;
     display: flex;
@@ -204,32 +220,6 @@ export default {
 
   &__btn-group {
     display: flex;
-
-    button {
-      border: 0;
-      padding: 1rem;
-      margin-right: 2rem;
-      border-radius: 30px;
-      padding: 10px 35px;
-      color: #fff;
-      background-color: #EB5757;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
-      border: 2px solid rgba(255, 255, 255, 0.24);
-      transition: ease-in-out 0.25s all;
-
-      &.salvar {
-        background-color: #038375;
-        &:disabled {
-          cursor: not-allowed;
-          background-color: #ddd;
-          opacity: 0.45;
-        }
-      }
-      &:hover {
-        cursor: pointer;
-        box-shadow: 1px 5px 9px rgba(0, 0, 0, 0.36);
-      }
-    }
   }
 }
 </style>

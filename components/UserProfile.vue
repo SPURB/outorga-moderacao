@@ -1,7 +1,12 @@
 <template>
   <a class="user-profile__profile">
     <p>{{ name }}</p>
-    <img v-if="imgPathIsKnown" :src="profileImageUrl" @load="isLoaded" class="profile__image">
+    <img
+      v-if="imgPathIsKnown"
+      :src="profileImageUrl"
+      @load="isLoaded"
+      class="profile__image"
+    />
     <user-profile-placeholder v-else />
   </a>
 </template>
@@ -23,7 +28,9 @@ export default {
     }
   },
   computed: {
-    alt () { return `Imagem de ${this.name}` },
+    alt () {
+      return `Imagem de ${this.name}`
+    },
     ...mapState({
       error: state => state.error,
       userInfo: state => state.userInfo,
@@ -37,7 +44,10 @@ export default {
         this.name = this.userInfo.NM_NOME
         this.imgPathIsKnown = true
         this.imgLoading = true
-        this.profileImageUrl = `http://emurbsp12410/sp_urbanismo/rh/pessoal/${this.userInfo.NR_PRONTUARIO.replace(/\s/g, '')}.jpg`
+        this.profileImageUrl = `http://emurbsp12410/sp_urbanismo/rh/pessoal/${this.userInfo.NR_PRONTUARIO.replace(
+          /\s/g,
+          ''
+        )}.jpg`
       }
     }
   },

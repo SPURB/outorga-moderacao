@@ -1,14 +1,5 @@
 <template>
   <div class="mapa">
-    <div v-if="selectedFeatures.length" class="mapa__actions">
-      <p>Associar esta feição ao cadastro {{ $route.params.id }}?</p>
-      <button @click.prevent="update(selectedFeatures[0])">
-        Sim
-      </button>
-      <button @click.prevent="close">
-        Cancelar
-      </button>
-    </div>
     <vl-map
       ref="map"
       :load-tiles-while-animating="true"
@@ -39,6 +30,18 @@
         <vl-interaction-select :features.sync="selectedFeatures" />
       </vl-layer-vector>
     </vl-map>
+    <div v-if="selectedFeatures.length" class="mapa__actions">
+      <p>Associar esta feição ao cadastro {{ $route.params.id }}?</p>
+      <button
+        @click.prevent="update(selectedFeatures[0])"
+        class="mapa__btn button-color salvar"
+      >
+        Sim
+      </button>
+      <button @click.prevent="close" class="mapa__btn button-color cancelar">
+        Cancelar
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -50,7 +53,7 @@ export default {
   name: 'MapaSeletor',
   props: {
     idGeo: {
-      required: true
+      default: 0
     }
   },
   data () {
@@ -60,7 +63,7 @@ export default {
       zoom: 12.9,
       maxZoom: 19,
       rotation: 0,
-      center: [ -46.685461, -23.585462 ]
+      center: [-46.685461, -23.585462]
     }
   },
   async created () {
@@ -71,8 +74,7 @@ export default {
     try {
       const { data } = await get(`/mapas/${mapaGeoId}`)
       this.features = data.features
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error(e)
     }
   },
@@ -90,3 +92,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.mapa {
+  max-width: 80vw;
+  &__btn {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+</style>

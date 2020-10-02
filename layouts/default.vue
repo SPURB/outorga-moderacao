@@ -31,9 +31,13 @@ export default {
     ...mapGetters('setores', ['oucs']),
     ouc () {
       const { idopurbanasrc } = this.$route.query
-      if (!this.oucs.length || !idopurbanasrc) { return {} }
-      else {
-        return this.oucs.find(({ IdOperacaoUrbana }) => parseInt(IdOperacaoUrbana) === parseInt(idopurbanasrc))
+      if (!this.oucs.length || !idopurbanasrc) {
+        return {}
+      } else {
+        return this.oucs.find(
+          ({ IdOperacaoUrbana }) =>
+            parseInt(IdOperacaoUrbana) === parseInt(idopurbanasrc)
+        )
       }
     }
   },
@@ -45,12 +49,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions('setores', [ 'setOuc' ])
+    ...mapActions('setores', ['setOuc'])
   },
   head () {
     return {
       title: 'SP Urbanismo | Moderção de CEPAC',
-      meta: [{ hid: 'relatorios', name: 'relatorios', content: 'Relatórios da São Paulo Urbanismo' }]
+      meta: [
+        {
+          hid: 'relatorios',
+          name: 'relatorios',
+          content: 'Relatórios da São Paulo Urbanismo'
+        }
+      ]
     }
   }
 }

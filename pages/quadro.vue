@@ -20,7 +20,8 @@
         :rows="rows"
         :search-options="{
           enabled: true,
-          placeholder: 'Digite e aperte Enter. Para reiniciar deixe em branco e aperte enter',
+          placeholder:
+            'Digite e aperte Enter. Para reiniciar deixe em branco e aperte enter',
           trigger: 'enter'
         }"
         :sort-options="{
@@ -46,11 +47,19 @@
         <button @click.prevent="$router.push('cadastro/criar')">
           <span>+</span> Criar novo registro
         </button>
-        <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.json'), rows)">
+        <button
+          @click.prevent="
+            saveTable(addDateToFileName('outorga-ouc-faria-lima.json'), rows)
+          "
+        >
           <span style="font-size: 0.8rem">{ }</span>
           Salvar como .json
         </button>
-        <button @click.prevent="saveTable(addDateToFileName('outorga-ouc-faria-lima.csv'), rows)">
+        <button
+          @click.prevent="
+            saveTable(addDateToFileName('outorga-ouc-faria-lima.csv'), rows)
+          "
+        >
           <span style="font-size: 0.8rem">&boxplus;</span>
           Salvar como .csv
         </button>
@@ -241,14 +250,18 @@ export default {
   },
   computed: {
     ...mapGetters(['requestAuth']),
-    displayError () { return this.error !== '' }
+    displayError () {
+      return this.error !== ''
+    }
   },
   created () {
     const { idopurbanasrc } = this.$route.query
     const oucFilter = idopurbanasrc ? `idopurbanasrc=${idopurbanasrc}` : ''
     const filters = this.fetchFilterString(this.$route.query, this.columns)
 
-    filters ? this.fetchData(`fila${filters}&${oucFilter}`) : this.fetchData(`fila?${oucFilter}`)
+    filters
+      ? this.fetchData(`fila${filters}&${oucFilter}`)
+      : this.fetchData(`fila?${oucFilter}`)
   },
   methods: {
     addDateToFileName (name) {
@@ -262,23 +275,30 @@ export default {
       const nameSplit = name.split('.')
       const type = nameSplit[nameSplit.length - 1] // 'json' ou 'csv'
       if (type === 'json') {
-        const jsonBlob = new Blob([JSON.stringify(content)], { type: 'text/json; charset=utf-8' })
+        const jsonBlob = new Blob([JSON.stringify(content)], {
+          type: 'text/json; charset=utf-8'
+        })
         FileSaver.saveAs(jsonBlob, name)
-      }
-      else if (type === 'csv') {
-        const csvBlob = new Blob([this.convertToCSV(content)], { type: 'text/csv; charset=utf-8' })
+      } else if (type === 'csv') {
+        const csvBlob = new Blob([this.convertToCSV(content)], {
+          type: 'text/csv; charset=utf-8'
+        })
         FileSaver.saveAs(csvBlob, name)
+      } else {
+        throw new Error(`${type} não é um formato válido para conversão`)
       }
-      else { throw new Error(`${type} não é um formato válido para conversão`) }
     },
     convertToCSV (objArray) {
-      const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
+      const array =
+        typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
       let str = `${Object.keys(objArray[0]).join(',')}\r\n` // header vem do primeiro objeto
 
-      array.forEach((obj) => {
+      array.forEach(obj => {
         let line = ''
         for (const key in obj) {
-          if (line !== '') { line += ',' }
+          if (line !== '') {
+            line += ','
+          }
           line += obj[key]
         }
         str += `${line}\r\n`
@@ -287,24 +307,31 @@ export default {
     },
     fetchData (path) {
       this.isFetching = true
-      formApi.get(path)
-        .then((res) => {
-          const resIsArray = Object.prototype.toString.call(res.data) === '[object Array]'
-          if (resIsArray) { this.rows = res.data }
-          else {
+      formApi
+        .get(path)
+        .then(res => {
+          const resIsArray =
+            Object.prototype.toString.call(res.data) === '[object Array]'
+          if (resIsArray) {
+            this.rows = res.data
+          } else {
             this.rows.push(res.data)
           }
         })
-        .catch((e) => { this.error = e })
-        .then(() => { this.isFetching = false })
+        .catch(e => {
+          this.error = e
+        })
+        .then(() => {
+          this.isFetching = false
+        })
     },
     fetchFilterString (queries, columns) {
-      if (Object.keys(queries).length === 0) { return false } // no queries
+      if (Object.keys(queries).length === 0) {
+        return false
+      } // no queries
       const filters = []
       const isValidQuery = (queryKey, columns) => {
-        return columns
-          .map(column => column.field)
-          .includes(queryKey)
+        return columns.map(column => column.field).includes(queryKey)
       }
       for (const key in queries) {
         if (isValidQuery(key, columns)) {
@@ -313,15 +340,26 @@ export default {
         }
       }
       if (filters.length) {
-        return `?${filters.join('/')}`// algo como -> ?Id=1/SubSetor=99
+        return `?${filters.join('/')}` // algo como -> ?Id=1/SubSetor=99
+      } else {
+        return false
       }
-      else { return false }
     },
-    reloadApp () { window.location.reload(true) },
-    formatStatus (statusObj) { return statusObj.Nome },
-    formatSetor (setorObj) { return setorObj.Nome },
-    formatOperacaoUrbana (setorObj) { return setorObj.OperacaoUrbana.Nome },
-    formatFmData (str) { return str.replace('T', ', ') },
+    reloadApp () {
+      window.location.reload(true)
+    },
+    formatStatus (statusObj) {
+      return statusObj.Nome
+    },
+    formatSetor (setorObj) {
+      return setorObj.Nome
+    },
+    formatOperacaoUrbana (setorObj) {
+      return setorObj.OperacaoUrbana.Nome
+    },
+    formatFmData (str) {
+      return str.replace('T', ', ')
+    },
     onCellClick (params) {
       if (params.column.field === 'Id') {
         const id = params.row.Id
@@ -333,8 +371,10 @@ export default {
             idopurbanasrc
           }
         })
-      }
-      else if (!window.getSelection().toString() && params.event.target.nodeName === 'SPAN') {
+      } else if (
+        !window.getSelection().toString() &&
+        params.event.target.nodeName === 'SPAN'
+      ) {
         const tip = document.createElement('span')
         tip.classList.add('tip')
         tip.textContent = params.column.label
@@ -347,7 +387,6 @@ export default {
 }
 </script>
 <style lang="scss">
-
 .index {
   .preloader {
     position: absolute;
@@ -360,13 +399,13 @@ export default {
     justify-content: center;
     z-index: 2;
     background-color: #008375;
-    color: #FFF;
+    color: #fff;
     transition: all ease-in 0.25s 0.15s;
     h2 {
       font-size: 1rem;
       font-weight: normal;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, .36);
-      transition: all ease-out .4s;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.36);
+      transition: all ease-out 0.4s;
       user-select: none;
     }
     &.faded {
@@ -380,25 +419,25 @@ export default {
   .error {
     padding: 2rem 3.25rem;
     h2 {
-      color: #EB5757;
+      color: #eb5757;
       font-size: 1.5rem;
     }
     p {
       font-size: small;
-      color: #BDBDBD;
+      color: #bdbdbd;
     }
     button {
       margin: 2rem 0 0;
       padding: 1.5rem 1.75rem 1.6rem;
       background-color: #005249;
-      border: 2px solid rgba(255, 255, 255, .2);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 0.25rem;
       font-family: inherit;
       font-size: 1rem;
-      color: #FFF;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, .36);
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.36);
       cursor: pointer;
-      transition: all ease-out .1s;
+      transition: all ease-out 0.1s;
       span {
         font-size: 1.25rem;
         line-height: 1.6rem;
@@ -418,7 +457,7 @@ export default {
         font-size: 1.5rem;
         position: absolute;
         line-height: 1.75rem;
-        color: #FFF;
+        color: #fff;
       }
       input {
         font-family: inherit;
@@ -428,13 +467,23 @@ export default {
         border: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         background-color: transparent;
-        color: #FFF;
-        transition: border ease-in .2s;
-        &:focus { border-bottom-color: #FFF; }
-        &::-webkit-input-placeholder { opacity: 1; }
-        &::-moz-placeholder { opacity: 1; }
-        &:-moz-placeholder { opacity: 1; }
-        &:-ms-input-placeholder { opacity: 1; }
+        color: #fff;
+        transition: border ease-in 0.2s;
+        &:focus {
+          border-bottom-color: #fff;
+        }
+        &::-webkit-input-placeholder {
+          opacity: 1;
+        }
+        &::-moz-placeholder {
+          opacity: 1;
+        }
+        &:-moz-placeholder {
+          opacity: 1;
+        }
+        &:-ms-input-placeholder {
+          opacity: 1;
+        }
       }
     }
     .vgt-responsive {
@@ -446,12 +495,15 @@ export default {
         border-collapse: separate;
         border-spacing: 0;
         @media (min-width: 1200px) {
-          tbody:hover td { color: #BDBDBD; }
+          tbody:hover td {
+            color: #bdbdbd;
+          }
           tr:hover td {
             color: initial;
           }
         }
-        thead tr th:first-child:not([colspan]), tbody tr td:first-child:not([colspan]) {
+        thead tr th:first-child:not([colspan]),
+        tbody tr td:first-child:not([colspan]) {
           position: absolute;
           left: 0;
           width: 3.25rem !important;
@@ -467,14 +519,14 @@ export default {
             padding: calc(0.25rem - 2px) calc(0.5rem - 2px);
             background-color: #005249;
             border-radius: 2rem;
-            border: 2px solid rgba(255, 255, 255, .2);
-            color: #FFF;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, .48);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.48);
             line-height: calc(16px * 1.6);
             font-size: 0.7rem;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, .48);
-            transition: all ease-out .1s;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.48);
+            transition: all ease-out 0.1s;
             &::after {
               position: absolute;
               width: 100%;
@@ -485,7 +537,7 @@ export default {
               letter-spacing: -13px;
               opacity: 0;
               font-size: 1.25rem;
-              transition: all ease-out .2s;
+              transition: all ease-out 0.2s;
             }
             &:hover {
               background-color: #008375;
@@ -494,19 +546,21 @@ export default {
               &::after {
                 letter-spacing: 0;
                 opacity: 1;
-                color: #FFF;
+                color: #fff;
               }
             }
           }
         }
-        thead tr th:nth-child(2):not([colspan]), tbody tr td:nth-child(2):not([colspan]) {
+        thead tr th:nth-child(2):not([colspan]),
+        tbody tr td:nth-child(2):not([colspan]) {
           padding-left: 0;
         }
-        thead tr th:last-child:not([colspan]), tbody tr td:last-child:not([colspan]) {
+        thead tr th:last-child:not([colspan]),
+        tbody tr td:last-child:not([colspan]) {
           padding-right: 3.25rem;
         }
         thead tr th {
-          background-color: #D5D5D5;
+          background-color: #d5d5d5;
           text-align: left;
           user-select: none;
           -moz-user-select: none;
@@ -520,7 +574,7 @@ export default {
             vertical-align: 2px;
             font-weight: normal;
             margin-left: 0;
-            transition: all ease-out .2s;
+            transition: all ease-out 0.2s;
           }
           &.sorting {
             span::after {
@@ -535,17 +589,20 @@ export default {
             }
           }
         }
-        tbody tr:nth-child(2n) td { background: #F5F5F5; }
+        tbody tr:nth-child(2n) td {
+          background: #f5f5f5;
+        }
         tbody tr td:last-child span {
           display: block;
           max-width: 500px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        th, td {
+        th,
+        td {
           white-space: nowrap;
           padding: 0 1rem;
-          transition: all ease-in-out .1s;
+          transition: all ease-in-out 0.1s;
           span {
             display: inline-block;
             padding: 0.75rem 0;
@@ -576,7 +633,7 @@ export default {
               left: 50%;
               transform: translateY(2rem) translateX(-50%);
               padding: 1rem 1.5rem 1rem 1rem;
-              color: #FFF;
+              color: #fff;
               font-size: 1.5rem;
               text-align: center;
               display: inline-block;
@@ -602,16 +659,16 @@ export default {
       .footer__row-count {
         line-height: 1.2;
         padding: 1rem 1.25rem;
-        background-color: rgba(255, 255, 255, .04);
+        background-color: rgba(255, 255, 255, 0.04);
         border-radius: 0.25rem;
-        color: #FFF;
+        color: #fff;
         order: 2;
         select {
           font-family: inherit;
           font-size: inherit;
           color: #005249;
           border: 0;
-          background-color: #FFF;
+          background-color: #fff;
           margin-left: 0.75rem;
         }
       }
@@ -619,15 +676,15 @@ export default {
         order: 1;
         white-space: nowrap;
         box-sizing: border-box;
-        color: #FFF;
+        color: #fff;
         a.footer__navigation__page-btn {
           display: inline-block;
           padding: 1rem 1.25rem;
-          background-color: rgba(255, 255, 255, .04);
+          background-color: rgba(255, 255, 255, 0.04);
           border-radius: 0.25rem;
           text-decoration: none;
           text-align: center;
-          transition: all ease-out .1s;
+          transition: all ease-out 0.1s;
           color: inherit;
           font-size: 1rem;
           line-height: 1.2;
@@ -653,7 +710,7 @@ export default {
         }
         .footer__navigation__info {
           display: inline-block;
-          background-color: rgba(0, 0, 0, .08);
+          background-color: rgba(0, 0, 0, 0.08);
           padding: 1rem 1.25rem;
           line-height: 1.2;
           border-radius: 0.25rem;
@@ -671,13 +728,13 @@ export default {
       }
       border: 0;
       padding: 1rem 1.25rem;
-      background-color: rgba(255, 255, 255, .04);
+      background-color: rgba(255, 255, 255, 0.04);
       border-radius: 0.25rem;
       font-family: inherit;
-      color: #FFF;
+      color: #fff;
       font-size: initial;
       cursor: pointer;
-      transition: all ease-out .2s;
+      transition: all ease-out 0.2s;
       &:hover {
         background-color: #008375;
       }
@@ -686,7 +743,7 @@ export default {
         width: 1.2rem;
         line-height: 1.2rem;
         border-radius: 1.2rem;
-        background-color: rgba(255, 255, 255, .2);
+        background-color: rgba(255, 255, 255, 0.2);
         margin: 0 0.25rem 0 0;
       }
     }
@@ -696,8 +753,8 @@ export default {
     font-size: small;
     line-height: 1;
     padding: 0.25rem 0.3rem;
-    background-color: #FFF;
-    border: 1px solid #DDD;
+    background-color: #fff;
+    border: 1px solid #ddd;
     opacity: 0;
     user-select: none;
     -moz-user-select: none;
@@ -740,9 +797,12 @@ export default {
             padding: 1rem;
             .footer__navigation {
               margin-bottom: 1rem;
-              .footer__navigation__info, .footer__navigation__page-btn {
+              .footer__navigation__info,
+              .footer__navigation__page-btn {
                 padding: 0.25rem 0.5rem;
-                &.disabled { padding: 0; }
+                &.disabled {
+                  padding: 0;
+                }
               }
             }
             .footer__row-count {

@@ -18,7 +18,11 @@
               type="input"
               placeholder="000.000.0000-0"
             />
-            <button v-if="sql.id !== 1" @click.prevent="removeSql(sql)" class="btn remove">
+            <button
+              v-if="sql.id !== 1"
+              @click.prevent="removeSql(sql)"
+              class="btn remove"
+            >
               Remover
             </button>
           </li>
@@ -27,7 +31,11 @@
           Adicionar item
         </button>
         <ul v-if="responses.length" class="responses">
-          <li v-for="(response, index) in responses" :key="index" :class="{ error: response.error }">
+          <li
+            v-for="(response, index) in responses"
+            :key="index"
+            :class="{ error: response.error }"
+          >
             {{ response.response }}
           </li>
         </ul>
@@ -66,7 +74,9 @@ export default {
     }
   },
   computed: {
-    UsuarioAlteracao () { return this.$store.state.userInfo.NM_PRODAM }
+    UsuarioAlteracao () {
+      return this.$store.state.userInfo.NM_PRODAM
+    }
   },
   methods: {
     cancel () {
@@ -74,7 +84,9 @@ export default {
     },
     removeSql (sql) {
       const indexSql = this.sqls.indexOf(sql)
-      if (this.sqls[indexSql].Id) { this.toRemove.push(this.sqls[indexSql].Id) }
+      if (this.sqls[indexSql].Id) {
+        this.toRemove.push(this.sqls[indexSql].Id)
+      }
       this.sqls.splice(indexSql, 1)
     },
     addSql () {
@@ -87,18 +99,19 @@ export default {
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
       const toPostItems = this.sqls
         .filter(sql => !sql.Id)
-        .map((sql) => {
-          formApi.post('/sqls', {
-            NumeroSql: sql.NumeroSql,
-            IdFilaCepac: this.$route.params.id
-          })
-            .then((response) => {
+        .map(sql => {
+          formApi
+            .post('/sqls', {
+              NumeroSql: sql.NumeroSql,
+              IdFilaCepac: this.$route.params.id
+            })
+            .then(response => {
               this.responses.push({
                 error: false,
                 response: `${sql.NumeroSql} foi criado`
               })
             })
-            .catch((error) => {
+            .catch(error => {
               this.responses.push({ error: true, response: error })
             })
         })
@@ -107,24 +120,32 @@ export default {
 
       const toPutItems = this.sqls
         .filter((sql, index) => sql.Id)
-        .map((sql) => {
-          formApi.put(`/sqls/${sql.Id}`, {
-            NumeroSql: sql.NumeroSql
-          })
-            .then((response) => {
-              this.responses.push({ error: false, response: `${sql.Id} foi alterado` })
+        .map(sql => {
+          formApi
+            .put(`/sqls/${sql.Id}`, {
+              NumeroSql: sql.NumeroSql
             })
-            .catch((error) => {
+            .then(response => {
+              this.responses.push({
+                error: false,
+                response: `${sql.Id} foi alterado`
+              })
+            })
+            .catch(error => {
               this.responses.push({ error: true, response: error })
             })
         })
 
-      const toDeleteItems = this.toRemove.map((id) => {
-        formApi.delete(`/sqls/${id}`)
-          .then((response) => {
-            this.responses.push({ error: false, response: `${id} foi deletado` })
+      const toDeleteItems = this.toRemove.map(id => {
+        formApi
+          .delete(`/sqls/${id}`)
+          .then(response => {
+            this.responses.push({
+              error: false,
+              response: `${id} foi deletado`
+            })
           })
-          .catch((error) => {
+          .catch(error => {
             this.responses.push({ error: true, response: error })
           })
       })
@@ -146,7 +167,7 @@ export default {
 
 .cadastro-id-sqls-container {
   background-color: #fff;
-  max-width: 90vw
+  max-width: 90vw;
 }
 
 #cadastro-sqls {
@@ -180,13 +201,12 @@ export default {
 }
 
 .btn.remove {
-  margin: 0.auto;
+  margin: 0auto;
 }
 
 .item__input {
   width: -moz-available;
   margin-right: 0.5rem;
-  margin-bottom: 0.auto;
+  margin-bottom: 0auto;
 }
-
 </style>

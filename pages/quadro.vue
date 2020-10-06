@@ -1,8 +1,6 @@
 <template>
   <div class="index">
-    <button @click.prevent="$router.go(-1)">
-      &#8624; Voltar
-    </button>
+    <voltar class="voltar" to="/" />
     <div :class="{ faded: !isFetching }" class="preloader">
       <h2>Carregando</h2>
     </div>
@@ -75,12 +73,14 @@ import FileSaver from 'file-saver'
 import { mapGetters } from 'vuex'
 import UserAuth from '~/components/UserAuth'
 import { formApi } from '~/plugins/axios'
+import Voltar from '~/components/Voltar'
 
 export default {
   name: 'Index',
   components: {
     VueGoodTable,
-    UserAuth
+    UserAuth,
+    Voltar
   },
   data () {
     return {
@@ -388,6 +388,9 @@ export default {
 </script>
 <style lang="scss">
 .index {
+  .voltar {
+    width: 100%;
+  }
   .preloader {
     position: absolute;
     top: 0;

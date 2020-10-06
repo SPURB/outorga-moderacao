@@ -19,32 +19,41 @@
             <td>Tipo do pedido</td>
             <td>
               <input
-                id="pedidoVinculacao"
+                id="pedidoVinculacao-1"
                 v-model="TipoPedido"
                 name="TipoPedido"
                 type="radio"
                 checked="false"
                 value="Certidão de vinculação"
               />
-              <label for="pedidoVinculacao">Certidão de vinculação</label>
+              <label for="pedidoVinculacao-1">Certidão de vinculação</label>
               <input
-                id="pedidoAlteracao"
+                id="pedidoAlteracao-2"
                 v-model="TipoPedido"
                 name="TipoPedido"
                 type="radio"
                 checked="false"
                 value="Alteração de certidão"
               />
-              <label for="pedidoAlteracao">Alteração de certidão</label>
+              <label for="pedidoAlteracao-2">Alteração de certidão</label>
               <input
-                id="pedidoDesvinculacao"
+                id="pedidoDesvinculacao-3"
                 v-model="TipoPedido"
                 name="TipoPedido"
                 type="radio"
                 checked="false"
                 value="Desvinculação de CEPACs"
               />
-              <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
+              <label for="pedidoDesvinculacao-3">Desvinculação de CEPACs</label>
+              <input
+                id="pedidoDesvinculacao-4"
+                v-model="TipoPedido"
+                name="TipoPedido"
+                type="radio"
+                checked="false"
+                value="Certidão antiga"
+              />
+              <label for="pedidoDesvinculacao-4">Certidão antiga</label>
             </td>
           </tr>
           <tr>
@@ -611,36 +620,6 @@
             </ValidationProvider>
           </tr>
           <tr>
-            <td>Perímetro</td>
-            <td>
-              <template v-if="Object.keys(geojson).length > 0">
-                <transition-group name="fade" mode="out-in">
-                  <input-geojson
-                    key="t-2"
-                    :is-edit="true"
-                    @geojson="setGeojson"
-                  />
-                </transition-group>
-              </template>
-              <template v-else>
-                <transition>
-                  <input-geojson @geojson="setGeojson" />
-                </transition>
-              </template>
-            </td>
-          </tr>
-          <tr v-if="Object.keys(geojson).length > 0" class="mapa">
-            <td colspan="2">
-              <mapa
-                key="t-1"
-                :data="geojson"
-                :is-create="true"
-                :id="IdGeo"
-                @IdGeo="getIdgeo"
-              />
-            </td>
-          </tr>
-          <tr>
             <td>
               <label for="inputObs">Observações</label>
               <span class="opt">Opcional</span>
@@ -688,6 +667,7 @@ import InputGeojson from '~/components/InputGeojson'
 import Mapa from '~/components/Mapa'
 import { formApi } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Criar',
@@ -729,7 +709,6 @@ export default {
       CodigoProposta: '',
       IdStatus: 0,
       IdSetor: 0,
-      IdGeo: 0,
       mapSetores: {
         '1': 'HÉLIO PELLEGRINO',
         '2': 'FARIA LIMA',
@@ -796,9 +775,15 @@ export default {
       }
     }
   },
-  created () {
+  async created () {
     const date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
     this.Data = date.toISOString().slice(0, 10)
+    const { idopurbanasrc } = this.$route.query
+
+    if (idopurbanasrc) {
+      await this.getSetores()
+      this.setOuc(parseInt(idopurbanasrc))
+    }
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -814,6 +799,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions('setores', ['getSetores', 'setOuc']),
     onSubmit () {
       console.log('submited')
     },

@@ -24,7 +24,7 @@
               tag="td"
             >
               <input
-                id="pedidoVinculacao"
+                id="pedidoVinculacao-1"
                 v-model="fila.TipoPedido"
                 :checked="getTipo(fila.TipoPedido, 'Certidão de vinculação')"
                 @click="checkTipoUpdate($event, 'TipoPedido')"
@@ -32,9 +32,9 @@
                 name="TipoPedido"
                 value="Certidão de vinculação"
               />
-              <label for="pedidoVinculacao">Certidão de vinculação</label>
+              <label for="pedidoVinculacao-1">Certidão de vinculação</label>
               <input
-                id="pedidoAlteracao"
+                id="pedidoAlteracao-2"
                 v-model="fila.TipoPedido"
                 :checked="getTipo(fila.TipoPedido, 'Alteração de certidão')"
                 @click="checkTipoUpdate($event, 'TipoPedido')"
@@ -42,9 +42,9 @@
                 name="TipoPedido"
                 value="Alteração de certidão"
               />
-              <label for="pedidoAlteracao">Alteração de certidão</label>
+              <label for="pedidoAlteracao-2">Alteração de certidão</label>
               <input
-                id="pedidoDesvinculacao"
+                id="pedidoDesvinculacao-3"
                 v-model="fila.TipoPedido"
                 :checked="getTipo(fila.TipoPedido, 'Desvinculação de CEPACs')"
                 @click="checkTipoUpdate($event, 'TipoPedido')"
@@ -52,7 +52,17 @@
                 name="TipoPedido"
                 value="Desvinculação de CEPACs"
               />
-              <label for="pedidoDesvinculacao">Desvinculação de CEPACs</label>
+              <label for="pedidoAlteracao-3">Desvinculação de CEPACs</label>
+              <input
+                id="pedidoDesvinculacao-4"
+                v-model="fila.TipoPedido"
+                :checked="getTipo(fila.TipoPedido, 'Certidão antiga')"
+                @click="checkTipoUpdate($event, 'TipoPedido')"
+                type="radio"
+                name="TipoPedido"
+                value="Certidão antiga"
+              />
+              <label for="pedidoDesvinculacao-4">Certidão antiga</label>
             </ValidationProvider>
           </tr>
           <tr>
@@ -599,27 +609,9 @@
               }}</span>
             </ValidationProvider>
           </tr>
-          <tr>
+          <tr v-if="displayPerimetro">
             <td>Perímetro</td>
-            <td>
-              <template v-if="Object.keys(geojson).length > 0">
-                <transition-group name="fade" mode="out-in">
-                  <input-geojson
-                    key="t-2"
-                    :is-edit="true"
-                    @geojson="setGeojson"
-                  />
-                </transition-group>
-              </template>
-              <template v-else>
-                <transition>
-                  <input-geojson @geojson="setGeojson" />
-                </transition>
-              </template>
-            </td>
-          </tr>
-          <tr v-if="Object.keys(geojson).length > 0" class="mapa">
-            <td v-if="fila.IdGeo" colspan="2">
+            <td v-if="fila.IdGeo">
               <mapa
                 :data="geojson"
                 :is-create="false"
@@ -627,12 +619,12 @@
                 @IdGeo="getIdgeo"
               />
             </td>
-            <td v-else colspan="2">
+            <td v-else>
               <mapa :data="geojson" :is-create="true" @IdGeo="getIdgeo" />
             </td>
           </tr>
           <tr>
-            <td>Selecionar outra feição de mapa</td>
+            <td>Selecionar feição de mapa</td>
             <td>
               <button @click.prevent="loadMapOuc = !loadMapOuc" class="button">
                 <span v-if="loadMapOuc">Fechar</span
@@ -641,12 +633,15 @@
             </td>
           </tr>
           <tr v-if="loadMapOuc">
-            <td colspan="2">
+            <td />
+            <td>
               <mapa-seletor
-                :IdGeo="fila.IdGeo"
+                v-if="mapaId"
+                :idMapa="mapaId"
                 @closeMapSelect="loadMapOuc = false"
-                @changeSelected="changeFila"
+                @changeSelected="changedMapa"
               />
+              <p v-else>Nenhum mapa associado à esta Operação Urbana</p>
             </td>
           </tr>
           <tr>
@@ -765,8 +760,8 @@ import { setores as setoresLabels } from '~/utils/setoresLabels'
 import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
 import MapaSeletor from '~/components/MapaSeletor'
-import InputGeojson from '~/components/InputGeojson'
 import Mapa from '~/components/Mapa'
+import mapasHashTable from '~/utils/mapas'
 
 export default {
   name: 'Cadastro',
@@ -778,7 +773,6 @@ export default {
     UserAuth,
     CadastroIdSqls,
     MapaSeletor,
-    InputGeojson,
     Mapa
   },
   data () {
@@ -864,6 +858,20 @@ export default {
     },
     isReady () {
       return this.isMounted && this.logged
+    },
+    displayPerimetro () {
+      return Object.keys(this.geojson).length > 0 && !this.loadMapOuc
+    },
+    mapaId () {
+      const { idopurbanasrc } = this.$route.query
+      if (idopurbanasrc) {
+        return mapasHashTable[idopurbanasrc].mapaGeoId
+      } else if (this.ouc.IdOperacaoUrbana) {
+        return mapasHashTable[this.ouc.IdOperacaoUrbana].mapaGeoId
+      } else if (this.fila.SetorObj.IdOperacaoUrbana) {
+        return mapasHashTable[this.fila.SetorObj.IdOperacaoUrbana].mapaGeoId
+      }
+      return 0
     }
   },
   watch: {
@@ -1007,6 +1015,7 @@ export default {
       this.geojson = geojson
     },
     getIdgeo (IdGeo) {
+      this.saveBtnDisableState = true
       this.fila.IdGeo = IdGeo
     },
     checkInput (event, filaKey, errorsObj = []) {
@@ -1122,9 +1131,15 @@ export default {
     dateDisplay (dateStr) {
       return dateStr.replace('T', ', às ').substring(0, 20) + 'h'
     },
+    changedMapa (feature) {
+      const IdGeo = feature.properties.id
+      this.saveBtnDisableState = false
+      this.fila.IdGeo = IdGeo
+      this.geojson = feature
+    },
     changeFila (key, value) {
+      this.saveBtnDisableState = false
       this.fila[key] = value
-      console.log(value)
     }
   }
 }

@@ -27,6 +27,7 @@
     "DataAlteracao": "Última alteração",
     "IdStatus": "Status",
     "IdSetor": "Setor (OU)",
-    "Id": "Identificador"
+    "Id": "Identificador",
+    "IdGeo": "Identificador geográfico"
   }
 }

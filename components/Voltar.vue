@@ -1,0 +1,43 @@
+<template>
+  <nuxt-link class="voltar" tag="button" :to="to">
+    <i class="icon icon-abrir_esquerda"></i>
+    Voltar
+  </nuxt-link>
+</template>
+<script>
+export default {
+  name: 'Voltar',
+  props: {
+    to: {
+      type: String,
+      required: true
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+$font-stack: 'Roboto', 'Helvetica', Arial, sans-serif;
+$brand-1: #008375;
+
+.voltar {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-family: $font-stack;
+  color: #fff;
+  font-size: 1rem;
+  border: 0;
+  height: 55px;
+  background-color: grey;
+  transition: background-color 0.2s ease-in-out;
+  &.voltar > i {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    margin-left: 0.1rem;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: #00a896;
+  }
+}
+</style>

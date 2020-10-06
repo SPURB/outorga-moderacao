@@ -46,14 +46,13 @@
 </template>
 <script>
 import { axiosGeojson } from '~/plugins/axios'
-import mapasHashTable from '~/utils/mapas'
-// import { findPointOnSurface } from 'vuelayers/lib/ol-ext'
 
 export default {
   name: 'MapaSeletor',
   props: {
-    idGeo: {
-      default: 0
+    idMapa: {
+      type: Number,
+      required: true
     }
   },
   data () {
@@ -69,10 +68,9 @@ export default {
   async created () {
     const { get } = axiosGeojson
     const { idopurbanasrc } = this.$route.query
-    const { mapaGeoId } = mapasHashTable[idopurbanasrc]
 
     try {
-      const { data } = await get(`/mapas/${mapaGeoId}`)
+      const { data } = await get(`/mapas/${this.idMapa}`)
       this.features = data.features
     } catch (e) {
       throw new Error(e)
@@ -83,10 +81,7 @@ export default {
       this.$emit('closeMapSelect')
     },
     update (feature) {
-      const { properties } = feature
-      const { id } = properties
-
-      this.$emit('changeSelected', 'IdGeo', id)
+      this.$emit('changeSelected', feature)
       this.close()
     }
   }

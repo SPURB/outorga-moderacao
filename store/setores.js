@@ -54,5 +54,8 @@ export const actions = {
     if (!setor) { throw new Error('Ouc não encontrado') }
 
     commit('SET', { data: setor.OperacaoUrbana, key: 'ouc' })
+  },
+  resetOuc: ({ commit }) => {
+    commit('SET', { data: {}, key: 'ouc' })
   }
 }

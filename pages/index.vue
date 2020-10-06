@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import PreloaderVerticalizacao from '~/components/PreloaderVerticalizacao'
+import { PreloaderVerticalizacao } from '@spurb/componentes'
 import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
@@ -44,10 +44,11 @@ export default {
     }
   },
   created () {
+    this.resetOuc()
     this.getSetores()
   },
   methods: {
-    ...mapActions('setores', ['getSetores'])
+    ...mapActions('setores', ['getSetores', 'resetOuc'])
   }
 }
 </script>

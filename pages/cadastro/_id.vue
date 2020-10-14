@@ -12,7 +12,7 @@
         {{ dateDisplay(fila.DataAlteracao) }}</span
       >
     </header>
-    <user-auth v-if="requestAuth" />
+    <!-- user-auth v-if="requestAuth" / -->
     <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="sqlsReset" />
     <form>
       <table>
@@ -660,6 +660,11 @@
               />
             </td>
           </tr>
+          <tr>
+            <td colspan="2" style="padding: 0 !important;">
+              <input-image />
+            </td>
+          </tr>
         </tbody>
       </table>
     </form>
@@ -753,11 +758,12 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
+import InputImage from '~/components/InputImage'
 import { mapGetters, mapState, mapActions } from 'vuex'
 import { formApi, axiosGeojson } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
-import UserAuth from '~/components/UserAuth'
+// import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
 import MapaSeletor from '~/components/MapaSeletor'
 import Mapa from '~/components/Mapa'
@@ -770,7 +776,8 @@ export default {
     ValidationObserver,
     TheMask,
     DatePick,
-    UserAuth,
+    InputImage,
+    // UserAuth,
     CadastroIdSqls,
     MapaSeletor,
     Mapa

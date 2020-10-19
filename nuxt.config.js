@@ -29,6 +29,10 @@ export default {
       url: process.env.API_GEOJSON_URL,
       token: process.env.API_GEOJSON_TOKEN
     },
+    arquivo: {
+      url: process.env.API_ARQUIVOS_URL,
+      token: process.env.API_ARQUIVOS_TOKEN
+    },
     mode: process.env.NODE_ENV
   },
   head: {

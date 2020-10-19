@@ -1,39 +1,43 @@
 <template>
   <div class="file-image">
-    <div class="file-image__input">
-      <label>
-        inserir imagens
-      </label>
-      <input
-        id="fileImage"
-        type="file"
-        multiple
-        name="file"
-        class="inputfile inputfile--imagem"
-        accept="image/png, image/jpeg, image/jpg"
-        @change="setFile"
-      />
-      <label for="fileImage">
-        fazer upload do computador...
-      </label>
+    <div class="file-image__groupInput">
+      <section class="file-image__input">
+        <label>
+          inserir imagens
+        </label>
+        <input
+          id="fileImage"
+          type="file"
+          multiple
+          name="file"
+          class="inputfile inputfile--imagem"
+          accept="image/png, image/jpeg, image/jpg"
+          @change="setFile"
+        />
+        <label for="fileImage">
+          fazer upload do computador...
+        </label>
+      </section>
     </div>
 
-    <div v-if="previews.length > 0" class="file-image__galeria">
+    <div v-if="arquivos.length > 0" class="file-image__galeria">
       <div
-        class="preview"
+        :class="arquivo.isApi ? '' : 'preview__newImage'"
         :key="index"
-        v-for="(imagem, index) in previews"
         :style="{
-          'background-image': `url(${imagem.preview})`,
+          'background-image': `url(${arquivo.preview})`,
           'background-size': 'cover',
-          'background-repeat': 'no-repeat',
-          width: '200px',
-          height: '125px',
-          margin: '5px'
+          'background-repeat': 'no-repeat'
         }"
+        class="preview"
+        v-for="(arquivo, index) in arquivos"
       >
-        <div class="remove" @click="removeElement(index)">
+        <div class="remove" @click.prevent="removeElement(index)">
           X
+        </div>
+
+        <div class="salvar" @click.prevent="enviarFoto(index)">
+          ENVIAR
         </div>
       </div>
     </div>
@@ -41,11 +45,12 @@
 </template>
 
 <script>
+import { axiosArquivos } from '~/plugins/axios'
 export default {
   name: 'InputImage',
   data () {
     return {
-      previews: []
+      arquivos: []
     }
   },
   methods: {
@@ -53,15 +58,41 @@ export default {
       const files = event.target.files
 
       for (const file of files) {
-        this.previews.push({
-          arquivo: file,
+        this.arquivos.push({
+          file: file,
+          isApi: false,
           preview: URL.createObjectURL(file)
         })
       }
     },
+    // getFila () {},
     removeElement (el) {
-      console.log(el)
-      this.previews = this.previews.filter((value, index) => index != el)
+      const arquivo = this.arquivos.filter((value, index) => index === el)
+      if (arquivo.isApi) {
+        console.log('REMOVENDO NA API')
+      } else {
+        this.arquivos = this.arquivos.filter((value, index) => index !== el)
+        console.log('REMOVENDO DO ARRAY')
+      }
+    },
+    async enviarFoto (el) {
+      let fd = new FormData()
+      const arquivo = this.arquivos.filter((value, index) => index === el)
+      fd.append('arquivo', arquivo[0].file)
+
+      await axiosArquivos
+        .post('/', fd, {
+          headers: {
+            'Content-Type': 'multipart/form-data; boundary=something'
+          }
+        })
+        .then(res => {
+          // aqui vai colocar o registro na api do outorga
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
@@ -74,10 +105,20 @@ export default {
   padding: 30px;
   display: flex;
 
-  &__input {
-    align-items: center;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+
+  &__groupInput {
     display: flex;
+    flex-direction: column;
     width: 50%;
+
+    @media screen and (max-width: 800px) {
+      width: 100%;
+      align-items: flex-start;
+      flex-direction: column;
+    }
 
     .inputfile {
       width: 0.1px;
@@ -95,6 +136,10 @@ export default {
           border-radius: 5px;
           display: inline-block;
           cursor: pointer;
+
+          @media screen and (max-width: 800px) {
+            width: 100%;
+          }
         }
       }
     }
@@ -112,22 +157,58 @@ export default {
     flex-wrap: wrap;
     width: 50%;
 
+    @media screen and (max-width: 800px) {
+      width: 100%;
+    }
+
     .preview {
       display: flex;
-      justify-content: flex-end;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-radius: 5px;
       padding-top: 5px;
       padding-right: 5px;
+      width: 200px;
+      height: 125px;
+      margin: 5px;
 
+      @media screen and (max-width: 800px) {
+        width: 100%;
+        height: 150px;
+        margin: 5px 0px;
+      }
+
+      &__newImage {
+        border: 2px solid #5cd6c9;
+      }
       .remove {
         background-color: #eb5757;
-        cursor: pointer;
         color: #fff;
         display: flex;
         justify-content: center;
-        font-weight: bold;
         border-radius: 100%;
         width: 20px;
         height: 20px;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #eb5756db;
+        }
+      }
+
+      .salvar {
+        background-color: #5cd6c9;
+        border: none;
+        border-radius: 2px;
+        color: #fff;
+        padding: 3px 7px;
+        margin-bottom: 2px;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #5cd6c9db;
+        }
       }
     }
   }

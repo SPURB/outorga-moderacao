@@ -758,7 +758,7 @@
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { TheMask } from 'vue-the-mask'
 import DatePick from 'vue-date-pick'
-import InputImage from '~/components/InputImage'
+import InputImage from '~/components/forms/InputImage'
 import { mapGetters, mapState, mapActions } from 'vuex'
 import { formApi, axiosGeojson } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'

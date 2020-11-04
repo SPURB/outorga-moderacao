@@ -12,7 +12,7 @@
         {{ dateDisplay(fila.DataAlteracao) }}</span
       >
     </header>
-    <!-- user-auth v-if="requestAuth" / -->
+    <user-auth v-if="requestAuth"/>
     <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="sqlsReset" />
     <form>
       <table>
@@ -763,7 +763,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import { formApi, axiosGeojson } from '~/plugins/axios'
 import { fila as filaNiceName } from '~/utils/glossario'
 import { setores as setoresLabels } from '~/utils/setoresLabels'
-// import UserAuth from '~/components/UserAuth'
+import UserAuth from '~/components/UserAuth'
 import CadastroIdSqls from '~/components/CadastroIdSqls'
 import MapaSeletor from '~/components/MapaSeletor'
 import Mapa from '~/components/Mapa'
@@ -777,7 +777,7 @@ export default {
     TheMask,
     DatePick,
     InputImage,
-    // UserAuth,
+    UserAuth,
     CadastroIdSqls,
     MapaSeletor,
     Mapa

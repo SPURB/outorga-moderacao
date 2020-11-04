@@ -34,6 +34,11 @@ export default {
       required: true
     }
   },
+  computed: {
+    UsuarioAlteracao () {
+      return this.$store.state.userInfo.NM_PRODAM
+    }
+  },
   methods: {
     removeElement () {
       if (this.arquivo.isApi) {
@@ -64,8 +69,11 @@ export default {
           console.log(err)
         })
 
-      /* const { data } = await formApi.post('/arquivofila', body)
-      console.log(data) */
+      
+      formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
+      await formApi.post('/arquivofila', body)
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
     }
   }
 }

@@ -62,7 +62,7 @@
           Salvar como .csv
         </button>
       </footer>
-      <!-- user-auth v-if="requestAuth" / -->
+      <user-auth v-if="requestAuth" />
     </div>
   </div>
 </template>
@@ -71,7 +71,7 @@
 import { VueGoodTable } from 'vue-good-table'
 import FileSaver from 'file-saver'
 import { mapGetters } from 'vuex'
-// import UserAuth from '~/components/UserAuth'
+import UserAuth from '~/components/UserAuth'
 import { formApi } from '~/plugins/axios'
 import Voltar from '~/components/Voltar'
 
@@ -79,7 +79,7 @@ export default {
   name: 'Index',
   components: {
     VueGoodTable,
-    // UserAuth,
+    UserAuth,
     Voltar
   },
   data () {

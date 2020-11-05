@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { axiosArquivos } from '~/plugins/axios'
+import { formApi, axiosArquivos } from '~/plugins/axios'
 import Imagem from '~/components/forms/Imagem'
 export default {
   name: 'InputImage',
@@ -42,6 +42,9 @@ export default {
     return {
       arquivos: []
     }
+  },
+  beforeMount () {
+    this.getFila()
   },
   methods: {
     setFile (event) {
@@ -59,8 +62,27 @@ export default {
       let arquivo = this.arquivos.filter((val, index) => index === param)
       arquivo[0].isApi = true
       this.$set(this.arquivos, param, arquivo[0])
+    },
+    async getFila () {
+      let arquivosFila = []
+      await formApi.get(`/arquivofila?IdFilaCepac=${this.$route.params.id}`)
+        .then(res => arquivosFila = res.data.map(v => `/arquivos/api/${v.IdArquivo}`))
+        .catch(err => console.log(err))
+
+      for (const url of arquivosFila) {
+        await axiosArquivos.get(url)
+          .then(res => {
+            this.arquivos.push({
+              file: res.data.file.filename,
+              isApi: true,
+              preview: `https://servicos.spurbanismo.sp.gov.br/public/${res.data.file.filename}`
+            })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
-    // getFila () {}
   }
 }
 </script>

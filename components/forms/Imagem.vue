@@ -52,7 +52,7 @@ export default {
       let fd = new FormData()
       fd.append('arquivo', this.arquivo.file)
       await axiosArquivos
-        .post('/', fd, {
+        .post('/arquivos/api/', fd, {
           headers: {
             'Content-Type': 'multipart/form-data; boundary=something'
           }
@@ -67,9 +67,7 @@ export default {
         })
         .catch(err => {
           console.log(err)
-        })
-
-      
+        })      
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
       await formApi.post('/arquivofila', body)
         .then(res => console.log(res))

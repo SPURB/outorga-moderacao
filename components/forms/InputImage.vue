@@ -49,20 +49,18 @@ export default {
   },
   methods: {
     setFile (event) {
-      Array
-        .from(event.target.files)
-        .forEach((file, index) => { 
-          this.arquivos.push({
-            file: file,
-            isApi: false,
-            props: {
-              IdArquivo: index,
-              IdFilaCepac: this.$route.params.id,
-              id: 0
-            },
-            preview: URL.createObjectURL(file)
-          })
+      Array.from(event.target.files).forEach((file, index) => {
+        this.arquivos.push({
+          file: file,
+          isApi: false,
+          props: {
+            IdArquivo: index,
+            IdFilaCepac: this.$route.params.id,
+            id: 0
+          },
+          preview: URL.createObjectURL(file)
         })
+      })
     },
     mudarStatus ({ IdArquivo, id, indice }) {
       let arquivo = this.arquivos.filter((val, index) => index === indice)
@@ -73,16 +71,18 @@ export default {
     },
     async getFila () {
       let arquivosFila = []
-      await formApi.get(`/arquivofila?IdFilaCepac=${this.$route.params.id}`)
-        .then(res => { 
-          arquivosFila = res.data.map(v => {             
+      await formApi
+        .get(`/arquivofila?IdFilaCepac=${this.$route.params.id}`)
+        .then(res => {
+          arquivosFila = res.data.map(v => {
             return { url: `/arquivos/api/${v.IdArquivo}`, id: v.Id }
           })
         })
         .catch(err => console.log(err))
 
       for (const item of arquivosFila) {
-        await axiosArquivos.get(item.url)
+        await axiosArquivos
+          .get(item.url)
           .then(res => {
             this.arquivos.push({
               file: res.data.file.filename,

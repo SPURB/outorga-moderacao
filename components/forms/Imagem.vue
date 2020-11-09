@@ -41,11 +41,15 @@ export default {
   },
   methods: {
     async removeElement () {
-      if (this.arquivo.isApi) {        
+      if (this.arquivo.isApi) {
         try {
           formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
-          const arquivoApi = await axiosArquivos.delete(`/arquivos/api/${this.arquivo.props.IdArquivo}`)
-          const arquivoFila = await formApi.delete(`/arquivofila/${this.arquivo.props.id}`)
+          const arquivoApi = await axiosArquivos.delete(
+            `/arquivos/api/${this.arquivo.props.IdArquivo}`
+          )
+          const arquivoFila = await formApi.delete(
+            `/arquivofila/${this.arquivo.props.id}`
+          )
 
           if (arquivoApi.status === 200 && arquivoFila.status === 200) {
             this.$emit('remove', this.index)
@@ -78,7 +82,8 @@ export default {
         })
 
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
-      await formApi.post('/arquivofila', body)
+      await formApi
+        .post('/arquivofila', body)
         .then(res => {
           this.$emit('uploadedImage', {
             IdArquivo: body.IdArquivo,

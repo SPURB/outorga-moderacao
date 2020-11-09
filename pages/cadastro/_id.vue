@@ -12,7 +12,7 @@
         {{ dateDisplay(fila.DataAlteracao) }}</span
       >
     </header>
-    <user-auth v-if="requestAuth"/>
+    <user-auth v-if="requestAuth" />
     <cadastro-id-sqls v-if="showSqlsEditor" :sqls="sqls" @fechar="sqlsReset" />
     <form>
       <table>

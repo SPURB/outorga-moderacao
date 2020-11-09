@@ -168,6 +168,7 @@ export default {
 
     @media screen and (max-width: 800px) {
       width: 100%;
+      flex-direction: column;
     }
   }
 }

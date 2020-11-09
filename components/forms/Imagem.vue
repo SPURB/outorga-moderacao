@@ -40,11 +40,21 @@ export default {
     }
   },
   methods: {
-    removeElement () {
-      if (this.arquivo.isApi) {
-        console.log('REMOVENDO NA API')
+    async removeElement () {
+      if (this.arquivo.isApi) {        
+        try {
+          formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
+          const arquivoApi = await axiosArquivos.delete(`/arquivos/api/${this.arquivo.props.IdArquivo}`)
+          const arquivoFila = await formApi.delete(`/arquivofila/${this.arquivo.props.id}`)
+
+          if (arquivoApi.status === 200 && arquivoFila.status === 200) {
+            this.$emit('remove', this.index)
+          }
+        } catch (err) {
+          console.log(err)
+        }
       } else {
-        console.log('REMOVENDO DO ARRAY')
+        this.$emit('remove', this.index)
       }
     },
     async enviarFoto () {
@@ -58,8 +68,6 @@ export default {
           }
         })
         .then(res => {
-          // aqui vai colocar o registro na api do outorga
-          this.$emit('uploadedImage', this.index)
           body = {
             IdArquivo: res.data.result._id,
             IdFilaCepac: this.$route.params.id
@@ -67,10 +75,17 @@ export default {
         })
         .catch(err => {
           console.log(err)
-        })      
+        })
+
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
       await formApi.post('/arquivofila', body)
-        .then(res => console.log(res))
+        .then(res => {
+          this.$emit('uploadedImage', {
+            IdArquivo: body.IdArquivo,
+            indice: this.index,
+            id: res.data.Id
+          })
+        })
         .catch(err => console.log(err))
     }
   }

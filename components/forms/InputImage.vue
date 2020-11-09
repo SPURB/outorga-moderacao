@@ -27,6 +27,7 @@
         :index="index"
         v-for="(arquivo, index) in arquivos"
         @uploadedImage="mudarStatus"
+        @remove="removeImage"
       />
     </div>
   </div>
@@ -48,33 +49,49 @@ export default {
   },
   methods: {
     setFile (event) {
-      const files = event.target.files
-
-      for (const file of files) {
-        this.arquivos.push({
-          file: file,
-          isApi: false,
-          preview: URL.createObjectURL(file)
+      Array
+        .from(event.target.files)
+        .forEach((file, index) => { 
+          this.arquivos.push({
+            file: file,
+            isApi: false,
+            props: {
+              IdArquivo: index,
+              IdFilaCepac: this.$route.params.id,
+              id: 0
+            },
+            preview: URL.createObjectURL(file)
+          })
         })
-      }
     },
-    mudarStatus (param) {
-      let arquivo = this.arquivos.filter((val, index) => index === param)
+    mudarStatus ({ IdArquivo, id, indice }) {
+      let arquivo = this.arquivos.filter((val, index) => index === indice)
       arquivo[0].isApi = true
-      this.$set(this.arquivos, param, arquivo[0])
+      arquivo[0].props.IdArquivo = IdArquivo
+      arquivo[0].props.id = id
+      this.$set(this.arquivos, indice, arquivo[0])
     },
     async getFila () {
       let arquivosFila = []
       await formApi.get(`/arquivofila?IdFilaCepac=${this.$route.params.id}`)
-        .then(res => arquivosFila = res.data.map(v => `/arquivos/api/${v.IdArquivo}`))
+        .then(res => { 
+          arquivosFila = res.data.map(v => {             
+            return { url: `/arquivos/api/${v.IdArquivo}`, id: v.Id }
+          })
+        })
         .catch(err => console.log(err))
 
-      for (const url of arquivosFila) {
-        await axiosArquivos.get(url)
+      for (const item of arquivosFila) {
+        await axiosArquivos.get(item.url)
           .then(res => {
             this.arquivos.push({
               file: res.data.file.filename,
               isApi: true,
+              props: {
+                IdArquivo: res.data._id,
+                IdFilaCepac: this.$route.params.id,
+                id: item.id
+              },
               preview: `https://servicos.spurbanismo.sp.gov.br/public/${res.data.file.filename}`
             })
           })
@@ -82,6 +99,9 @@ export default {
             console.log(err)
           })
       }
+    },
+    removeImage (value) {
+      this.arquivos = this.arquivos.filter((val, index) => index !== value)
     }
   }
 }

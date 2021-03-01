@@ -195,7 +195,7 @@
               <date-pick
                 id="dataInclusao"
                 v-model="Data"
-                :format="'YYYY-MM-DD'"
+                :format="'DD/MM/YYYY'"
                 :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
                 :months="[
                   'Janeiro',
@@ -757,7 +757,6 @@ export default {
       return this.$store.state.logged
     }
   },
-
   watch: {
     ouc (key) {
       this.Setores = this.mapOucSetores[key].map(id => {
@@ -776,8 +775,12 @@ export default {
     }
   },
   async created () {
-    const date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    this.Data = date.toISOString().slice(0, 10)
+    const date = new Intl.DateTimeFormat('pt-BR', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    }).format(new Date(Date.now() - new Date().getTimezoneOffset() * 60000))
+    this.Data = date
     const { idopurbanasrc } = this.$route.query
 
     if (idopurbanasrc) {
@@ -846,6 +849,11 @@ export default {
 
       formApi.defaults.headers.common.Authorization = this.UsuarioAlteracao
 
+      const data = this.Data.slice(0, 10)
+        .split('/')
+        .reverse()
+        .join('-')
+
       formApi
         .post('fila', {
           TipoPedido: this.TipoPedido,
@@ -885,7 +893,7 @@ export default {
           IdSetor: parseInt(this.IdSetor),
           IdGeo: this.IdGeo,
           SubSetor: this.SubSetor,
-          Data: `${this.Data}T00:00:00`,
+          Data: `${data}T00:00:00`,
           UsuarioAlteracao: this.UsuarioAlteracao
         })
         .then(res => {

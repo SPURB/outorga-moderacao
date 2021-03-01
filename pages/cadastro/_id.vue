@@ -207,7 +207,7 @@
               <date-pick
                 id="dataInclusao"
                 v-model="dataNow"
-                :format="'YYYY-MM-DD'"
+                :format="'DD/MM/YYYY'"
                 :weekdays="['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']"
                 :months="[
                   'Janeiro',
@@ -844,6 +844,9 @@ export default {
     dataNow: {
       get () {
         return this.fila.Data.slice(0, 10)
+          .split('-')
+          .reverse()
+          .join('/')
       },
       set (val) {
         if (this.filaUntouched.Data.slice(0, 10) === val) {
@@ -853,7 +856,10 @@ export default {
           this.saveBtnDisableState = false
           this.$refs.dataInclusao.classList.add('updated')
         }
-        this.fila.Data = `${val}T00:00:00`
+        this.fila.Data = `${val
+          .split('/')
+          .reverse()
+          .join('-')}T00:00:00`
       }
     },
     isReady () {
